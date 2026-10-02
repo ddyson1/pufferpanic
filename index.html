@@ -89,11 +89,11 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .board b{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:1.7rem;color:#fff;font-variant-numeric:tabular-nums}
 .board em{font-style:normal;font-size:.8rem;color:var(--gold)}
 .scores{display:flex;gap:10px;justify-content:center;margin-top:6px;font-weight:700}
-.foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:.86rem;line-height:1.7}
+.foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:12px auto 0;color:var(--muted);font-size:.86rem;line-height:1.7}
 kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px;padding:1px 6px;white-space:nowrap}
-.tools{display:flex;gap:6px}
-.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:.85rem}
-.touch{display:none;justify-content:space-between;align-items:center;margin-top:12px;gap:12px;user-select:none;-webkit-user-select:none}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:.85rem;white-space:nowrap}
+.touch{display:none;justify-content:space-between;align-items:center;margin:12px auto 0;gap:12px;user-select:none;-webkit-user-select:none}
 @media (pointer:coarse){.touch{display:flex}.keys{display:none}}
 .pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);gap:4px}
 .pad button,.acts button{touch-action:none;border:0;background:var(--chip);color:var(--fg);font-weight:800;display:flex;align-items:center;justify-content:center}
@@ -135,7 +135,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 @media (max-width:520px){.fishedit{flex-direction:column;align-items:center}.bigprev{width:110px;height:110px}.fcontrols{width:100%}}
 .style{margin:14px auto 0;background:var(--chip);border-radius:16px;padding:14px 14px 4px}
 .style[hidden]{display:none}
-.story{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(to top,rgba(2,18,28,.94),rgba(2,18,28,.8) 65%,rgba(2,18,28,0));color:#eaf7f6}
+.story{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(to top,rgba(2,18,28,.97),rgba(2,18,28,.97) 30%,rgba(2,18,28,.8) 65%,rgba(2,18,28,0));color:#eaf7f6}
 .story[hidden]{display:none}
 .story p{margin:0 0 10px;font-size:clamp(.9rem,2.3vw,1.08rem);line-height:1.5;min-height:4.5em;max-width:62ch}
 .storybar{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -2484,7 +2484,9 @@ function updateKeysHelp() {
 
 // ================= layout =================
 function resize() {
-  const wrapW = stage.parentElement.clientWidth || 600;
+  // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
+  const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
+  const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0)) || 600;
   const touchH = getComputedStyle(touchEl).display !== 'none' ? touchEl.offsetHeight + 20 : 0;
   const availH = Math.max(240, (window.innerHeight || 800) - 150 - touchH);
   T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
@@ -2493,6 +2495,8 @@ function resize() {
   cv.style.width = COLS * T + 'px'; cv.style.height = ROWS * T + 'px';
   stage.style.width = COLS * T + 'px';
   $('#hud').style.width = COLS * T + 'px';
+  // keep the footer and touch pad as wide as the board so they line up when height limits the board
+  $('.foot').style.width = touchEl.style.width = COLS * T + 'px';
   stylePanel.style.maxWidth = COLS * T + 'px';
   rebuildArt();
 }
