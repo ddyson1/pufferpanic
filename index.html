@@ -40,10 +40,10 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-
   .wrap:has(.style:not([hidden]))>*{grid-column:1}
   .wrap .style:not([hidden]){grid-column:2;grid-row:1/span 5;margin:0;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;max-width:none !important}
 }
-.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 auto 8px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 auto 8px;font-size:clamp(.88rem,calc(var(--boardW,600px)/62),1.08rem);font-variant-numeric:tabular-nums}
 .hud .grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .chip{background:var(--chip);border-radius:999px;padding:4px 10px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
-.lvl{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:1.05rem;margin-right:4px}
+.lvl{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:clamp(1.05rem,calc(var(--boardW,600px)/52),1.3rem);margin-right:4px}
 .pips{display:inline-flex;gap:4px}
 .pips i{width:8px;height:8px;border-radius:50%;background:var(--line)}
 .pips i.on{background:var(--accent)}
@@ -63,6 +63,9 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-
 .pchip .pts{font-weight:700;min-width:2.5ch;text-align:right}
 .stage{position:relative;margin:0 auto;border-radius:18px;overflow:hidden;background:#0b4a5c;box-shadow:0 18px 40px rgba(2,40,52,.3),inset 0 0 0 1px rgba(255,255,255,.05)}
 canvas{display:block;touch-action:none}
+canvas:focus{outline:none}
+.rotate{display:none;margin:0 0 8px;font-size:.82rem;color:var(--muted);text-align:center}
+@media (pointer:coarse) and (orientation:portrait) and (max-height:640px){.rotate{display:block}}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;background:radial-gradient(ellipse at center,rgba(2,30,42,.55),rgba(2,20,30,.82));color:#e6f6f5;text-align:center}
 .overlay[hidden],.banner[hidden]{display:none}
 /* panels ease in rather than popping; display:none to shown restarts the animation each time */
@@ -73,6 +76,8 @@ canvas{display:block;touch-action:none}
 .overlay:not([hidden]) .card{animation:cardIn .3s ease-out}
 .banner:not([hidden]){animation:cardIn .25s ease-out}
 .story:not([hidden]){animation:slideUp .3s ease-out}
+@keyframes fadeOut{to{opacity:0;transform:translateY(8px)}}
+.story.out{animation:fadeOut .2s ease-in forwards}
 .stage.fresh canvas{animation:fadeIn .35s ease-out}
 @media (prefers-reduced-motion:reduce){.overlay,.card,.banner,.story,.stage.fresh canvas{animation:none !important}}
 .card{width:100%;max-width:520px;max-height:100%;overflow:auto;padding:4px}
@@ -105,10 +110,10 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .board b{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:1.7rem;color:#fff;font-variant-numeric:tabular-nums}
 .board em{font-style:normal;font-size:.8rem;color:var(--gold)}
 .scores{display:flex;gap:10px;justify-content:center;margin-top:6px;font-weight:700}
-.foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:12px auto 0;color:var(--muted);font-size:.86rem;line-height:1.7}
+.foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:12px auto 0;color:var(--muted);font-size:clamp(.86rem,calc(var(--boardW,600px)/64),1.02rem);line-height:1.7}
 kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
-.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:.85rem;white-space:nowrap}
+.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:clamp(.85rem,calc(var(--boardW,600px)/64),1rem);white-space:nowrap}
 .touch{display:none;justify-content:space-between;align-items:center;margin:12px auto 0;gap:12px;user-select:none;-webkit-user-select:none}
 @media (pointer:coarse){.touch{display:flex}.keys{display:none}}
 @media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
@@ -199,6 +204,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
     <div class="grp"><span class="chip sb" id="hTimeChip"><small>Time</small><b id="hTime">0:00.0</b></span><span class="chip sb" id="hScoreChip"><small>Score</small><b id="hScore">0</b></span><span class="grp" id="hPlayers"></span></div>
   </div>
 
+  <p class="rotate" id="rotateHint">Turn your phone sideways for a bigger reef.</p>
   <div class="stage" id="stage">
     <canvas id="c" aria-label="Game board"></canvas>
     <div class="banner" id="banner" hidden></div>
@@ -483,7 +489,7 @@ function loadLevel(i, retry) {
   persist();
   hideStyle();
   levelIdx = i;
-  if (autoTrack) track = trackForLevel(i);
+  if (autoTrack) setTrack(trackForLevel(i));
   const L = LEVELS[i];
   const grid = [], floor = [], born = [], wavePos = [[], [], [], []], enemies = [], urchins = new Map(), friends = [], bossTiles = new Set();
   const starts = [null, null];
@@ -640,7 +646,7 @@ function showFish() {
 
 function showMenu() {
   mode = 'menu'; S = null; hideBanner(); Ads.stop();
-  if (autoTrack) track = TRACKS.reef;
+  if (autoTrack) setTrack(TRACKS.reef);
   const coarse = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
   card.innerHTML = `<h2>${TITLE}</h2>
     <div class="tag">Two pufferfish versus the reef</div>
@@ -2371,7 +2377,7 @@ function playStory(id, done) {
   mode = 'story'; S = null;
   overlay.hidden = true; hideBanner(); hideStyle();
   story = {id, i:0, done, t0:time, chars:0};
-  storyEl.hidden = false;
+  storyEl.classList.remove('out'); storyEl.hidden = false;
   showPanel();
 }
 function showPanel() {
@@ -2390,8 +2396,9 @@ function storyNext() {
 }
 function endStory() {
   if (!story) return;
-  storyEl.hidden = true;
   const d = story.done; story = null; mode = 'menu';
+  storyEl.classList.add('out');
+  setTimeout(() => { if (!story) storyEl.hidden = true; storyEl.classList.remove('out'); }, 200);
   if (d) d();
 }
 storyNextBtn.addEventListener('click', e => { unlockAudio(); e.currentTarget.blur(); storyNext(); });
@@ -2598,12 +2605,15 @@ function resize() {
   // them, so the page never scrolls in a fixed frame such as an itch.io embed. Those wrap differently at
   // each width, so size twice and let them settle. 150 is the fallback before anything has laid out.
   for (let pass = 0; pass < 2; pass++) {
-    const chromeH = Math.max(sideTouch ? 48 : 150, hudEl.offsetHeight + footEl.offsetHeight + touchH + (sideTouch ? 24 : 56));
+    const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
+    const chromeH = Math.max(sideTouch ? 48 : 150, hudEl.offsetHeight + footEl.offsetHeight + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 56));
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
     // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
-    stage.style.width = footEl.style.width = touchEl.style.width = COLS * T + 'px';
-    hudEl.style.width = sideTouch ? '' : COLS * T + 'px'; // in landscape the hud spans the column so it stays one row
+    stage.style.width = touchEl.style.width = COLS * T + 'px';
+    // the hud and footer take at least 600px (within the window) so a narrow board cannot wrap them taller, which would shrink the board further
+    const barW = Math.max(COLS * T, Math.min(wrapW, 600)) + 'px';
+    footEl.style.width = barW; hudEl.style.width = sideTouch ? '' : barW;
   }
   // the frame cost is fill rate, so the backing store is capped at about 2.2 million pixels; a 975 px board on a 2x screen renders at 1.56x
   dpr = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(PIXEL_BUDGET / (COLS * T * ROWS * T)));
@@ -2611,8 +2621,11 @@ function resize() {
   cv.width = Math.round(COLS * T * dpr); cv.height = Math.round(ROWS * T * dpr);
   cv.style.width = COLS * T + 'px'; cv.style.height = ROWS * T + 'px';
   stylePanel.style.maxWidth = COLS * T + 'px';
+  wrap.style.setProperty('--boardW', COLS * T + 'px'); // the hud and footer text scale with it
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
 }
+cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
+stage.addEventListener('pointerdown', () => { try { cv.focus({preventScroll:true}); } catch (e) {} });
 window.addEventListener('resize', resize);
 const bFull = $('#bFull');
 if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
@@ -2645,6 +2658,7 @@ function releaseDir(i, n) { const p = playerN(i); if (!p) return; const k = p.he
 
 window.addEventListener('keydown', e => {
   unlockAudio();
+  if (e.target && e.target.tagName === 'BUTTON' && (e.code === 'Space' || e.code.startsWith('Arrow'))) { e.preventDefault(); e.target.blur(); }
   if (mode === 'story') {
     if (e.code === 'Escape') endStory();
     else if (['Space', 'Enter', 'ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); if (!e.repeat) storyNext(); }
@@ -2906,7 +2920,9 @@ const TRACKS = {
 };
 // 'auto' (the default) follows the reef: the loops get calmer the deeper you go, and each boss has its own
 const trackForLevel = i => TRACKS[i === 17 ? 'moondrift' : i === 12 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
-let autoTrack = !save.track || save.track === 'auto';
+let autoTrack = !save.track || save.track === 'auto', musicDuckUntil = 0;
+// change loops through a short dip in the music bus rather than a hard cut; the new loop starts from its first bar
+function setTrack(t) { if (t === track) return; track = t; step = 0; if (ac) { musicDuckUntil = ac.currentTime + .7; nextStep = ac.currentTime + .7; } }
 let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
   if (id === 'off') { musicOn = false; }
@@ -2915,7 +2931,7 @@ function applyTrack(id) {
 }
 function scheduleMusic() {
   if (!ac) return;
-  const on = !muted && musicOn && mode !== 'paused';
+  const on = !muted && musicOn && mode !== 'paused' && ac.currentTime >= musicDuckUntil;
   musicBus.gain.setTargetAtTime(on ? (mode === 'play' ? .9 : .7) : 0, ac.currentTime, .3);
   const STEP = 60 / track.bpm / 4;
   if (nextStep < ac.currentTime - .5) nextStep = ac.currentTime + .05;
