@@ -301,8 +301,8 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <thead><tr><th scope="col">Mode</th><th scope="col">Swim</th><th scope="col">Grow or break coral</th><th scope="col">Puff up</th></tr></thead>
 <tbody>
 <tr><th scope="row">1 player</th><td><kbd>Arrows</kbd> or <kbd>WASD</kbd></td><td><kbd>Space</kbd> (also <kbd>F</kbd>, <kbd>J</kbd>, <kbd>Z</kbd>, <kbd>/</kbd>)</td><td><kbd>Shift</kbd> (also <kbd>G</kbd>, <kbd>X</kbd>, <kbd>K</kbd>, <kbd>.</kbd>)</td></tr>
-<tr><th scope="row">2 players, Killi</th><td><kbd>WASD</kbd></td><td><kbd>F</kbd></td><td><kbd>G</kbd> or left <kbd>Shift</kbd></td></tr>
-<tr><th scope="row">2 players, Milli</th><td><kbd>Arrows</kbd></td><td><kbd>Space</kbd> or <kbd>/</kbd></td><td>right <kbd>Shift</kbd> or <kbd>.</kbd></td></tr>
+<tr><th scope="row">2 players, Killi</th><td><kbd>WASD</kbd></td><td><kbd>Space</kbd> or <kbd>F</kbd></td><td>left <kbd>Shift</kbd> or <kbd>G</kbd></td></tr>
+<tr><th scope="row">2 players, Milli</th><td><kbd>Arrows</kbd></td><td><kbd>Option</kbd> or <kbd>Alt</kbd> (also <kbd>/</kbd>)</td><td>right <kbd>Shift</kbd> or <kbd>.</kbd></td></tr>
 <tr><th scope="row">Touch</th><td>On-screen pad</td><td>Coral button</td><td>Puff button</td></tr>
 </tbody></table></div>
 <p><kbd>P</kbd> or <kbd>Esc</kbd> pauses, <kbd>R</kbd> restarts the reef, and there is a Pause button for touch players. Two-player mode needs a keyboard, since a phone shows controls for one fish.</p>

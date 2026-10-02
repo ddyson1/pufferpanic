@@ -115,6 +115,14 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
 .tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 10px;font-size:clamp(.85rem,calc(var(--boardW,600px)/64),1rem);white-space:nowrap}
+.tools button[hidden]{display:none}
+.mini{display:inline-flex;gap:6px}
+.mini button{width:34px;height:34px;padding:0;border-radius:11px;display:inline-flex;align-items:center;justify-content:center}
+.mini svg{width:20px;height:20px;fill:currentColor;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mini svg .s{fill:none}
+.mini svg .x,.mini svg .alt{display:none}
+.mini button.off{color:var(--muted)}.mini button.off svg .x{display:block}
+.mini button.on svg .main{display:none}.mini button.on svg .alt{display:block}
 .touch{display:none;justify-content:space-between;align-items:center;margin:12px auto 0;gap:12px;user-select:none;-webkit-user-select:none}
 .keys{display:none} /* the controls text is shown in the pause and Controls cards instead of under the board */
 .help{font-size:.92rem;line-height:1.9;color:#bfe0e2;max-width:48ch;margin:6px auto 2px}
@@ -208,9 +216,17 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .wrap.side .pane .grp{display:flex;flex-direction:column;align-items:stretch;gap:8px}
   .wrap.side .pane .lvl{font-size:1.3rem;margin:0 0 2px;line-height:1.15}
   .wrap.side .pane .chip{white-space:normal;justify-content:space-between;padding:6px 12px;background:var(--bg)}
+  .wrap.side .pane .grp.score{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .wrap.side .pane .grp.score .chip.sb{flex-direction:column;align-items:flex-start;gap:0;padding:8px 12px;background:var(--bg);color:var(--fg)}
+  .wrap.side .pane .grp.score .chip.sb small{opacity:.6}
+  .wrap.side .pane .grp.score .chip.sb b{font-size:1.25rem;text-align:left;min-width:0}
+  .wrap.side .pane .grp.score #hPlayers{grid-column:1/-1}
   .wrap.side .pane .foot{margin:auto 0 0;width:auto;justify-content:stretch}
   .wrap.side .pane .tools{flex-direction:column;align-items:stretch;gap:6px;width:100%}
   .wrap.side .pane .tools button{text-align:left;padding:8px 14px;background:var(--bg)}
+  .wrap.side .pane .mini{order:1;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;margin-top:4px}
+  .wrap.side .pane .mini button{width:auto;height:40px;padding:0;border-radius:12px;justify-content:center}
+  .wrap.side .pane .mini button[hidden]{display:none}
   .wrap.side:has(.style:not([hidden])){grid-template-columns:auto var(--labW,480px);justify-content:start;max-width:none}
   .wrap.side:has(.style:not([hidden])) .pane{display:none}
   .wrap.side .style:not([hidden]){grid-column:2;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
@@ -227,7 +243,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
       <span class="chip"><span id="hWave">Wave</span><span class="pips" id="hPips"></span></span>
       <span class="chip" id="hLeft">Choose a reef</span>
     </div>
-    <div class="grp"><span class="chip sb" id="hTimeChip"><small>Time</small><b id="hTime">0:00.0</b></span><span class="chip sb" id="hScoreChip"><small>Score</small><b id="hScore">0</b></span><span class="grp" id="hPlayers"></span></div>
+    <div class="grp score"><span class="chip sb" id="hTimeChip"><small>Time</small><b id="hTime">0:00.0</b></span><span class="chip sb" id="hScoreChip"><small>Score</small><b id="hScore">0</b></span><span class="grp" id="hPlayers"></span></div>
   </div>
 
   <p class="rotate" id="rotateHint">Turn your phone sideways for a bigger reef.</p>
@@ -252,7 +268,15 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 
   <div class="foot">
     <span class="keys" id="keys"></span>
-    <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bHelp">Controls</button><button id="bFull">Fullscreen</button></span>
+    <span class="tools">
+      <span class="mini">
+        <button id="bSound" aria-label="Sound on" title="Sound on"><svg viewBox="0 0 24 24"><polygon points="3,9 7,9 12,5 12,19 7,15 3,15"/><path class="s" d="M15.5 9.5a3.6 3.6 0 0 1 0 5"/><path class="s" d="M18 7a7 7 0 0 1 0 10"/><path class="s x" d="M4 20L20 4"/></svg></button>
+        <button id="bMusic" aria-label="Music on" title="Music on"><svg viewBox="0 0 24 24"><path class="s" d="M9 17V6l10-2.5V15"/><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="16.5" cy="15.5" r="2.6"/><path class="s x" d="M4 20L20 4"/></svg></button>
+        <button id="bPause" aria-label="Pause" title="Pause"><svg viewBox="0 0 24 24"><g class="main"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g><polygon class="alt" points="7,4 20,12 7,20"/></svg></button>
+        <button id="bFull" aria-label="Fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><g class="main s"><path d="M4 9V4h5"/><path d="M15 4h5v5"/><path d="M20 15v5h-5"/><path d="M9 20H4v-5"/></g><g class="alt s"><path d="M9 4v5H4"/><path d="M20 9h-5V4"/><path d="M15 20v-5h5"/><path d="M4 15h5v5"/></g></svg></button>
+      </span>
+      <button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bHelp">Controls</button>
+    </span>
   </div>
 
   <aside class="pane" id="pane" hidden aria-label="Game panel"></aside>
@@ -1496,6 +1520,7 @@ function buildArt() {
   }
 }
 function rebuildArt() {
+  silCache.clear();
   if (theme.pixel) { const sT = T, sD = dpr; T = PIX_T; dpr = 1; buildArt(); T = sT; dpr = sD; }
   else buildArt();
   buildFxSprites();
@@ -1522,6 +1547,59 @@ function draw() {
   if (S) drawTags();
 }
 
+// Cut-paper drop shadows used to come from the canvas shadow state, which costs a blurred layer for every fill and
+// stroke of every creature, every frame. Now a creature's shadow is its flat silhouette, drawn once through a context
+// that turns every fill and stroke into one dark color, cached as a sprite per kind and pose, and blitted under the
+// creature with the paper offset. Eels and the Queen's tentacles follow a path, so their silhouette is one stroke
+// drawn live instead (see silMode in drawEel and drawTentPath).
+const SIL = '#051923';
+let silTarget = ctxMain; // the context the silhouette proxy writes to
+const alphaOf = c => { if (typeof c !== 'string') return 1; const m = /rgba?\([^)]*,\s*([\d.]+)\s*\)$/.exec(c); return m ? +m[1] : 1; };
+const silCtx = new Proxy({}, {
+  get(t, k) {
+    if (k === 'createRadialGradient' || k === 'createLinearGradient') return () => { const g = {max:0, addColorStop(_, c) { g.max = Math.max(g.max, alphaOf(c)); }}; return g; };
+    const v = silTarget[k]; return typeof v === 'function' ? v.bind(silTarget) : v;
+  },
+  set(t, k, v) {
+    if (k === 'fillStyle' || k === 'strokeStyle') silTarget[k] = typeof v === 'object' ? (v.max >= .5 ? SIL : 'rgba(0,0,0,0)') : alphaOf(v) < .5 ? 'rgba(0,0,0,0)' : SIL; // soft glows cast no shadow
+    else if (k !== 'shadowColor' && k !== 'shadowBlur' && k !== 'shadowOffsetX' && k !== 'shadowOffsetY' && k !== 'globalCompositeOperation') silTarget[k] = v;
+    return true;
+  }
+});
+const silMode = () => ctx === silCtx;
+const silCache = new Map();
+const SIL_SZ = {K:5, F:4};
+function silSprite(fn, o, key) {
+  let sp = silCache.get(key);
+  if (sp) return sp;
+  const sz = SIL_SZ[o.kind] || 3, px = T * dpr;
+  sp = document.createElement('canvas'); sp.width = sp.height = Math.ceil(sz * px); sp.sz = sz;
+  const c = sp.getContext('2d'); c.setTransform(px, 0, 0, px, 0, 0); c.fillStyle = c.strokeStyle = SIL;
+  const clone = Object.assign({}, o, {fx:sz / 2 - .5, fy:sz / 2 - .45, held:[], inv:0, dead:false, deathT:0, born:-9, stun:0});
+  const keep = ctx; silTarget = c; ctx = silCtx;
+  try { fn(clone); } finally { ctx = keep; silTarget = ctxMain; }
+  silCache.set(key, sp);
+  return sp;
+}
+function silKey(t, o) {
+  if (t === 's') return 's' + o.type + (o.open ? 1 : 0);
+  if (t === 'e') return o.kind + o.dir.x + o.dir.y + (o.kind === 'Y' ? o.state : o.kind === 'F' ? o.ph : '');
+  if (t === 'f') return 'N' + o.dir.x + o.dir.y;
+  return 'p' + o.fish.name + (o.puff > 0 ? 'P' : '') + o.face.x + o.face.y + (o.fish.acc || '');
+}
+function paperDraw(fn, o, t) {
+  if (theme.paper && ctx === ctxMain) {
+    if (t && !(o.dead || (o.kind === 'Y' && o.state === 'buried'))) {
+      const sp = silSprite(fn, o, silKey(t, o)), sz = sp.sz, a = ctx.globalAlpha;
+      ctx.globalAlpha = a * .38; ctx.drawImage(sp, o.fx - sz / 2 + .53, o.fy - sz / 2 + .51, sz, sz); ctx.globalAlpha = a;
+    } else if (!t) { // eels, the Queen and her tentacles: a live one-stroke silhouette
+      ctx.save(); ctx.globalAlpha *= .38; ctx.translate(.03, .06); ctx.fillStyle = ctx.strokeStyle = SIL;
+      silTarget = ctxMain; ctx = silCtx; try { fn(o); } finally { ctx = ctxMain; }
+      ctx.restore();
+    }
+  }
+  fn(o);
+}
 function paperShadow(on) {
   if (!theme.paper) return;
   const px = T * dpr;
@@ -1536,10 +1614,8 @@ function drawScene() {
   if (S) {
     drawFloorFx();
     drawRows();
-    paperShadow(true);
-    if (S.boss) drawBoss();
-    for (const e of S.enemies) if (FLY[e.kind]) drawEnemy(e);
-    paperShadow(false);
+    if (S.boss) paperDraw(drawBoss, null, '');
+    for (const e of S.enemies) if (FLY[e.kind]) paperDraw(drawEnemy, e, 'e');
   } else if (mode === 'story' && story) drawStory();
   else { paperShadow(true); drawMenuScene(); paperShadow(false); }
   if (!theme.paper) drawLight();
@@ -1681,14 +1757,14 @@ function drawRows() {
       } else if (g === 'c') drawCoral(x, y);
     }
     buckets[y].ents.sort((a, b) => a.o.fx - b.o.fx);
-    paperShadow(true);
     for (const it of buckets[y].ents) {
-      if (it.t === 's') drawSnack(it.o);
-      else if (it.t === 'e') drawEnemy(it.o);
-      else if (it.t === 'f') drawSeal(it.o);
-      else { drawPuffer(it.o); drawShield(it.o); }
+      const o = it.o;
+      if (it.t === 's') paperDraw(drawSnack, o, 's');
+      else if (it.t === 'e') paperDraw(drawEnemy, o, o.kind === 'E' ? '' : 'e');
+      else if (it.t === 'f') paperDraw(drawSeal, o, 'f');
+      else paperDraw(drawPlayer, o, 'p');
     }
-    paperShadow(false); // the kelp sprites carry their own shadow
+    // the kelp sprites carry their own shadow
     for (let x = 0; x < COLS; x++) if (S.floor[y][x] === 'k') drawKelp(x, y);
   }
 }
@@ -2059,12 +2135,12 @@ function drawEel(e) {
     off.push({x:pts[i].x + .5 - dy * w, y:pts[i].y + .45 + dx * w});
   }
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  // one blurred stroke for the paper shadow, then the three passes without it (27 blurred strokes per eel per frame otherwise)
-  const shadowed = ctx.shadowBlur > 0;
-  if (shadowed) {
-    ctx.strokeStyle = '#3e6a1e'; ctx.lineWidth = .2;
+  // the silhouette pass gets one stroke; the body is three tapered passes
+  if (silMode()) {
+    ctx.lineWidth = .24;
     ctx.beginPath(); ctx.moveTo(off[0].x, off[0].y); for (let i = 1; i < n; i++) ctx.lineTo(off[i].x, off[i].y); ctx.stroke();
-    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+    ell(e.fx + .5, e.fy + .45, .2, .2); ctx.fill();
+    return;
   }
   for (let pass = 0; pass < 3; pass++) {
     ctx.strokeStyle = ['#3e6a1e', '#6f9a32', '#c8e07a'][pass];
@@ -2073,7 +2149,6 @@ function drawEel(e) {
       ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y); ctx.lineTo(off[i - 1].x, off[i - 1].y); ctx.stroke();
     }
   }
-  if (shadowed) paperShadow(true);
   const hx = e.fx + .5, hy = e.fy + .45, d = e.dir, px = -d.y, py = d.x;
   ctx.fillStyle = '#5c8a2e'; ell(hx + d.x * .04, hy + d.y * .04, .18, .18); ctx.fill();
   ctx.fillStyle = '#fff6b0'; circ(hx + d.x * .08 + px * .07, hy + d.y * .08 + py * .07, .05); ctx.fill();
@@ -2266,6 +2341,7 @@ function drawSeal(n) {
   ctx.restore();
 }
 
+function drawPlayer(p) { drawPuffer(p); drawShield(p); }
 function drawShield(p) {
   if (!p.shield || p.dead) return;
   const r = .5 + Math.sin(time * 4 + p.id) * .02;
@@ -2323,11 +2399,11 @@ function drawShark(e, sc) {
 function drawTentPath(pts, w0, w1) {
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   const n = pts.length;
-  // one blurred stroke for the paper shadow, then the tapered passes without it; a blur per segment was most of the Queen's frame cost
-  if (ctx.shadowBlur > 0) {
-    ctx.strokeStyle = '#6e2463'; ctx.lineWidth = (w0 + w1) / 2;
+  // the silhouette pass gets one stroke; a segment-by-segment shadow was most of the Queen's frame cost
+  if (silMode()) {
+    ctx.lineWidth = (w0 + w1) / 2;
     ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < n; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.stroke();
-    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+    ctx.restore(); return;
   }
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass ? '#c25a9e' : '#6e2463';
@@ -2345,14 +2421,12 @@ function drawQueenBody(cx, cy, sc, mood, alpha, flash, lookX) {
   ctx.save();
   ctx.globalAlpha *= alpha;
   ctx.translate(cx, cy); ctx.scale(sc, sc);
-  const shadowed = ctx.shadowBlur > 0;
   for (let i = 0; i < 6; i++) {
     const side = i < 3 ? -1 : 1, k = i % 3, pts = [];
     for (let j = 0; j <= 10; j++) { const s = j / 10; pts.push({x:side * (.55 + k * .3 + s * (1.1 + k * .25)), y:.55 + s * (1.3 - k * .25) + Math.sin(time * 2 + s * 4 + i) * .15 * s}); }
     drawTentPath(pts, .34, .1);
   }
-  // same trick for the body: one blurred fill under everything, then the details without blur
-  if (shadowed) { ctx.fillStyle = '#7b2a6e'; ell(0, 0, 1.45, 1.12); ctx.fill(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0; }
+  if (silMode()) { ell(0, 0, 1.45, 1.12); ctx.fill(); ctx.restore(); return; }
   const g = ctx.createRadialGradient(-.4, -.5, .1, 0, 0, 1.6);
   g.addColorStop(0, '#ec93c4'); g.addColorStop(1, '#7b2a6e');
   ctx.fillStyle = g; ell(0, 0, 1.45, 1.12); ctx.fill();
@@ -2634,6 +2708,8 @@ function drawParts() {
 
 // ================= HUD =================
 const hudCache = {};
+const bPause = $('#bPause'), bMenuBtn = $('#bMenu');
+function lbl(b, t) { b.title = t; b.setAttribute('aria-label', t); } // icon buttons carry their state in the tooltip and for screen readers
 function setText(el, key, v) { if (hudCache[key] !== v) { hudCache[key] = v; el.textContent = v; } }
 function fmtTime(sec) { sec = Math.max(0, +sec || 0); const m = Math.floor(sec / 60), s = sec - m * 60; return `${m}:${s < 10 ? '0' : ''}${s.toFixed(1)}`; }
 function buildHudPlayers() {
@@ -2645,6 +2721,8 @@ function hud() {
   const showBoard = !!S && (mode === 'play' || mode === 'paused' || mode === 'won');
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
+  const tk = mode + (document.fullscreenElement ? 'F' : '');
+  if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; }
   if (showBoard) {
     setText(hTime, 't', fmtTime(S.elapsed));
     setText(hScore, 's', S.players.reduce((a, p) => a + p.points, 0).toLocaleString());
@@ -2690,7 +2768,7 @@ function hud() {
 }
 function updateKeysHelp() {
   keysEl.innerHTML = twoP
-    ? `<b>Killi</b> <kbd>WASD</kbd> swim, <kbd>F</kbd> coral, <kbd>G</kbd> puff. <b>Milli</b> <kbd>Arrows</kbd> swim, <kbd>Space</kbd> coral, <kbd>Right Shift</kbd> puff. <kbd>P</kbd> pause, <kbd>R</kbd> restart.`
+    ? `<b>Killi</b> <kbd>WASD</kbd> swim, <kbd>Space</kbd> coral, <kbd>Left Shift</kbd> puff. <b>Milli</b> <kbd>Arrows</kbd> swim, <kbd>Option</kbd> or <kbd>Alt</kbd> coral, <kbd>Right Shift</kbd> puff. <kbd>P</kbd> pause, <kbd>R</kbd> restart.`
     : `<kbd>Arrows</kbd> or <kbd>WASD</kbd> swim. <kbd>Space</kbd> grows a coral wall or breaks the one you face. <kbd>Shift</kbd> puffs up and stuns anything close. <kbd>P</kbd> pause, <kbd>R</kbd> restart.`;
   resize(); // the help text changes height, which changes the room left for the board
 }
@@ -2764,7 +2842,7 @@ window.addEventListener('resize', resize);
 const bFull = $('#bFull');
 if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
   bFull.addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); });
-  document.addEventListener('fullscreenchange', () => { bFull.textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen'; });
+  document.addEventListener('fullscreenchange', () => { const on = !!document.fullscreenElement; bFull.classList.toggle('on', on); lbl(bFull, on ? 'Exit fullscreen' : 'Fullscreen'); });
 } else bFull.hidden = true;
 
 // ================= input =================
@@ -2776,13 +2854,14 @@ function binding(code) {
     if (['ShiftLeft', 'ShiftRight', 'KeyG', 'KeyX', 'KeyK', 'Period'].includes(code)) return {p:0, puff:true};
     return null;
   }
+  // player 1 keeps the one-player keys (WASD, Space, left Shift); player 2 takes the arrows, Option and right Shift
   const k = {KeyW:'up', KeyS:'down', KeyA:'left', KeyD:'right'}[code];
   if (k) return {p:0, dir:k};
-  if (code === 'KeyF') return {p:0, act:true};
-  if (code === 'KeyG' || code === 'ShiftLeft') return {p:0, puff:true};
+  if (code === 'Space' || code === 'KeyF') return {p:0, act:true};
+  if (code === 'ShiftLeft' || code === 'KeyG') return {p:0, puff:true};
   const m = {ArrowUp:'up', ArrowDown:'down', ArrowLeft:'left', ArrowRight:'right'}[code];
   if (m) return {p:1, dir:m};
-  if (code === 'Space' || code === 'Slash') return {p:1, act:true};
+  if (code === 'AltRight' || code === 'AltLeft' || code === 'ControlRight' || code === 'Slash') return {p:1, act:true};
   if (code === 'ShiftRight' || code === 'Period') return {p:1, puff:true};
   return null;
 }
@@ -2849,7 +2928,11 @@ let ac = null, muted = !!save.muted, musicOn = save.music !== false;
 let master, sfxBus, musicBus, trackBus, noiseBuf, sendGain, softLP, nextStep = 0, step = 0, lastGet = -9, combo = 0, musicAhead = .25, previewing = false;
 const PENTA = [0, 2, 4, 7, 9];
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
-function setAudioLabels() { $('#bSound').textContent = muted ? 'Sound off' : 'Sound on'; $('#bMusic').textContent = musicOn ? 'Music on' : 'Music off'; }
+function setAudioLabels() {
+  const bs = $('#bSound'), bm = $('#bMusic');
+  bs.classList.toggle('off', muted); lbl(bs, muted ? 'Sound off' : 'Sound on');
+  bm.classList.toggle('off', !musicOn); lbl(bm, musicOn ? 'Music on' : 'Music off');
+}
 
 function unlockAudio() {
   try {

@@ -20,8 +20,8 @@ Wiki: https://ddyson1.github.io/pufferpanic/wiki/
 | | Swim | Coral | Puff |
 |---|---|---|---|
 | 1 player | Arrows or WASD | Space | Shift |
-| 2 players, Killi | WASD | F | G |
-| 2 players, Milli | Arrows | Space | Right Shift |
+| 2 players, Killi | WASD | Space (or F) | Left Shift (or G) |
+| 2 players, Milli | Arrows | Option or Alt (or /) | Right Shift (or .) |
 
 P pauses, R restarts. On touch devices an on-screen pad and buttons appear; two-player mode needs a keyboard.
 

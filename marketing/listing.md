@@ -34,7 +34,7 @@ arcade, maze, co-op, 2 player, local multiplayer, puzzle, cute, ocean, fish, fam
 Everyone. No blood, no text chat, no purchases.
 
 ## Controls text for portals
-Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players: Killi on WASD with F and G, Milli on the arrows with Space and right Shift. Touch controls on phones. Press P or Esc to pause.
+Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players: Killi keeps WASD, Space and left Shift, Milli takes the arrows, Option or Alt, and right Shift. Touch controls on phones. Press P or Esc to pause.
 
 ## itch.io page settings
 - Kind of project: HTML. Upload the zip built with `npm run itch` (index.html, sw.js, manifest.webmanifest, icons/) and tick "This file will be played in the browser".
@@ -42,8 +42,8 @@ Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players
 - Classification: Games. Genre: Action. Tags from the list above (itch allows ten, drop "short" and "casual" first).
 - Pricing: No payments, or Donate with a suggested $0.
 - Community: Comments. Visibility: Public once the cover and screenshots are uploaded.
-- Cover image: `marketing/cover-630x500.png` (itch shows it at 315 x 250, so the title stays large). Screenshots: the six in `marketing/screenshots/`, in the order they are numbered.
+- Cover image: `marketing/cover-630x500.png` (itch shows it at 315 x 250, so the title stays large). Screenshots: the ten in `marketing/screenshots/`, in the order they are numbered (the first six are reefs, then co-op, Bruiser, the fish card and the lab). itch.io takes video only as a YouTube or Vimeo link, so upload `marketing/trailer.mp4` there and paste the link in the Trailer field; `marketing/trailer.gif` can go in the screenshot row as a moving preview.
 - Theme: background #0e5a68, link and button color #f6c445, text on a light card.
 
 ## Press kit
-Screenshots are in `marketing/screenshots/` (1280 px wide), regenerated with `npm run assets`. The store cover is `marketing/cover-630x500.png` (itch.io size; `cover-1260x1000.png` is the 2x version), regenerated with `npm run cover`. Icons are in `icons/`. The comic and style explorations can be exported from the design canvases.
+Screenshots are in `marketing/screenshots/` (1280 px wide): 01 to 06 come from `npm run assets`, 07 to 10 from `npm run trailer` (SHOTS_ONLY=1 to retake only those). The trailer is `marketing/trailer.mp4` (1080p30, 51 seconds, the reef music rendered from the game's own synth) with a 5 second `marketing/trailer.gif` loop, both from `npm run trailer`, which needs Playwright and ffmpeg and the game served at localhost:5173. The store cover is `marketing/cover-630x500.png` (itch.io size; `cover-1260x1000.png` is the 2x version), regenerated with `npm run cover`. Icons are in `icons/`. The comic and style explorations can be exported from the design canvases.
