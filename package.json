@@ -14,8 +14,7 @@
     "assets": "node tools/launchassets.js",
     "art-samples": "node tools/art/styles.js",
     "cover": "node tools/cover.js",
-    "itch": "zip -qr killi-and-milli-itch.zip index.html manifest.webmanifest sw.js icons && echo built killi-and-milli-itch.zip",
-    "trailer": "node tools/trailer.mjs"
+    "itch": "zip -qr killi-and-milli-itch.zip index.html manifest.webmanifest sw.js icons && echo built killi-and-milli-itch.zip"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.60",
