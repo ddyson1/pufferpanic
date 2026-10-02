@@ -212,7 +212,9 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .wrap.side .foot{grid-column:3;grid-row:1;align-self:end;justify-self:start;margin:0;width:auto}
   .wrap.side .tools{flex-direction:column;align-items:flex-start}
   .wrap.side .rotate,.wrap.side .touch{display:none}
-  .wrap.side:has(.style:not([hidden])){grid-template-columns:200px minmax(0,1fr) 340px;max-width:none}
+  .wrap.side:has(.style:not([hidden])){grid-template-columns:200px minmax(0,1fr) 480px;max-width:none}
+  .wrap.side .style{padding:18px 18px 8px}.wrap.side .style .opt{padding:12px 13px;gap:6px}.wrap.side .style .opt b{font-size:1.02rem}.wrap.side .style .opt small{font-size:.86rem}
+  .wrap.side .style .head h3{font-size:1.45rem}.wrap.side .style .lead{font-size:.92rem}.wrap.side .srow{margin-bottom:20px}
   .wrap.side:has(.style:not([hidden])) .hud .grp:last-child,.wrap.side:has(.style:not([hidden])) .foot{display:none}
   .wrap.side .style:not([hidden]){grid-column:3;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
 }
@@ -2713,13 +2715,14 @@ function resize() {
   let sideMode = false;
   if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
     // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
-    const fullW = (window.innerWidth || 0) - 32 - (labW ? labW + 216 : 432); // two 200px columns, or one plus the lab
+    const fullW = (window.innerWidth || 0) - 32 - (labW ? 496 + 216 : 432); // two 200px columns, or one plus the 480px lab
     const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24) / ROWS));
-    sideMode = tSide > tStack;
+    // with the lab open, the wide panel is worth a slightly smaller board, as long as the board stays a decent size
+    sideMode = labW ? tSide >= 40 && tSide >= tStack * .8 : tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
   if (sideMode) {
-    T = Math.max(16, Math.floor(Math.min(((window.innerWidth || 0) - 32 - (labW ? labW + 216 : 432)) / COLS, (innerH - 24) / ROWS)));
+    T = Math.max(16, Math.floor(Math.min(((window.innerWidth || 0) - 32 - (labW ? 496 + 216 : 432)) / COLS, (innerH - 24) / ROWS)));
     stage.style.width = COLS * T + 'px'; hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
