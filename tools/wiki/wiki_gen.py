@@ -391,7 +391,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 </details>
 
 <h2 id="look-and-sound">Look and sound</h2>
-<p>A Look and sound panel, reached from the gear button or the title screen, opens a live demo reef where nothing can catch you; on wide screens the panel lays over the right half of the board. Choices are saved and apply to the whole game.</p>
+<p>A Look and sound panel, reached from the gear button or the title screen, opens a live demo reef where nothing can catch you; on wide screens the panel opens as a card over the board, with the demo reef running behind it. Choices are saved and apply to the whole game.</p>
 <div class="tablewrap"><table class="wikitable">
 <thead><tr><th scope="col">Setting</th><th scope="col">Options</th></tr></thead>
 <tbody>
