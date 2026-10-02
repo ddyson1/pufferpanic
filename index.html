@@ -199,24 +199,23 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .overlay{container-type:size}
 @container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
-/* wide desktop windows: hud chips down the left, buttons down the right, the board as tall as the window */
+/* wide desktop windows: the board and one right pane (reef, score, fish, buttons) centered together, the board as tall as the window */
 @media (pointer:fine) and (min-width:1000px){
-  .wrap.side{display:grid;grid-template-columns:200px minmax(0,1fr) 200px;column-gap:16px;align-items:center;max-width:none;min-height:100vh;padding:12px 16px}
-  .wrap.side .hud{display:contents}
-  .wrap.side .hud .grp{flex-direction:column;align-items:flex-start;gap:8px;grid-row:1}
-  .wrap.side .hud .grp:first-child{grid-column:1;align-self:center;justify-self:end;align-items:flex-end;text-align:right}
-  .wrap.side .hud .grp:last-child{grid-column:3;align-self:start;align-items:flex-start;justify-self:start;padding-top:4px}
-  .wrap.side .lvl{margin:0 0 4px;line-height:1.1}
-  .wrap.side .hud .chip{white-space:normal;max-width:200px;text-align:inherit}
-  .wrap.side .stage{grid-column:2;grid-row:1}
-  .wrap.side .foot{grid-column:3;grid-row:1;align-self:end;justify-self:start;margin:0;width:auto}
-  .wrap.side .tools{flex-direction:column;align-items:flex-start}
-  .wrap.side .rotate,.wrap.side .touch{display:none}
-  .wrap.side:has(.style:not([hidden])){grid-template-columns:200px minmax(0,1fr) 480px;max-width:none}
+  .wrap.side{display:grid;grid-template-columns:auto 260px;justify-content:center;column-gap:16px;align-items:stretch;max-width:none;min-height:100vh;padding:12px 16px}
+  .wrap.side .hud,.wrap.side .rotate,.wrap.side .touch{display:none}
+  .wrap.side .stage{grid-column:1;grid-row:1;margin:0}
+  .wrap.side .pane{display:flex;flex-direction:column;gap:16px;grid-column:2;grid-row:1;min-width:0;background:var(--chip);border-radius:18px;padding:16px;font-size:.95rem}
+  .wrap.side .pane .grp{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+  .wrap.side .pane .lvl{font-size:1.3rem;margin:0 0 2px;line-height:1.15}
+  .wrap.side .pane .chip{white-space:normal;justify-content:space-between;padding:6px 12px;background:var(--bg)}
+  .wrap.side .pane .foot{margin:auto 0 0;width:auto;justify-content:stretch}
+  .wrap.side .pane .tools{flex-direction:column;align-items:stretch;gap:6px;width:100%}
+  .wrap.side .pane .tools button{text-align:left;padding:8px 14px;background:var(--bg)}
+  .wrap.side:has(.style:not([hidden])){grid-template-columns:auto var(--labW,480px);justify-content:start;max-width:none}
+  .wrap.side:has(.style:not([hidden])) .pane{display:none}
+  .wrap.side .style:not([hidden]){grid-column:2;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
   .wrap.side .style{padding:18px 18px 8px}.wrap.side .style .opt{padding:12px 13px;gap:6px}.wrap.side .style .opt b{font-size:1.02rem}.wrap.side .style .opt small{font-size:.86rem}
   .wrap.side .style .head h3{font-size:1.45rem}.wrap.side .style .lead{font-size:.92rem}.wrap.side .srow{margin-bottom:20px}
-  .wrap.side:has(.style:not([hidden])) .hud .grp:last-child,.wrap.side:has(.style:not([hidden])) .foot{display:none}
-  .wrap.side .style:not([hidden]){grid-column:3;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
 }
 </style>
 </head>
@@ -256,6 +255,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
     <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bHelp">Controls</button><button id="bFull">Fullscreen</button></span>
   </div>
 
+  <aside class="pane" id="pane" hidden aria-label="Game panel"></aside>
   <section class="style" id="stylePanel" hidden aria-label="Look and sound">
     <div class="head"><h3>Look and sound</h3><button class="btn" id="styleDone">Done</button></div>
     <p class="lead">The reef is a live demo. Swim around with the arrow keys; every choice applies right away and is saved.</p>
@@ -382,20 +382,20 @@ const LEVELS = [
 
 const STORY = {
   intro: [
-    {scene:'home', text:'In the warm shallows live two pufferfish. Killi puffs first and asks questions later. Milli always has a plan.'},
-    {scene:'feast', text:'Every year the reef throws the Moonlight Feast, and this year Killi and Milli are in charge of the snacks.'},
-    {scene:'tremor', text:'Then, the night before the feast, a rumble rolls up from the deep. Something huge has woken in the Trench, and every grumpy creature on the reef is on the move.'},
-    {scene:'plan', text:'There is only one way to save the feast: gather every snack, reef by reef. Grow coral to block the way, and puff up when things get too close.'},
-    {scene:'nori', text:'Whatever woke up is still waiting at the bottom of the reef. Luckily, Killi and Milli are about to make a friend.'},
+    {scene:'home', text:'In the warm shallows live two pufferfish. Killi puffs first and asks questions later. Milli always has a plan, usually a backup plan, and a snack in case the backup plan takes a while.'},
+    {scene:'feast', text:'Once a year, when the moon is at its roundest, the whole reef throws the Moonlight Feast. This year the snacks are Killi and Milli\'s job. It is a big job. Everyone has opinions about krill.'},
+    {scene:'tremor', text:'The night before the feast, a rumble rolls up from the Trench. Rocks wobble. Jellyfish wake up cross. Every crab on the reef starts walking in a straight line, which is never a good sign.'},
+    {scene:'plan', text:'Milli\'s plan: gather every snack, reef by reef, before the feast. Grow coral to wall off the grumpy ones, break it to get through, and puff up when something gets too close. Killi\'s plan: that, but louder.'},
+    {scene:'nori', text:'Whatever woke up is still down there, waiting at the bottom of the reef. Luckily, somewhere past the sandbar, a seal called Nori is about to take an interest.'},
   ],
-  bruiser: [{scene:'bruiser', text:'Bruiser the shark guards the way to the deep. He charges at anything that moves, and he never looks where he is going. A coral wall in his path might give him a headache.'}],
-  queen: [{scene:'queen', text:'At the very bottom of the Trench waits the Kraken Queen, and her tentacles can reach across the whole reef. Trap one in coral, then puff right next to it.'}],
+  bruiser: [{scene:'bruiser', text:'Bruiser the shark guards the way to the deep. He charges at anything that moves and has never once looked where he is going. A coral wall in his path might give him something to think about, briefly.'}],
+  queen: [{scene:'queen', text:'At the very bottom of the Trench waits the Kraken Queen, crown and all. Her tentacles reach across the whole reef, and she is in a mood. Trap one in coral, then puff right next to its tip.'}],
   ending: [
-    {scene:'ending1', text:'With one last wobble, the Kraken Queen sank down and sighed. She had never wanted to wreck the reef. She had heard about the Moonlight Feast, and nobody had invited her.'},
-    {scene:'invite', text:'So Killi and Milli did. Milli made the invitation out of a pearl, and Killi puffed up as big as he could to deliver it.'},
-    {scene:'ending2', text:'That year the Moonlight Feast was the biggest the reef had ever seen. Every crab, eel and jellyfish came, and the Queen sat at the head of the table.'},
-    {scene:'dessert', text:'And Bruiser even brought dessert. He carried it all the way up from the Trench without crashing into anything, which for Bruiser was a first.'},
-    {scene:'moonset', text:'They ate until the moon went down, and nobody on the reef was grumpy for a whole year. The end.'},
+    {scene:'ending1', text:'With one last wobble, the Kraken Queen sank down and sighed a sigh that rearranged the sand. She had never wanted to wreck the reef. Every year she heard about the Moonlight Feast, and nobody had ever invited her.'},
+    {scene:'invite', text:'So Killi and Milli did. Milli made the invitation out of a pearl, with proper lettering. Killi delivered it puffed up as big as he could go, so that it would look official.'},
+    {scene:'ending2', text:'That year the Moonlight Feast was the biggest the reef had ever seen. Every crab came, in a straight line. The eels held the lanterns. The Queen sat at the head of the table and was very careful with her tentacles.'},
+    {scene:'dessert', text:'And Bruiser even brought dessert. He carried it all the way up from the Trench without crashing into anything, which for Bruiser was a first, and he was so pleased about it that he very nearly did.'},
+    {scene:'moonset', text:'They ate until the moon went down. Nobody on the reef was grumpy for a whole year, which is the longest anyone could remember. The end.'},
   ],
 };
 
@@ -653,7 +653,7 @@ function showFish() {
     <div class="picks" role="group" aria-label="${twoP ? 'Fish to customize' : 'Fish to play as'}">
       ${['killi', 'milli'].map(w => `<button class="pick" ${twoP ? `data-edit="${w}"` : `data-pick="${w}"`} aria-pressed="${twoP ? fishEdit === w : pick === w}">
         <canvas data-who="${w}" width="72" height="72" aria-hidden="true"></canvas><span>${FISH_NAMES[w]}</span>
-        <small>${twoP ? (w === 'killi' ? 'Player 1, WASD' : 'Player 2, arrows') : (w === 'killi' ? 'Puffs first, asks later' : 'Always has a plan')}</small></button>`).join('')}
+        <small>${twoP ? (w === 'killi' ? 'Player 1, WASD' : 'Player 2, arrows') : (w === 'killi' ? 'Puffs first, asks questions later' : 'Always has a plan')}</small></button>`).join('')}
     </div>
     <div class="fishedit">
       <canvas data-who="${fishEdit}" data-big="1" width="150" height="150" class="bigprev" aria-label="Preview of ${FISH_NAMES[fishEdit]}"></canvas>
@@ -2696,7 +2696,8 @@ function updateKeysHelp() {
 }
 
 // ================= layout =================
-let builtT = 0, builtDpr = 0;
+let builtT = 0, builtDpr = 0, paneMode = false;
+const hudGroups = [...$('#hud').children];
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
@@ -2715,14 +2716,27 @@ function resize() {
   let sideMode = false;
   if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
     // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
-    const fullW = (window.innerWidth || 0) - 32 - (labW ? 496 + 216 : 432); // two 200px columns, or one plus the 480px lab
+    const fullW = (window.innerWidth || 0) - 48 - 260; // the board plus the pane
     const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24) / ROWS));
-    // with the lab open, the wide panel is worth a slightly smaller board, as long as the board stays a decent size
-    sideMode = labW ? tSide >= 40 && tSide >= tStack * .8 : tSide > tStack;
+    sideMode = tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
+  wrap.style.paddingLeft = '';
+  if (sideMode !== paneMode) { // the hud groups and the footer live in the pane in the side layout, in their usual places otherwise
+    paneMode = sideMode; const pane = $('#pane');
+    if (sideMode) { pane.append(...hudGroups, footEl); pane.hidden = false; }
+    else { hudEl.append(...hudGroups); stylePanel.before(footEl); pane.hidden = true; }
+  }
   if (sideMode) {
-    T = Math.max(16, Math.floor(Math.min(((window.innerWidth || 0) - 32 - (labW ? 496 + 216 : 432)) / COLS, (innerH - 24) / ROWS)));
+    const innerW = window.innerWidth || 0;
+    T = Math.max(16, Math.floor(Math.min((innerW - 48 - 260) / COLS, (innerH - 24) / ROWS)));
+    if (labW) {
+      // the lab opens in the pane's place without moving or shrinking the board: it takes the room to the board's right,
+      // 480 px at most, 340 at least; only when even 340 will not fit does the board give way
+      const boardW = COLS * T, left = Math.round(16 + (innerW - 32 - (boardW + 16 + 260)) / 2), room = innerW - left - boardW - 16 - 16;
+      if (room >= 340) { wrap.style.paddingLeft = left + 'px'; wrap.style.setProperty('--labW', Math.min(480, room) + 'px'); }
+      else { T = Math.max(16, Math.floor(Math.min((innerW - 48 - 340) / COLS, (innerH - 24) / ROWS))); wrap.style.setProperty('--labW', '340px'); }
+    }
     stage.style.width = COLS * T + 'px'; hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
