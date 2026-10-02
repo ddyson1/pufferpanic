@@ -305,7 +305,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <tr><th scope="row">2 players, Milli</th><td><kbd>Arrows</kbd></td><td><kbd>Option</kbd> or <kbd>Alt</kbd> (also <kbd>/</kbd>)</td><td>right <kbd>Shift</kbd> or <kbd>.</kbd></td></tr>
 <tr><th scope="row">Touch</th><td>On-screen pad</td><td>Coral button</td><td>Puff button</td></tr>
 </tbody></table></div>
-<p><kbd>P</kbd> or <kbd>Esc</kbd> pauses and <kbd>R</kbd> restarts the reef. Small buttons toggle sound, music, pause and fullscreen: in the bottom corner of the board on wide screens, under it elsewhere. The title screen has buttons for the story, the Look and sound lab and this controls card. Two-player mode needs a keyboard, since a phone shows controls for one fish.</p>
+<p><kbd>P</kbd> or <kbd>Esc</kbd> pauses and <kbd>R</kbd> restarts the reef. Small buttons toggle sound, music, pause and fullscreen and open the Look and sound lab: in the bottom corner of the board on wide screens, under it elsewhere. The title screen has buttons for the story, the lab and this controls card. Two-player mode needs a keyboard, since a phone shows controls for one fish.</p>
 
 <h2 id="characters">Characters</h2>
 <div class="chars">
@@ -391,7 +391,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 </details>
 
 <h2 id="look-and-sound">Look and sound</h2>
-<p>A Look and sound panel, reached from the title screen, opens a live demo reef where nothing can catch you. Choices are saved and apply to the whole game.</p>
+<p>A Look and sound panel, reached from the gear button or the title screen, opens a live demo reef where nothing can catch you; on wide screens the panel lays over the right half of the board. Choices are saved and apply to the whole game.</p>
 <div class="tablewrap"><table class="wikitable">
 <thead><tr><th scope="col">Setting</th><th scope="col">Options</th></tr></thead>
 <tbody>
