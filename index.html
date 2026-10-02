@@ -128,12 +128,12 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .help{font-size:.92rem;line-height:1.9;color:#bfe0e2;max-width:48ch;margin:6px auto 2px}
 .help kbd{background:rgba(255,255,255,.14);color:#e6f6f5}
 @media (pointer:coarse){.touch{display:flex}}
-@media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
-  .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px}
+@media (pointer:coarse) and (orientation:landscape){
+  .wrap{max-width:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px}
   .wrap>*{grid-column:2}
   .touch{display:contents}
-  .pad{grid-column:1;grid-row:1/span 2}
-  .acts{grid-column:3;grid-row:1/span 2;flex-direction:column}
+  .pad{grid-column:1;grid-row:1}
+  .acts{grid-column:3;grid-row:1;flex-direction:column}
   .foot{display:none}
 }
 .pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);gap:4px}
@@ -207,24 +207,32 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .overlay{container-type:size}
 @container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
+/* the reef info as a strip over the top row of rocks and the icon buttons in the bottom corner, used whenever resize()
+   moves them into the stage: wide desktop windows and landscape phones */
+@media (min-width:0){
+  .stage>.hud{position:absolute;left:0;right:0;top:0;z-index:5;margin:0;min-height:var(--T,40px);padding:5px 10px;gap:4px 8px;color:#e6f6f5;background:linear-gradient(rgba(2,26,36,.78),rgba(2,26,36,.5));font-size:clamp(.72rem,calc(var(--boardW,600px)/48),.9rem)}
+  .stage>.hud[hidden]{display:none}
+  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:3px 9px}
+  .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
+  .stage>.hud .chip.sb small{opacity:.7}
+  .stage>.hud .pips i{background:rgba(255,255,255,.3)}.stage>.hud .pips i.on{background:var(--accent)}.stage>.hud .pips i.done{background:rgba(255,255,255,.6)}.stage>.hud .pips i.boss{background:#e8463a}
+  .stage>.hud .lvl{font-size:clamp(.9rem,calc(var(--boardW,600px)/40),1.1rem);color:var(--gold)}
+  .stage>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
+  .stage>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
+  .stage>.mini button.off{color:rgba(230,246,245,.5)}
+  .stage.hudin .banner{top:calc(var(--T,40px) + 10px)}
+  .stage.hudin .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
+  .stage.tall{display:flex;align-items:center;justify-content:center}
+  .stage.narrow>.hud .chip.sb,.stage.narrow>.hud #hWave{display:none}.stage.narrow>.hud #hWave+.pips{margin-left:2px}
+  .stage.narrow>.hud{padding:3px 8px;gap:3px 6px}.stage.narrow>.hud .chip{padding:2px 7px}
+  .wrap.inmenu .touch{display:none} /* the pad has nothing to do on the title screen */
+}
 /* wide desktop windows: the board alone, as tall as the window; the reef info sits in a strip over the top row of rocks
    and the sound, music, pause and fullscreen buttons in the bottom right corner (see resize, which moves them in) */
 @media (pointer:fine) and (min-width:1000px){
   .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:stretch;max-width:none;min-height:100vh;padding:12px 16px}
   .wrap.side>.hud,.wrap.side .rotate,.wrap.side .touch,.wrap.side .foot{display:none}
   .wrap.side .stage{grid-column:1;grid-row:1;margin:0}
-  .stage>.hud{position:absolute;left:0;right:0;top:0;z-index:5;margin:0;min-height:var(--T,40px);padding:6px 12px;gap:6px 10px;color:#e6f6f5;background:linear-gradient(rgba(2,26,36,.78),rgba(2,26,36,.5));font-size:.9rem}
-  .stage>.hud[hidden]{display:none}
-  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:3px 9px}
-  .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
-  .stage>.hud .chip.sb small{opacity:.7}
-  .stage>.hud .pips i{background:rgba(255,255,255,.3)}.stage>.hud .pips i.on{background:var(--accent)}.stage>.hud .pips i.done{background:rgba(255,255,255,.6)}.stage>.hud .pips i.boss{background:#e8463a}
-  .stage>.hud .lvl{font-size:1.1rem;color:var(--gold)}
-  .stage>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
-  .stage>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
-  .stage>.mini button.off{color:rgba(230,246,245,.5)}
-  .wrap.side .banner{top:calc(var(--T,40px) + 10px)}
-  .wrap.side .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
   .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;margin:0;width:min(760px,94%);max-width:none !important;max-height:calc(100% - 24px);border-radius:16px;background:rgba(7,34,43,.96);color:#e6f6f5;overflow:auto;padding:16px 18px 8px;box-shadow:0 0 0 3000px rgba(2,20,30,.6),0 24px 60px rgba(0,0,0,.45)}
   .wrap.side .stage>.style .opts{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
   .wrap.side .stage>.style .opt{padding:10px 11px}.wrap.side .stage>.style .opt b{font-size:.98rem}.wrap.side .stage>.style .opt small{font-size:.82rem}
@@ -2725,6 +2733,8 @@ function hud() {
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
   hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style');
+  const inMenu = mode === 'menu' || mode === 'fish';
+  if (inMenu !== stage.parentElement.classList.contains('inmenu')) { stage.parentElement.classList.toggle('inmenu', inMenu); resize(); }
   const tk = mode + (document.fullscreenElement ? 'F' : '');
   if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; $('#bStyle').classList.toggle('on', mode === 'style'); }
   if (showBoard) {
@@ -2778,14 +2788,15 @@ function updateKeysHelp() {
 }
 
 // ================= layout =================
-let builtT = 0, builtDpr = 0, sideLayout = false;
+let builtT = 0, builtDpr = 0, sideLayout = false, labIn = false;
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
   const labW = !stylePanel.hidden && !sideLayout && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column in the stacked layout, see .wrap:has(.style) in the CSS
   const touchDisp = getComputedStyle(touchEl).display, sideTouch = touchDisp === 'contents'; // landscape phones put the pad beside the board
-  const touchH = touchDisp !== 'none' && !sideTouch ? touchEl.offsetHeight + 20 : 0;
+  const inMenu = wrap.classList.contains('inmenu');
+  const touchH = touchDisp !== 'none' && !sideTouch && !inMenu ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
   const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - labW - sideW) || 600;
   // the board gets the height left over by the hud, footer and touch pad plus the 56px of margins around
@@ -2802,20 +2813,26 @@ function resize() {
     sideMode = tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
-  if (sideMode !== sideLayout) { // the hud and the icon buttons sit on the board in the side layout, in their usual places otherwise
-    sideLayout = sideMode;
-    if (sideMode) stage.append(hudEl, miniEl, stylePanel);
-    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); footEl.after(stylePanel); hudEl.hidden = false; }
+  const hudIn = sideMode || sideTouch; // the hud and the icon buttons sit on the board on wide windows and landscape phones
+  if (hudIn !== sideLayout) {
+    sideLayout = hudIn;
+    if (hudIn) stage.append(hudEl, miniEl);
+    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); hudEl.hidden = false; }
   }
+  if (sideMode !== labIn) { labIn = sideMode; if (sideMode) stage.append(stylePanel); else footEl.after(stylePanel); }
+  stage.classList.toggle('hudin', hudIn);
   if (sideMode) {
     const innerW = window.innerWidth || 0;
     T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24) / ROWS)));
-    stage.style.width = COLS * T + 'px'; hudEl.style.width = footEl.style.width = touchEl.style.width = '';
+    stage.style.width = COLS * T + 'px'; stage.style.height = ''; stage.classList.remove('tall'); hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
-    const chromeH = Math.max(sideTouch ? 48 : 100, hudEl.offsetHeight + footEl.offsetHeight + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
+    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? 0 : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
+    // a portrait phone's title screen: the card gets the height the pad would have taken, the board sits in the middle of it
+    const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > ROWS * T + 80;
+    stage.classList.toggle('tall', tall); stage.style.height = tall ? availH + 'px' : '';
     // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
     stage.style.width = touchEl.style.width = COLS * T + 'px';
     // the hud and footer take at least 600px (within the window) so a narrow board cannot wrap them taller, which would shrink the board further
@@ -2830,6 +2847,7 @@ function resize() {
   stylePanel.style.maxWidth = COLS * T + 'px';
   wrap.style.setProperty('--boardW', COLS * T + 'px'); // the hud and footer text scale with it
   stage.style.setProperty('--T', T + 'px'); // the strip over the top row of rocks in the side layout
+  stage.classList.toggle('narrow', hudIn && COLS * T < 600); // a landscape phone's strip keeps only the reef, the snacks and the fish
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
 }
 cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
