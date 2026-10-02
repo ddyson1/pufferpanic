@@ -380,10 +380,13 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
   <figure>{bimg(B + 'b_intro3.png', 'Killi grows a coral wall to stop a crab', 300)}<figcaption>The plan</figcaption></figure>
 </div>
 <details class="spoiler"><summary>The ending (contains a spoiler)</summary>
-  <p>Defeating the Kraken Queen plays a two-panel ending. She was never trying to wreck the reef: she had heard about the Moonlight Feast and nobody had invited her. So Killi and Milli invite her, and that year&#8217;s feast is the biggest the reef has ever seen, with Bruiser bringing dessert.</p>
+  <p>Defeating the Kraken Queen plays a five-panel ending. She was never trying to wreck the reef: she had heard about the Moonlight Feast and nobody had invited her. So Killi and Milli invite her, with a pearl for an invitation, and that year&#8217;s feast is the biggest the reef has ever seen: every creature comes, the Queen sits at the head of the table, and Bruiser brings dessert all the way up from the Trench without crashing into anything. They eat until the moon goes down.</p>
   <div class="gallery">
-    <figure>{bimg(B + 'b_ending0.png', 'The Kraken Queen, calm and smiling', 300)}<figcaption>The Queen explains</figcaption></figure>
-    <figure>{bimg(B + 'b_ending1.png', 'Everyone at the feast together', 300)}<figcaption>The biggest feast the reef has seen</figcaption></figure>
+    <figure>{bimg(B + 'b_ending0.png', 'The Kraken Queen, calm, with the fish edging closer', 300)}<figcaption>The Queen explains</figcaption></figure>
+    <figure>{bimg(B + 'b_ending1.png', 'Milli brings the Queen a pearl', 300)}<figcaption>The invitation</figcaption></figure>
+    <figure>{bimg(B + 'b_ending2.png', 'Everyone at the feast under lanterns and a full moon', 300)}<figcaption>The biggest feast the reef has seen</figcaption></figure>
+    <figure>{bimg(B + 'b_ending3.png', 'Bruiser arrives with a cake balanced on his nose', 300)}<figcaption>Bruiser brings dessert</figcaption></figure>
+    <figure>{bimg(B + 'b_ending4.png', 'The feast as the moon sets', 300)}<figcaption>Until the moon went down</figcaption></figure>
   </div>
 </details>
 
@@ -403,7 +406,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 
 <h2 id="trivia">Trivia</h2>
 <ul>
-<li>Every sound effect and all five music loops are synthesized in the browser as the game runs; the game contains no audio files.</li>
+<li>Every sound effect in the four packs and all five music loops are synthesized in the browser as the game runs; the game contains no audio files.</li>
 <li>Sounds are panned left or right by where they happen on the reef, and snack pickups climb a musical scale when eaten in quick succession.</li>
 <li>The shark fin hat and royal crown are trophies from the two bosses, and the hearts pattern, unlocked by finishing the story, is a nod to Killi and Milli being in love.</li>
 <li>Cut paper became the default look after four art directions were compared side by side: ink and flat color, watercolor storybook, cut-paper diorama and soft clay 3D.</li>

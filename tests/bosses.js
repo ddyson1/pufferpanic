@@ -108,10 +108,8 @@ setTimeout(()=>{
   for(let k=0;k<30;k++) G.tick(1/30); shot('queen_down');
   for(let k=0;k<60;k++) G.tick(1/30);
   chk(G.mode==='story' && G.story.id==='ending','beating the Queen plays the ending');
-  for(let k=0;k<60;k++) G.tick(1/30); shot('ending0');
-  D.querySelector('#storyNext').click(); D.querySelector('#storyNext').click();
-  for(let k=0;k<90;k++) G.tick(1/30); shot('ending1');
-  D.querySelector('#storyNext').click(); D.querySelector('#storyNext').click();
+  // five panels; each needs one click to finish the text and one to advance, and a few seconds so its animation has arrived
+  for(let i=0;i<5;i++){ for(let k=0;k<120;k++) G.tick(1/30); shot('ending'+i); D.querySelector('#storyNext').click(); D.querySelector('#storyNext').click(); }
   chk(G.mode==='won' && /whole reef is clear/.test(D.querySelector('#card').textContent),'then the final victory card');
   // boss card does not repeat
   G.startLevel(12); chk(G.mode==='play','boss story only plays the first time');

@@ -29,7 +29,7 @@ setTimeout(()=>{
   for(const id of ['reef','twilight','lagoon']){ w.document.querySelector(`[data-theme="${id}"]`).click();
     w.document.querySelector('[data-pv="grow"]').click(); for(let k=0;k<30;k++) G.tick(1/60); G.draw();
     fs.writeFileSync(`${require('path').join(__dirname, 'out')}/theme_${id}.png`, w.document.querySelector('#c').__png()); }
-  w.document.querySelector('[data-track="off"]').click(); w.document.querySelector('[data-track="deep"]').click();
+  w.document.querySelector('[data-track="moondrift"]').click(); w.document.querySelector('[data-track="auto"]').click();
   w.document.querySelector('#styleDone').click();
   console.log('after Done mode:',G.mode,'panel hidden:',w.document.querySelector('#stylePanel').hidden);
   console.log('errors:',errs.length?errs.slice(0,3):'none'); process.exit(0);
