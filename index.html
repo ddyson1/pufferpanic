@@ -225,6 +225,9 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .stage.hudin .banner{top:56px}
   .stage.hudin .overlay{padding:14px 14px 58px}
   .stage.tall{display:flex;align-items:center;justify-content:center}
+  .stage.hudin:not(.narrow) .storybar{margin-right:180px}
+  .stage.hudin.narrow:has(.story:not([hidden]))>.mini{display:none}
+  .stage.narrow .story p{font-size:.78rem;line-height:1.35;min-height:0}.stage.narrow .story{padding:20px 12px 10px}
   .stage.narrow>.hud .chip.sb{display:none}
   .stage.narrow>.hud{padding:0 8px;gap:4px}.stage.narrow>.hud .chip{padding:2px 7px}
   .wrap.inmenu .touch{display:none} /* the pad has nothing to do on the title screen */
@@ -418,20 +421,20 @@ const LEVELS = [
 
 const STORY = {
   intro: [
-    {scene:'home', text:'In the warm shallows live two pufferfish. Killi puffs first and asks questions later. Milli always has a plan, usually a backup plan, and a snack in case the backup plan takes a while.'},
-    {scene:'feast', text:'Once a year, when the moon is at its roundest, the whole reef throws the Moonlight Feast. This year the snacks are Killi and Milli\'s job. It is a big job. Everyone has opinions about krill.'},
-    {scene:'tremor', text:'The night before the feast, a rumble rolls up from the Trench. Rocks wobble. Jellyfish wake up cross. Every crab on the reef starts walking in a straight line, which is never a good sign.'},
-    {scene:'plan', text:'Milli\'s plan: gather every snack, reef by reef, before the feast. Grow coral to wall off the grumpy ones, break it to get through, and puff up when something gets too close. Killi\'s plan: that, but louder.'},
-    {scene:'nori', text:'Whatever woke up is still down there, waiting at the bottom of the reef. Luckily, somewhere past the sandbar, a seal called Nori is about to take an interest.'},
+    {scene:'home', text:'In the warm shallows, where the sand is soft and the coral glows at dusk, live Killi and Milli, the two smallest and roundest pufferfish on the whole reef. Killi is the dreamer, forever chasing something shiny. Milli is the one who makes sure he finds his way home, and that there is a snack waiting when he does.'},
+    {scene:'feast', text:'Once a year, on the night of the roundest moon, the whole reef gathers for the Moonlight Feast. Lanterns on the kelp, songs from the clams, and more snacks than anyone can count. This year, for the first time, the snacks are Killi and Milli\'s job.'},
+    {scene:'tremor', text:'The night before the feast, a rumble rolls up from the Trench and the whole reef feels it. Jellyfish wake up cross. Eels stop pretending to be friendly. Every crab sets off in a straight line, and the snacks scatter into every corner of the reef.'},
+    {scene:'plan', text:'Milli makes a plan, because that is what Milli does. Every snack, every reef, before the moon is up. Coral to wall the grumpy ones off, coral broken to get through, and a good puff when something gets too close. Killi nods through all of it and is already gone.'},
+    {scene:'nori', text:'Whatever woke up is still down there, and the reef gets grumpier the deeper it goes. But somewhere past the sandbar a seal called Nori has spotted two very small fish heading the wrong way, and she has decided they could use a friend.'},
   ],
-  bruiser: [{scene:'bruiser', text:'Bruiser the shark guards the way to the deep. He charges at anything that moves and has never once looked where he is going. A coral wall in his path might give him something to think about, briefly.'}],
-  queen: [{scene:'queen', text:'At the very bottom of the Trench waits the Kraken Queen, crown and all. Her tentacles reach across the whole reef, and she is in a mood. Trap one in coral, then puff right next to its tip.'}],
+  bruiser: [{scene:'bruiser', text:'Halfway down lives Bruiser, who guards the way to the deep and has never once looked where he is going. He charges at anything that moves. A coral wall in his path will give him something to think about, briefly, and that is your moment.'}],
+  queen: [{scene:'queen', text:'At the bottom of the Trench sits the Kraken Queen, crown and all, and she has been in a mood for a very long time. Her tentacles reach across the whole reef. Catch one in coral, then puff right at its tip while it is stuck.'}],
   ending: [
-    {scene:'ending1', text:'With one last wobble, the Kraken Queen sank down and sighed a sigh that rearranged the sand. She had never wanted to wreck the reef. Every year she heard about the Moonlight Feast, and nobody had ever invited her.'},
-    {scene:'invite', text:'So Killi and Milli did. Milli made the invitation out of a pearl, with proper lettering. Killi delivered it puffed up as big as he could go, so that it would look official.'},
-    {scene:'ending2', text:'That year the Moonlight Feast was the biggest the reef had ever seen. Every crab came, in a straight line. The eels held the lanterns. The Queen sat at the head of the table and was very careful with her tentacles.'},
-    {scene:'dessert', text:'And Bruiser even brought dessert. He carried it all the way up from the Trench without crashing into anything, which for Bruiser was a first, and he was so pleased about it that he very nearly did.'},
-    {scene:'moonset', text:'They ate until the moon went down. Nobody on the reef was grumpy for a whole year, which is the longest anyone could remember. The end.'},
+    {scene:'ending1', text:'With one last wobble the Kraken Queen sank to the sand and sighed, and the sigh moved the sand. She had not come to wreck anything. Every year she heard the feast from the bottom of the Trench, and every year nobody came down to ask.'},
+    {scene:'invite', text:'So Killi and Milli asked. Milli wrote the invitation on a pearl, with proper lettering and a border. Killi carried it down puffed up to full size, so that the Queen would know it was serious. She read it twice and said yes very quietly.'},
+    {scene:'ending2', text:'It was the biggest Moonlight Feast the reef had ever thrown. The crabs came in a straight line. The eels held the lanterns and only ate two. The Queen sat at the head of the table with all eight arms folded in her lap, and nobody minded the crown.'},
+    {scene:'dessert', text:'Bruiser brought the cake. He carried it up from the Trench on his nose without crashing into a single thing, which had never happened before, and he was so proud of it that he very nearly did at the last moment.'},
+    {scene:'moonset', text:'They ate until the moon went down and the lanterns ran out. Nobody on the reef was grumpy for a whole year afterwards, which is a reef record. And when the next roundest moon came around, Killi and Milli were asked to do the snacks again. The end.'},
   ],
 };
 
@@ -2735,7 +2738,7 @@ function hud() {
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
   hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style');
-  const inMenu = mode === 'menu' || mode === 'fish';
+  const inMenu = mode === 'menu' || mode === 'fish' || mode === 'story';
   if (inMenu !== stage.parentElement.classList.contains('inmenu')) { stage.parentElement.classList.toggle('inmenu', inMenu); resize(); }
   const tk = mode + (document.fullscreenElement ? 'F' : '');
   if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; $('#bStyle').classList.toggle('on', mode === 'style'); }
@@ -2797,7 +2800,7 @@ function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
   const labW = !stylePanel.hidden && !sideLayout && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column in the stacked layout, see .wrap:has(.style) in the CSS
-  const touchDisp = getComputedStyle(touchEl).display, sideTouch = touchDisp === 'contents'; // landscape phones put the pad beside the board
+  const touchDisp = getComputedStyle(touchEl).display, sideTouch = !!(window.matchMedia && matchMedia('(pointer:coarse) and (orientation:landscape)').matches); // landscape phones put the pad beside the board
   const inMenu = wrap.classList.contains('inmenu');
   const touchH = touchDisp !== 'none' && !sideTouch && !inMenu ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
