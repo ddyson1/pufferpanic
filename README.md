@@ -47,7 +47,7 @@ Settings, Pages, deploy from the `main` branch, root folder. The game is then at
 
 ## Credits
 
-Design, art, code and music by {YOUR NAME}. Built with help from Claude.
+Design, art, code and music by Devin Dyson. Built with help from Claude.
 
 ## License
 
