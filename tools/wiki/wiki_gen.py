@@ -403,7 +403,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 
 <h2 id="trivia">Trivia</h2>
 <ul>
-<li>Every sound effect and both music tracks are synthesized in the browser as the game runs; the game contains no audio files.</li>
+<li>Every sound effect and all five music loops are synthesized in the browser as the game runs; the game contains no audio files.</li>
 <li>Sounds are panned left or right by where they happen on the reef, and snack pickups climb a musical scale when eaten in quick succession.</li>
 <li>The shark fin hat and royal crown are trophies from the two bosses, and the hearts pattern, unlocked by finishing the story, is a nod to Killi and Milli being in love.</li>
 <li>Cut paper became the default look after four art directions were compared side by side: ink and flat color, watercolor storybook, cut-paper diorama and soft clay 3D.</li>

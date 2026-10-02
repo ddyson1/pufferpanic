@@ -458,6 +458,7 @@ function loadLevel(i, retry) {
   persist();
   hideStyle();
   levelIdx = i;
+  if (autoTrack) track = trackForLevel(i);
   const L = LEVELS[i];
   const grid = [], floor = [], born = [], wavePos = [[], [], [], []], enemies = [], urchins = new Map(), friends = [], bossTiles = new Set();
   const starts = [null, null];
@@ -613,6 +614,7 @@ function showFish() {
 
 function showMenu() {
   mode = 'menu'; S = null; hideBanner(); Ads.stop();
+  if (autoTrack) track = TRACKS.reef;
   const coarse = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
   card.innerHTML = `<h2>${TITLE}</h2>
     <div class="tag">Two pufferfish versus the reef</div>
@@ -2841,11 +2843,37 @@ const TRACKS = {
     if (s === 0) { pad(ch, t, stepLen * 16, .022); bassNote(root, t, stepLen * 15, .08); }
     if (s % 4 === 2 && Math.random() < .35) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 1.4, 'sine', .022, at(t), 0, musicBus); tone(hz(m) * 2.01, hz(m) * 2.01, .4, 'sine', .006, at(t), 0, musicBus); }
   }},
+  tidepool: {name:'Tide pool', desc:'Slow kalimba over a low drone', bpm:64, fn(s, bar, t, stepLen) {
+    // pentatonic, one chord per bar, a drone that only moves every two bars
+    const [root, ch] = [[45, [57, 60, 64, 67]], [45, [57, 60, 64, 67]], [41, [53, 57, 60, 65]], [43, [55, 59, 62, 67]]][bar];
+    if (s === 0 && bar % 2 === 0) pad([root + 12, root + 19], t, stepLen * 32, .014);
+    if (s === 0) bassNote(root, t, stepLen * 14, .06);
+    const seq = [0, 2, 1, 3, 2, 0, 3, 1];
+    if (s % 2 === 0 && Math.random() < .85) mallet(ch[seq[(s / 2 + bar * 2) % 8]] + 12, t, .028);
+    if (s === 11 && Math.random() < .5) mallet(ch[0] + 24, t, .012);
+  }},
+  moondrift: {name:'Moon drift', desc:'Pads that breathe, almost no pulse', bpm:56, fn(s, bar, t, stepLen) {
+    const [root, ch] = [[38, [57, 62, 65]], [41, [57, 60, 65]], [36, [55, 60, 64]], [43, [55, 59, 62]]][bar];
+    if (s === 0) { pad(ch, t, stepLen * 16, .02); pad([ch[0] + 12], t + stepLen * 4, stepLen * 10, .008); bassNote(root, t, stepLen * 16, .07); }
+    if (s === 8 && Math.random() < .6) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 2.2, 'sine', .016, at(t), 0, musicBus); }
+    if (s === 4 && bar % 2 === 1) mallet(ch[2] + 12, t, .012);
+  }},
+  lantern: {name:'Lantern', desc:'A lullaby on soft mallets', bpm:80, fn(s, bar, t, stepLen) {
+    const [root, ch] = [[48, [60, 64, 67]], [45, [57, 60, 64]], [53, [57, 60, 65]], [43, [55, 59, 62]]][bar];
+    if (s === 0) { bassNote(root, t, stepLen * 12, .07); pad([ch[0], ch[2]], t, stepLen * 15, .011); }
+    // three-note cells, one per half bar, each a question then an answer
+    const cell = [[0, 1, 2], [2, 1, 0], [1, 2, 0], [0, 2, 1]][(bar + (s >= 8 ? 1 : 0)) % 4];
+    if (s % 8 === 0 || s % 8 === 3 || s % 8 === 5) mallet(ch[cell[[0, 3, 5].indexOf(s % 8)]] + (s >= 8 ? 12 : 0), t, .034);
+    if (s === 14 && Math.random() < .4) mallet(ch[1] + 24, t, .014);
+  }},
 };
-let track = TRACKS[save.track] || TRACKS.reef;
+// 'auto' (the default) follows the reef: the loops get calmer the deeper you go, and each boss has its own
+const trackForLevel = i => TRACKS[i >= 17 ? 'moondrift' : i >= 16 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
+let autoTrack = !save.track || save.track === 'auto';
+let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
   if (id === 'off') { musicOn = false; }
-  else { musicOn = true; track = TRACKS[id] || TRACKS.reef; save.track = id; step = 0; }
+  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; track = autoTrack ? (S ? trackForLevel(levelIdx) : TRACKS.reef) : TRACKS[id]; save.track = autoTrack ? 'auto' : id; step = 0; }
   save.music = musicOn; persist(); setAudioLabels();
 }
 function scheduleMusic() {
@@ -2882,7 +2910,8 @@ function renderStyle() {
   const opt = (attr, id, o, on, sw) => `<button class="opt" data-${attr}="${id}" aria-pressed="${on}">${sw || ''}<b>${o.name}</b><small>${o.desc}</small></button>`;
   $('#optTheme').innerHTML = Object.entries(THEMES).map(([id, t]) => opt('theme', id, t, theme === t, `<span class="sw">${t.sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>`)).join('');
   $('#optPack').innerHTML = Object.entries(PACKS).map(([id, p]) => opt('pack', id, p, pack === p)).join('');
-  $('#optTrack').innerHTML = Object.entries(TRACKS).map(([id, t]) => opt('track', id, t, musicOn && track === t)).join('') + opt('track', 'off', {name:'No music', desc:'Just the reef ambience and effects'}, !musicOn);
+  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Follows the reef', desc:'Calmer loops the deeper you go, and each boss has its own'}, musicOn && autoTrack)
+    + Object.entries(TRACKS).map(([id, t]) => opt('track', id, t, musicOn && !autoTrack && track === t)).join('') + opt('track', 'off', {name:'No music', desc:'Just the reef ambience and effects'}, !musicOn);
   $('#previews').innerHTML = `<button class="all" id="playAll">Play all</button>` + PREVIEWS.map(([n, l]) => `<button data-pv="${n}">${l}</button>`).join('');
 }
 function preview(n) {
@@ -2938,7 +2967,7 @@ if (!save.seenIntro) playStory('intro', () => { save.seenIntro = true; persist()
 requestAnimationFrame(frame);
 
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
-  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; },
+  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; },
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
   get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();
