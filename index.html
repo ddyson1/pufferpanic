@@ -225,8 +225,12 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .stage>.mini button.off{color:rgba(230,246,245,.5)}
   .wrap.side .banner{top:calc(var(--T,40px) + 10px)}
   .wrap.side .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
-  .wrap.side:has(.style:not([hidden])){grid-template-columns:auto var(--labW,480px);justify-content:start;max-width:none}
-  .wrap.side .style:not([hidden]){grid-column:2;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
+  .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;top:0;right:0;bottom:0;z-index:6;margin:0;width:min(450px,54%);max-width:none !important;max-height:none;border-radius:0;background:rgba(7,34,43,.94);color:#e6f6f5;overflow:auto;padding:16px 16px 8px;box-shadow:-12px 0 30px rgba(0,0,0,.25)}
+  .stage>.style .opt{background:rgba(255,255,255,.08)}.stage>.style .opt[aria-pressed="true"]{background:rgba(255,255,255,.16)}
+  .stage>.style .lead,.stage>.style summary{color:#9fc3c9}.stage>.style .previews button{background:rgba(255,255,255,.1);color:#e6f6f5;box-shadow:none}
+  .stage>.mini{right:auto;left:10px}
+  .mini #bStyle.on{background:var(--accent);color:var(--bg)}
+  .wrap.side:has(.style:not([hidden])){grid-template-columns:auto;justify-content:center;max-width:none}
   .wrap.side .style{padding:18px 18px 8px}.wrap.side .style .opt{padding:12px 13px;gap:6px}.wrap.side .style .opt b{font-size:1.02rem}.wrap.side .style .opt small{font-size:.86rem}
   .wrap.side .style .head h3{font-size:1.45rem}.wrap.side .style .lead{font-size:.92rem}.wrap.side .srow{margin-bottom:20px}
 }
@@ -270,9 +274,10 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
         <button id="bSound" aria-label="Sound on" title="Sound on"><svg viewBox="0 0 24 24"><polygon points="3,9 7,9 12,5 12,19 7,15 3,15"/><path class="s" d="M15.5 9.5a3.6 3.6 0 0 1 0 5"/><path class="s" d="M18 7a7 7 0 0 1 0 10"/><path class="s x" d="M4 20L20 4"/></svg></button>
         <button id="bMusic" aria-label="Music on" title="Music on"><svg viewBox="0 0 24 24"><path class="s" d="M9 17V6l10-2.5V15"/><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="16.5" cy="15.5" r="2.6"/><path class="s x" d="M4 20L20 4"/></svg></button>
         <button id="bPause" aria-label="Pause" title="Pause"><svg viewBox="0 0 24 24"><g class="main"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g><polygon class="alt" points="7,4 20,12 7,20"/></svg></button>
+        <button id="bStyle" aria-label="Look and sound" title="Look and sound"><svg viewBox="0 0 24 24"><g class="s"><circle cx="12" cy="12" r="3.4"/><path d="M18.2 12.0L21.6 12.0"/> <path d="M16.4 16.4L18.8 18.8"/> <path d="M12.0 18.2L12.0 21.6"/> <path d="M7.6 16.4L5.2 18.8"/> <path d="M5.8 12.0L2.4 12.0"/> <path d="M7.6 7.6L5.2 5.2"/> <path d="M12.0 5.8L12.0 2.4"/> <path d="M16.4 7.6L18.8 5.2"/></g></svg></button>
         <button id="bFull" aria-label="Fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><g class="main s"><path d="M4 9V4h5"/><path d="M15 4h5v5"/><path d="M20 15v5h-5"/><path d="M9 20H4v-5"/></g><g class="alt s"><path d="M9 4v5H4"/><path d="M20 9h-5V4"/><path d="M15 20v-5h5"/><path d="M4 15h5v5"/></g></svg></button>
       </span>
-      <button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bHelp">Controls</button>
+      <button id="bMenu">Levels</button><button id="bHelp">Controls</button>
     </span>
   </div>
 
@@ -2718,9 +2723,9 @@ function hud() {
   const showBoard = !!S && (mode === 'play' || mode === 'paused' || mode === 'won');
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
-  hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story');
+  hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style');
   const tk = mode + (document.fullscreenElement ? 'F' : '');
-  if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; }
+  if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; $('#bStyle').classList.toggle('on', mode === 'style'); }
   if (showBoard) {
     setText(hTime, 't', fmtTime(S.elapsed));
     setText(hScore, 's', S.players.reduce((a, p) => a + p.points, 0).toLocaleString());
@@ -2777,7 +2782,7 @@ const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), h
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
-  const labW = !stylePanel.hidden && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column, see .wrap:has(.style) in the CSS
+  const labW = !stylePanel.hidden && !sideLayout && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column in the stacked layout, see .wrap:has(.style) in the CSS
   const touchDisp = getComputedStyle(touchEl).display, sideTouch = touchDisp === 'contents'; // landscape phones put the pad beside the board
   const touchH = touchDisp !== 'none' && !sideTouch ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
@@ -2796,22 +2801,14 @@ function resize() {
     sideMode = tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
-  wrap.style.paddingLeft = '';
   if (sideMode !== sideLayout) { // the hud and the icon buttons sit on the board in the side layout, in their usual places otherwise
     sideLayout = sideMode;
-    if (sideMode) stage.append(hudEl, miniEl);
-    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); hudEl.hidden = false; }
+    if (sideMode) stage.append(hudEl, miniEl, stylePanel);
+    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); footEl.after(stylePanel); hudEl.hidden = false; }
   }
   if (sideMode) {
     const innerW = window.innerWidth || 0;
     T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24) / ROWS)));
-    if (labW) {
-      // the lab takes the room to the board's right, 480 px at most, 340 at least. The board keeps its size and place
-      // when that fits, slides left when it must, and only shrinks when even 340 px will not fit beside it
-      const boardW = COLS * T, centered = Math.round((innerW - boardW) / 2), left = Math.max(16, Math.min(centered, innerW - 32 - boardW - 340)), room = innerW - left - boardW - 32;
-      if (room >= 340) { wrap.style.paddingLeft = left + 'px'; wrap.style.setProperty('--labW', Math.min(480, room) + 'px'); }
-      else { T = Math.max(16, Math.floor(Math.min((innerW - 48 - 340) / COLS, (innerH - 24) / ROWS))); wrap.style.setProperty('--labW', '340px'); }
-    }
     stage.style.width = COLS * T + 'px'; hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
@@ -2915,7 +2912,7 @@ function showControls() {
   overlay.hidden = false;
 }
 $('#bHelp').addEventListener('click', e => { e.currentTarget.blur(); showControls(); });
-$('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); openStyle(); });
+$('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'style') closeStyle(); else openStyle(); });
 $('#bPause').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'play') pause(); else if (mode === 'paused') resume(); });
 $('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted || adMute ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
 $('#bMusic').addEventListener('click', e => { unlockAudio(); musicOn = !musicOn; save.music = musicOn; persist(); setAudioLabels(); e.currentTarget.blur(); });
