@@ -81,17 +81,17 @@ canvas:focus{outline:none}
 .story.out{animation:fadeOut .2s ease-in forwards}
 .stage.fresh canvas{animation:fadeIn .35s ease-out}
 @media (prefers-reduced-motion:reduce){.overlay,.card,.banner,.story,.stage.fresh canvas{animation:none !important}}
-.card{width:100%;max-width:520px;max-height:100%;overflow:auto;padding:4px}
+.card{width:100%;max-width:520px;max-height:100%;overflow:auto;padding:4px;scrollbar-width:thin}
 .card h2{margin:0;font-family:"Grandstander",system-ui,sans-serif;font-weight:900;font-size:clamp(1.9rem,6vw,3rem);line-height:.95;color:var(--gold);letter-spacing:-.01em;text-shadow:0 3px 0 #a5640f,0 6px 18px rgba(0,0,0,.35)}
 .card h3{margin:0 0 4px;font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:clamp(1.5rem,5vw,2.1rem);color:var(--gold)}
 .card p{margin:8px auto;color:#bfe0e2;line-height:1.45;max-width:40ch;font-size:.95rem}
-.tag{margin-top:8px;color:#9fd0d4;font-size:.95rem}
-.seg{display:inline-flex;background:rgba(255,255,255,.08);border-radius:12px;padding:3px;margin:14px 0 4px}
+.tag{margin-top:4px;color:#9fd0d4;font-size:.95rem}
+.seg{display:inline-flex;background:rgba(255,255,255,.08);border-radius:12px;padding:3px;margin:10px 0 2px}
 .seg button{border:0;background:transparent;color:#cfe9ea;padding:8px 14px;border-radius:9px;font-weight:700}
 .seg button[aria-pressed="true"]{background:#e6f6f5;color:#05303d}
-.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:10px 0 2px}
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:8px 0 2px}
 button{font:inherit;cursor:pointer}
-.lv{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);color:#e6f6f5;border:0;border-radius:11px;padding:7px 9px;text-align:left;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.lv{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);color:#e6f6f5;border:0;border-radius:11px;padding:6px 9px;text-align:left;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
 .lv:hover:not(:disabled){background:rgba(255,255,255,.14)}
 .lv b{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;color:var(--gold);min-width:1.4em;font-size:1.05rem}
 .lv span{display:block;font-weight:600;font-size:.88rem;line-height:1.15}
@@ -101,7 +101,7 @@ button{font:inherit;cursor:pointer}
 .stars{font-size:1.9rem;color:var(--gold);letter-spacing:4px;margin:2px 0 4px;text-shadow:0 2px 0 #a5640f}.stars span{color:rgba(255,255,255,.2);text-shadow:none}
 .btn{background:var(--gold);color:#3a2700;border:0;border-radius:12px;padding:10px 16px;font-weight:800}
 .btn.ghost{background:transparent;color:#e6f6f5;box-shadow:inset 0 0 0 1.5px rgba(230,246,245,.45)}
-.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .banner{position:absolute;left:50%;top:12px;transform:translateX(-50%);background:rgba(2,26,36,.82);color:#e6f6f5;padding:8px 16px;border-radius:14px;text-align:center;pointer-events:none;font-size:.9rem;width:max-content;max-width:92%;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .banner b{display:block;font-family:"Grandstander",system-ui,sans-serif;font-size:1.15rem;color:var(--gold)}
@@ -135,7 +135,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .acts #tAct{background:var(--coral);color:#3d0608}
 .pressed{filter:brightness(.82)}
 .note{font-size:.78rem;color:#93c0c4;margin-top:4px}
-.fishrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0 2px;flex-wrap:wrap}
+.fishrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 0;flex-wrap:wrap}
 .fishmini{display:flex;flex-direction:column;align-items:center;font-size:.78rem;color:#cfe9ea}
 .fishmini canvas{width:52px;height:52px}
 .fishrow .btn{padding:8px 14px}
@@ -192,6 +192,10 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .previews{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .previews button{border:0;border-radius:999px;padding:6px 11px;background:var(--bg);color:var(--fg);font-size:.85rem;box-shadow:inset 0 0 0 1px var(--line)}
 .previews button.all{background:var(--accent);color:var(--bg);font-weight:700}
+/* the overlay is a container: on a wide board the menu widens and lists the reefs in three columns, so 18 fit without a scrollbar */
+.overlay{container-type:size}
+@container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
 </style>
 </head>
 <body>
@@ -1895,7 +1899,8 @@ function drawAccessory(acc, r, ex, ey) {
     ctx.fillStyle = '#7cc4f0'; circ(-.08, -.01, .016); ctx.fill(); circ(.08, -.01, .016); ctx.fill();
   } else if (acc === 'pearls') {
     // a string of larger pearls under the chin, alternating warm and cool tints, on a thin cord
-    const pts = []; for (let i = 0; i < 9; i++) { const a = -.02 * Math.PI + i * (.66 * Math.PI / 8); pts.push([Math.cos(a) * r * .86, Math.sin(a) * r * .86]); }
+    // a shallow arc under the chin, from about 4 o'clock round to 8, sitting on the body's outline
+    const pts = []; for (let i = 0; i < 9; i++) { const a = .2 * Math.PI + i * (.6 * Math.PI / 8); pts.push([Math.cos(a) * r * .82, Math.sin(a) * r * .82]); }
     ctx.strokeStyle = 'rgba(70,50,30,0.55)'; ctx.lineWidth = .012 * k; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
     pts.forEach(([x, y], i) => {
       ctx.fillStyle = 'rgba(0,25,35,0.25)'; circ(x + .01 * k, y + .012 * k, .042 * k); ctx.fill();
@@ -2616,6 +2621,7 @@ function buildHudPlayers() {
 }
 function hud() {
   const showBoard = !!S && (mode === 'play' || mode === 'paused' || mode === 'won');
+  hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
   if (showBoard) {
     setText(hTime, 't', fmtTime(S.elapsed));
@@ -2781,7 +2787,7 @@ $('#bMusic').addEventListener('click', e => { unlockAudio(); musicOn = !musicOn;
 // ================= sound =================
 // Everything is synthesized with Web Audio: no audio files.
 let ac = null, muted = !!save.muted, musicOn = save.music !== false;
-let master, sfxBus, musicBus, noiseBuf, sendGain, softLP, nextStep = 0, step = 0, lastGet = -9, combo = 0, musicAhead = .25, previewing = false;
+let master, sfxBus, musicBus, trackBus, noiseBuf, sendGain, softLP, nextStep = 0, step = 0, lastGet = -9, combo = 0, musicAhead = .25, previewing = false;
 const PENTA = [0, 2, 4, 7, 9];
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
 function setAudioLabels() { $('#bSound').textContent = muted ? 'Sound off' : 'Sound on'; $('#bMusic').textContent = musicOn ? 'Music on' : 'Music off'; }
@@ -2806,6 +2812,7 @@ function buildAudio() {
   const dlf = ac.createBiquadFilter(); dlf.type = 'lowpass'; dlf.frequency.value = 1600;
   sfxBus.connect(sendGain); sendGain.connect(dl); dl.connect(dlf); dlf.connect(fb); fb.connect(dl); dlf.connect(master);
   musicBus = ac.createGain(); musicBus.gain.value = 0;
+  trackBus = ac.createGain(); trackBus.connect(musicBus); // the current loop's own bus, swapped on every track change
   const mf = ac.createBiquadFilter(); mf.type = 'lowpass'; mf.frequency.value = 2600;
   musicBus.connect(mf); mf.connect(master); musicBus.connect(sendGain);
   noiseBuf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate);
@@ -3011,14 +3018,14 @@ function mallet(m, t, vol) {
   o.type = 'triangle'; o.frequency.value = hz(m); o2.type = 'sine'; o2.frequency.value = hz(m) * 4;
   g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .005); g.gain.exponentialRampToValueAtTime(.0001, t + .45);
   g2.gain.setValueAtTime(.0001, t); g2.gain.exponentialRampToValueAtTime(vol * .25, t + .003); g2.gain.exponentialRampToValueAtTime(.0001, t + .08);
-  o.connect(g); o2.connect(g2); g.connect(musicBus); g2.connect(musicBus);
+  o.connect(g); o2.connect(g2); g.connect(trackBus); g2.connect(trackBus);
   o.start(t); o2.start(t); o.stop(t + .5); o2.stop(t + .1);
 }
 function bassNote(m, t, dur, vol, type) {
   const o = ac.createOscillator(), g = ac.createGain();
   o.type = type || 'sine'; o.frequency.value = hz(m);
   g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
-  o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + dur + .05);
+  o.connect(g); g.connect(trackBus); o.start(t); o.stop(t + dur + .05);
 }
 function pad(ms, t, dur, vol) {
   for (const m of ms) for (const det of [-7, 7]) {
@@ -3026,7 +3033,7 @@ function pad(ms, t, dur, vol) {
     o.type = 'triangle'; o.frequency.value = hz(m) * Math.pow(2, det / 1200);
     g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(vol, t + .9);
     g.gain.setValueAtTime(vol, t + Math.max(1, dur - .4)); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .8);
-    o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + dur + .9);
+    o.connect(g); g.connect(trackBus); o.start(t); o.stop(t + dur + .9);
   }
 }
 const TRACKS = {
@@ -3040,7 +3047,7 @@ const TRACKS = {
   deep: {name:'Deep current', desc:'Slow pads and distant bells', bpm:72, fn(s, bar, t, stepLen) {
     const [root, ch] = [[38, [62, 65, 69]], [46, [58, 62, 65]], [41, [60, 65, 69]], [48, [60, 64, 67]]][bar];
     if (s === 0) { pad(ch, t, stepLen * 16, .022); bassNote(root, t, stepLen * 15, .08); }
-    if (s % 4 === 2 && Math.random() < .35) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 1.4, 'sine', .022, at(t), 0, musicBus); tone(hz(m) * 2.01, hz(m) * 2.01, .4, 'sine', .006, at(t), 0, musicBus); }
+    if (s % 4 === 2 && Math.random() < .35) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 1.4, 'sine', .022, at(t), 0, trackBus); tone(hz(m) * 2.01, hz(m) * 2.01, .4, 'sine', .006, at(t), 0, trackBus); }
   }},
   tidepool: {name:'Tide pool', desc:'Slow kalimba over a drone', bpm:64, fn(s, bar, t, stepLen) {
     // pentatonic, one chord per bar, a drone that only moves every two bars
@@ -3054,7 +3061,7 @@ const TRACKS = {
   moondrift: {name:'Moon drift', desc:'Breathing pads, no pulse', bpm:56, fn(s, bar, t, stepLen) {
     const [root, ch] = [[38, [57, 62, 65]], [41, [57, 60, 65]], [36, [55, 60, 64]], [43, [55, 59, 62]]][bar];
     if (s === 0) { pad(ch, t, stepLen * 16, .02); pad([ch[0] + 12], t + stepLen * 4, stepLen * 10, .008); bassNote(root, t, stepLen * 16, .07); }
-    if (s === 8 && Math.random() < .6) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 2.2, 'sine', .016, at(t), 0, musicBus); }
+    if (s === 8 && Math.random() < .6) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 2.2, 'sine', .016, at(t), 0, trackBus); }
     if (s === 4 && bar % 2 === 1) mallet(ch[2] + 12, t, .012);
   }},
   lantern: {name:'Lantern', desc:'A lullaby on soft mallets', bpm:80, fn(s, bar, t, stepLen) {
@@ -3070,11 +3077,19 @@ const TRACKS = {
 const trackForLevel = i => TRACKS[i === 17 ? 'moondrift' : i === 12 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
 let autoTrack = !save.track || save.track === 'auto', musicDuckUntil = 0;
 // change loops through a short dip in the music bus rather than a hard cut; the new loop starts from its first bar
-function setTrack(t) { if (t === track) return; track = t; step = 0; if (ac) { musicDuckUntil = ac.currentTime + .7; nextStep = ac.currentTime + .7; } }
+function setTrack(t, now) {
+  if (t === track && !now) return;
+  track = t; step = 0;
+  if (!ac) return;
+  // everything the old loop already scheduled (pads ring for seconds) fades out on its own bus; the new loop gets a fresh one
+  const old = trackBus; old.gain.setTargetAtTime(0, ac.currentTime, .12); setTimeout(() => { try { old.disconnect(); } catch (e) {} }, 1500);
+  trackBus = ac.createGain(); trackBus.connect(musicBus);
+  nextStep = ac.currentTime + (now ? .05 : .7); musicDuckUntil = now ? 0 : ac.currentTime + .7;
+}
 let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
   if (id === 'off') { musicOn = false; }
-  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; track = autoTrack ? (S ? trackForLevel(levelIdx) : TRACKS.reef) : TRACKS[id]; save.track = autoTrack ? 'auto' : id; step = 0; }
+  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; setTrack(autoTrack ? (S ? trackForLevel(levelIdx) : TRACKS.reef) : TRACKS[id], true); save.track = autoTrack ? 'auto' : id; }
   save.music = musicOn; persist(); setAudioLabels();
 }
 function scheduleMusic() {
