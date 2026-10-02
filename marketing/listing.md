@@ -34,7 +34,7 @@ arcade, maze, co-op, 2 player, local multiplayer, puzzle, cute, ocean, fish, fam
 Everyone. No blood, no text chat, no purchases.
 
 ## Controls text for portals
-Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players: Killi on WASD with F and G, Milli on the arrows with Space and right Shift. Touch controls on phones. Press P or Esc to pause.
+Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players: Killi keeps WASD, Space and left Shift, Milli takes the arrows, Option or Alt, and right Shift. Touch controls on phones. Press P or Esc to pause.
 
 ## itch.io page settings
 - Kind of project: HTML. Upload the zip built with `npm run itch` (index.html, sw.js, manifest.webmanifest, icons/) and tick "This file will be played in the browser".

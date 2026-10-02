@@ -14,16 +14,21 @@ function boot(dprv,cb){const dom=new JSDOM(html,{url:'https://example.com/',runS
   Object.defineProperty(w.HTMLElement.prototype,'clientWidth',{get(){return 780}});
 }}); setTimeout(()=>cb(dom.window),400);}
 const tp=(a,x,y)=>{a.x=a.tx=a.fx=x;a.y=a.ty=a.fy=y;a.moving=false;};
-// icon: Killi on the paper reef, cropped tight
-boot(4, w=>{ const G=w.__pp, cv=w.document.querySelector('#c').__cv(), T=cv.width/15;
+// icon: Killi puffed up on a transparent background, drawn through the fish card preview (which has no reef behind it)
+boot(4, w=>{ const G=w.__pp; const ICONS=require('path').join(__dirname, '..', 'icons');
   const rows=[]; for(let y=0;y<13;y++){let r='';for(let x=0;x<15;x++) r+=(x===0||y===0||x===14||y===12)?'#':'.'; rows.push(r);}
   const set=(x,y,c)=>{rows[y]=rows[y].slice(0,x)+c+rows[y].slice(x+1);}; set(7,6,'P'); set(13,11,'Q'); set(13,1,'1');
   G.LEVELS.push({name:'x',hint:'',waves:['krill'],map:rows}); G.setTwoP(false); G.loadLevel(G.LEVELS.length-1); G.tick(.5);
-  const p=G.S.players[0]; p.face={x:1,y:0}; G.draw();
-  const crop=(x0,y0,s,out,name)=>{ const c=createCanvas(out,out); c.getContext('2d').drawImage(cv,x0*T,y0*T,s*T,s*T,0,0,out,out); fs.writeFileSync(`${require('path').join(__dirname, '..', 'icons')}/${name}.png`,c.toBuffer('image/png')); };
-  crop(6.45,5.4,2.2,512,'icon-512'); crop(6.45,5.4,2.2,192,'icon-192'); crop(6.45,5.4,2.2,180,'icon-180'); crop(6.45,5.4,2.2,64,'icon-64');
-  // maskable: more padding
-  crop(5.95,4.9,3.2,512,'icon-maskable-512');
+  const pc=w.document.createElement('canvas'); pc.dataset.who='killi'; pc.dataset.big='1'; w.document.querySelector('#card').appendChild(pc);
+  // the big preview puffs up for the last second of every four; step time until the drawing is that wide
+  let box=null; for(let k=0;k<60 && !box;k++){ G.tick(.1); G.drawPreviews(); const c=pc.__cv(), d=c.getContext('2d').getImageData(0,0,c.width,c.height).data; let x0=1e9,y0=1e9,x1=0,y1=0;
+    for(let y=0;y<c.height;y++) for(let x=0;x<c.width;x++) if(d[(y*c.width+x)*4+3]>8){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+    if((x1-x0)/c.width>.6) box={c,x0,y0,x1,y1}; }
+  const side=Math.max(box.x1-box.x0, box.y1-box.y0)*1.06, cx=(box.x0+box.x1)/2, cy=(box.y0+box.y1)/2;
+  const fish=(out,pad)=>{ const c=createCanvas(out,out), x=c.getContext('2d'); const s=out*(1-2*pad); x.drawImage(box.c,cx-side/2,cy-side/2,side,side,(out-s)/2,(out-s)/2,s,s); return c; };
+  for(const [n,out] of [['icon-512',512],['icon-192',192],['icon-180',180],['icon-64',64]]) fs.writeFileSync(`${ICONS}/${n}.png`, fish(out,0).toBuffer('image/png'));
+  // maskable: reef blue behind, fish inside the safe zone
+  { const c=createCanvas(512,512), x=c.getContext('2d'); x.fillStyle='#2b8fa0'; x.fillRect(0,0,512,512); x.drawImage(fish(512,.17),0,0); fs.writeFileSync(`${ICONS}/icon-maskable-512.png`, c.toBuffer('image/png')); }
   // screenshots at 2x
   boot(2, w2=>{ const G2=w2.__pp, cv2=w2.document.querySelector('#c').__cv();
     const save=(name)=>{ G2.draw(); const c=createCanvas(1280,Math.round(1280*cv2.height/cv2.width)); c.getContext('2d').drawImage(cv2,0,0,c.width,c.height); fs.writeFileSync(`${require('path').join(__dirname, '..', 'marketing', 'screenshots')}/${name}.png`,c.toBuffer('image/png')); };

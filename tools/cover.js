@@ -1,4 +1,4 @@
-// Store cover: Killi, Milli and a crab on the paper reef with the title on top, drawn from the game itself
+// Store cover: the whole cast around the title on the paper reef, drawn from the game itself
 // so it always matches the build. Writes marketing/cover-1260x1000.png (itch.io, 2x of its 630x500) and
 // marketing/cover-630x500.png. The title font is bundled in tools/fonts/ (Grandstander, OFL) because the
 // game loads it from Google Fonts, which node cannot.
@@ -24,16 +24,29 @@ function boot(dprv, cb) { const dom = new JSDOM(html, {url: 'https://example.com
 
 boot(4, w => {
   const G = w.__pp, cv = w.document.querySelector('#c').__cv(), T = cv.width / 15;
-  const rows = []; for (let y = 0; y < 13; y++) { let r = ''; for (let x = 0; x < 15; x++) r += (x === 0 || y === 0 || x === 14 || y === 12) ? '#' : '.'; rows.push(r); }
-  const set = (x, y, c) => { rows[y] = rows[y].slice(0, x) + c + rows[y].slice(x + 1); };
-  set(7, 7, 'P'); set(8, 7, 'Q'); set(9, 8, 'C'); set(6, 8, 'c'); set(10, 9, 'k'); set(5, 9, 'k'); set(13, 1, '1');
-  G.LEVELS.push({name: 'x', hint: '', waves: ['krill'], map: rows});
-  G.setTwoP(true); G.loadLevel(G.LEVELS.length - 1); G.tick(.3);
-  const S = G.S; S.players[0].face = {x: 1, y: 0}; S.players[1].face = {x: -1, y: 0};
-  G.setTwoP(false); // hides the name tags
-  G.draw();
+  const tp = (a, x, y) => { a.x = a.tx = a.fx = x; a.y = a.ty = a.fy = y; a.moving = false; if (a.trail) a.trail = a.trail.map((_, i) => ({x: x - a.dir.x * i * .14, y: y - a.dir.y * i * .14})); };
+  // the whole cast around the title: a level with one of everything, then everyone is placed by hand
+  const map = ['###############', '#.............#', '#.C.J.E.S.Y.F.#', '#...k......k..#', '#..c........c.#', '#.C.J.......B.#', '#.....P.Q.....#',
+    '#.............#', '#......N......#', '#....c...c....#', '#1.1.1.1.1.1.1#', '#.............#', '###############'];
+  G.LEVELS.push({name: 'cast', boss: 'shark', hint: '', waves: ['krill'], map});
+  G.setTwoP(true); G.loadLevel(G.LEVELS.length - 1); G.tick(.4); G.setTwoP(false); // one player hides the fish name tags
+  const S = G.S, P = S.players, E = S.enemies, L = {x: -1, y: 0}, R = {x: 1, y: 0};
+  tp(P[0], 5.9, 5.9); P[0].face = R; P[0].puff = .6; tp(P[1], 8.5, 5.95); P[1].face = L;
+  const nori = S.friends[0]; tp(nori, 7.1, 7.9); nori.dir = R;
+  const by = k => E.filter(e => e.kind === k);
+  const [c1, c2] = by('C'), [j1, j2] = by('J'), [eel] = by('E'), [sw] = by('S'), [ray] = by('Y'), [lion] = by('F'), [shark] = by('K');
+  tp(c1, 4.0, 7.5); c1.dir = R; tp(c2, 10.9, 7.6); c2.dir = L; tp(j1, 4.1, 5.0); tp(j2, 11.3, 6.4);
+  tp(eel, 4.9, 9.0); eel.dir = R; tp(sw, 10.2, 9.0); sw.dir = L; tp(ray, 7.6, 9.25); ray.state = 'hunt'; ray.dir = L;
+  tp(lion, 3.6, 6.3); lion.ph = 'fan'; lion.ft = 1; tp(shark, 10.5, 5.1); shark.dir = L; shark.charge = true; shark.windup = 0; shark.crash = 0;
+  for (const e of E) e.stun = 0;
+  const types = ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon'], pos = [[5.3, 7.4], [9.6, 7.4], [6.0, 8.5], [8.6, 8.8], [3.4, 8.5], [11.6, 8.6], [7.4, 5.0]];
+  S.snacks.forEach((s, i) => { if (i < pos.length) { tp(s, pos[i][0], pos[i][1]); s.type = types[i]; s.born = -9; s.wait = 0; s.open = true; } else tp(s, -5, -5); });
+  // Nori's name tag is drawn above her; render once without her and paste her body back in from a frame with her
+  G.draw(); const withNori = createCanvas(cv.width, cv.height); withNori.getContext('2d').drawImage(cv, 0, 0);
+  S.friends.length = 0; G.draw();
+  cv.getContext('2d').drawImage(withNori, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T);
   const W = 1260, H = 1000, c = createCanvas(W, H), x = c.getContext('2d');
-  const tw = 4.8, th = tw * H / W, x0 = 8 - tw / 2, y0 = 7.7 - th / 2;
+  const tw = 9.2, th = tw * H / W, x0 = 7.5 - tw / 2, y0 = 6.45 - th / 2;
   x.drawImage(cv, x0 * T, y0 * T, tw * T, th * T, 0, 0, W, H);
   // title in the game's font, gold with a paper drop like the in-game cards
   const title = 'Killi and Milli', tx = W / 2, ty = 215;
