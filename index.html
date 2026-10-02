@@ -3240,6 +3240,7 @@ const TRACKS = {
 };
 // 'auto' (the default) follows the reef: the loops get calmer the deeper you go, and each boss has its own
 const trackForLevel = i => TRACKS[i === 17 ? 'moondrift' : i === 12 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
+const autoTrackNow = () => mode === 'style' ? TRACKS.lantern : S ? trackForLevel(levelIdx) : TRACKS.reef; // the lab previews Lantern, which only the automatic choice plays
 let autoTrack = !save.track || save.track === 'auto', musicDuckUntil = 0;
 // change loops through a short dip in the music bus rather than a hard cut; the new loop starts from its first bar
 function setTrack(t, now) {
@@ -3254,7 +3255,7 @@ function setTrack(t, now) {
 let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
   if (id === 'off') { musicOn = false; }
-  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; setTrack(autoTrack ? (S ? trackForLevel(levelIdx) : TRACKS.reef) : TRACKS[id], true); save.track = autoTrack ? 'auto' : id; }
+  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; setTrack(autoTrack ? autoTrackNow() : TRACKS[id], true); save.track = autoTrack ? 'auto' : id; }
   save.music = musicOn; persist(); setAudioLabels();
 }
 function scheduleMusic() {
@@ -3280,6 +3281,7 @@ const PREVIEWS = [['grow', 'Grow coral'], ['break', 'Break coral'], ['get', 'Sna
 function openStyle() {
   const tw = twoP; twoP = true; loadLevel(LEVELS.findIndex(l => l.name === 'Lionfish Lair')); twoP = tw;
   mode = 'style'; S.readyT = 0; hideBanner(); overlay.hidden = true;
+  if (autoTrack) setTrack(TRACKS.lantern);
   stylePanel.hidden = false; resize();
   unlockAudio(); renderStyle();
   stylePanel.scrollTop = 0; if (stylePanel.getBoundingClientRect().top > (window.innerHeight || 800) - 120) stylePanel.scrollIntoView({behavior:'smooth', block:'start'});
@@ -3291,7 +3293,7 @@ function renderStyle() {
   const opt = (attr, id, o, on, sw) => `<button class="opt" data-${attr}="${id}" aria-pressed="${on}">${sw || ''}<b>${o.name}</b><small>${o.desc}</small></button>`;
   $('#optTheme').innerHTML = Object.entries(THEMES).map(([id, t]) => opt('theme', id, t, theme === t, `<span class="sw">${t.sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>`)).join('');
   $('#optPack').innerHTML = Object.entries(PACKS).map(([id, p]) => opt('pack', id, p, pack === p)).join('');
-  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Follows the reef', desc:'Calmer the deeper you go'}, musicOn && autoTrack)
+  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Reef by reef', desc:'Five tunes, one per stretch of reef'}, musicOn && autoTrack)
     + ['reef', 'tidepool', 'moondrift'].map(id => opt('track', id, TRACKS[id], musicOn && !autoTrack && track === TRACKS[id])).join('');
   $('#previews').innerHTML = `<button class="all" id="playAll">Play all</button>` + PREVIEWS.map(([n, l]) => `<button data-pv="${n}">${l}</button>`).join('');
 }
