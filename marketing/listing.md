@@ -34,4 +34,4 @@ Everyone. No blood, no text chat, no purchases.
 Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players: Killi on WASD with F and G, Milli on the arrows with Space and right Shift. Touch controls on phones.
 
 ## Press kit
-Screenshots are in `marketing/screenshots/` (1280 px wide). Icons are in `icons/`. The comic and style explorations can be exported from the design canvases.
+Screenshots are in `marketing/screenshots/` (1280 px wide). The store cover is `marketing/cover-630x500.png` (itch.io size; `cover-1260x1000.png` is the 2x version), regenerated with `npm run cover`. Icons are in `icons/`. The comic and style explorations can be exported from the design canvases.
