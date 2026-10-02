@@ -7,6 +7,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800;900&display=swap" rel="stylesheet">
+<meta name="description" content="A co-op arcade maze game about two pufferfish gathering snacks for the reef's Moonlight Feast. Grow coral, puff up, bring a friend.">
+<meta name="theme-color" content="#2f7f92">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Killi and Milli">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<!-- Ad portals: load the portal's SDK here when submitting (see the Ads adapter below). Nothing is loaded otherwise. -->
 <style>
 :root{
   --bg:#dcefee; --fg:#05303d; --muted:#45707a; --chip:#c5e2e0; --line:#a9d0cd;
@@ -337,6 +347,42 @@ const THEMES = {
 };
 const PIX_T = 16;
 
+// ================= ad portal adapter =================
+// Works with the Poki SDK or the CrazyGames SDK when one is loaded on the page, and does nothing otherwise.
+let adMute = false;
+const Ads = (() => {
+  const poki = () => window.PokiSDK, cg = () => (window.CrazyGames && window.CrazyGames.SDK) || null;
+  let ready = false, playing = false;
+  const quiet = on => { adMute = on; if (typeof master !== 'undefined' && master && ac) master.gain.setTargetAtTime(on || muted ? 0 : .9, ac.currentTime, .05); };
+  return {
+    init() {
+      try {
+        if (poki()) poki().init().then(() => { ready = true; poki().gameLoadingFinished(); }).catch(() => {});
+        else if (cg()) Promise.resolve(cg().init()).then(() => { ready = true; }).catch(() => {});
+      } catch (e) {}
+    },
+    get ready() { return ready; },
+    play() { if (playing) return; playing = true; try { if (poki()) poki().gameplayStart(); else if (cg()) cg().game.gameplayStart(); } catch (e) {} },
+    stop() { if (!playing) return; playing = false; try { if (poki()) poki().gameplayStop(); else if (cg()) cg().game.gameplayStop(); } catch (e) {} },
+    // an interstitial at a natural pause; the SDKs decide how often one actually shows
+    break(done) {
+      try {
+        if (poki() && ready) { this.stop(); poki().commercialBreak(() => quiet(true)).then(() => { quiet(false); done(); }).catch(() => { quiet(false); done(); }); return; }
+        if (cg() && ready) { this.stop(); cg().ad.requestAd('midgame', {adStarted: () => quiet(true), adFinished: () => { quiet(false); done(); }, adError: () => { quiet(false); done(); }}); return; }
+      } catch (e) {}
+      done();
+    },
+    canReward() { return ready && !!(poki() || cg()); },
+    reward(done, fail) {
+      try {
+        if (poki() && ready) { this.stop(); poki().rewardedBreak(() => quiet(true)).then(ok => { quiet(false); ok ? done() : fail(); }).catch(() => { quiet(false); fail(); }); return; }
+        if (cg() && ready) { this.stop(); cg().ad.requestAd('rewarded', {adStarted: () => quiet(true), adFinished: () => { quiet(false); done(); }, adError: () => { quiet(false); fail(); }}); return; }
+      } catch (e) {}
+      fail();
+    },
+  };
+})();
+
 // ================= DOM & state =================
 const $ = s => document.querySelector(s);
 const cv = $('#c'), ctxMain = cv.getContext('2d');
@@ -472,7 +518,7 @@ function revive(p) {
 }
 
 function levelWon() {
-  mode = 'won';
+  mode = 'won'; Ads.stop();
   sfx('win');
   const before = S.unlocksAtStart || new Set(unlockedSet());
   save.unlocked = Math.max(save.unlocked, Math.min(LEVELS.length, levelIdx + 2));
@@ -506,10 +552,11 @@ function levelWon() {
 function startLevel(i) {
   const L = LEVELS[i];
   save.seenStory = save.seenStory || {};
-  if (L.story && !save.seenStory[L.story]) {
-    save.seenStory[L.story] = true; persist();
-    playStory(L.story, () => loadLevel(i));
-  } else loadLevel(i);
+  const go = () => {
+    if (L.story && !save.seenStory[L.story]) { save.seenStory[L.story] = true; persist(); playStory(L.story, () => loadLevel(i)); }
+    else loadLevel(i);
+  };
+  Ads.break(go);
 }
 
 let fishEdit = 'killi';
@@ -548,7 +595,7 @@ function showFish() {
 }
 
 function showMenu() {
-  mode = 'menu'; S = null; hideBanner();
+  mode = 'menu'; S = null; hideBanner(); Ads.stop();
   const coarse = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
   card.innerHTML = `<h2>${TITLE}</h2>
     <div class="tag">Two pufferfish versus the reef</div>
@@ -574,13 +621,23 @@ function showMenu() {
   updateKeysHelp();
 }
 
+function offerContinue() {
+  S.offeredContinue = true; mode = 'fail'; Ads.stop();
+  card.innerHTML = `<h3>Caught</h3><p>Keep going from here, with the snacks and score you have, or start the reef over.</p>
+    <div class="row"><button class="btn" data-act="continue">Watch an ad to continue</button><button class="btn ghost" data-act="retry">Start over</button></div>`;
+  overlay.hidden = false;
+}
+function continueLevel() {
+  for (const p of S.players) if (p.dead) revive(p);
+  S.failT = 0; mode = 'play'; overlay.hidden = true; Ads.play();
+}
 function pause() {
   if (mode !== 'play') return;
-  mode = 'paused';
+  mode = 'paused'; Ads.stop();
   card.innerHTML = `<h3>Paused</h3><div class="row"><button class="btn" data-act="resume">Resume</button><button class="btn ghost" data-act="retry">Restart</button><button class="btn ghost" data-act="menu">Levels</button></div>`;
   overlay.hidden = false;
 }
-function resume() { if (mode !== 'paused') return; mode = 'play'; overlay.hidden = true; for (const p of S.players) p.held.length = 0; }
+function resume() { if (mode !== 'paused') return; mode = 'play'; overlay.hidden = true; for (const p of S.players) p.held.length = 0; if (S.readyT <= 0) Ads.play(); }
 function showBanner(t, s) { banner.innerHTML = `<b>${t}</b>${s}`; banner.hidden = false; }
 function hideBanner() { banner.hidden = true; }
 
@@ -605,7 +662,8 @@ card.addEventListener('click', e => {
   }
   if (a === 'story') { playStory('intro', showMenu); return; }
   if (a === 'next') startLevel(levelIdx + 1);
-  else if (a === 'retry') loadLevel(levelIdx);
+  else if (a === 'retry') Ads.break(() => loadLevel(levelIdx));
+  else if (a === 'continue') Ads.reward(continueLevel, () => loadLevel(levelIdx, true));
   else if (a === 'menu') showMenu();
   else if (a === 'resume') resume();
 });
@@ -623,11 +681,14 @@ function update(dt) {
     return;
   }
   if (mode !== 'play' || !S) return;
-  if (S.readyT > 0) { S.readyT -= dt; if (S.readyT <= 0) hideBanner(); return; }
+  if (S.readyT > 0) { S.readyT -= dt; if (S.readyT <= 0) { hideBanner(); Ads.play(); } return; }
   if (S.failT > 0) {
     S.failT -= dt;
     for (const p of S.players) if (p.deathT > 0) p.deathT -= dt;
-    if (S.failT <= 0) loadLevel(levelIdx, true);
+    if (S.failT <= 0) {
+      if (Ads.canReward() && !S.offeredContinue) offerContinue();
+      else loadLevel(levelIdx, true);
+    }
     return;
   }
   S.elapsed += dt;
@@ -2479,7 +2540,7 @@ window.addEventListener('keydown', e => {
   if (e.code === 'Escape' && mode === 'style') { closeStyle(); return; }
   if (mode === 'fish' && (e.code === 'Escape' || (e.code === 'Enter' && !(e.target && e.target.tagName === 'BUTTON')))) { showMenu(); return; }
   if (e.code === 'KeyP' || e.code === 'Escape') { if (mode === 'play') pause(); else if (mode === 'paused') resume(); return; }
-  if (e.code === 'KeyR' && S && (mode === 'play' || mode === 'paused')) { loadLevel(levelIdx); return; }
+  if (e.code === 'KeyR' && S && (mode === 'play' || mode === 'paused' || mode === 'fail')) { loadLevel(levelIdx); return; }
   if (e.code === 'Enter' && !(e.target && e.target.tagName === 'BUTTON')) {
     if (mode === 'won' && levelIdx < LEVELS.length - 1) startLevel(levelIdx + 1);
     else if (mode === 'menu') startLevel(save.unlocked - 1);
@@ -2501,7 +2562,7 @@ $('#tPuff').addEventListener('pointerdown', e => { e.preventDefault(); unlockAud
 $('#bMenu').addEventListener('click', e => { e.currentTarget.blur(); showMenu(); });
 $('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); openStyle(); });
 $('#bPause').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'play') pause(); else if (mode === 'paused') resume(); });
-$('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
+$('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted || adMute ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
 $('#bMusic').addEventListener('click', e => { unlockAudio(); musicOn = !musicOn; save.music = musicOn; persist(); setAudioLabels(); e.currentTarget.blur(); });
 
 // ================= sound =================
@@ -2519,7 +2580,7 @@ function unlockAudio() {
   } catch (e) { ac = null; }
 }
 function buildAudio() {
-  master = ac.createGain(); master.gain.value = muted ? 0 : .9;
+  master = ac.createGain(); master.gain.value = muted || adMute ? 0 : .9;
   const comp = ac.createDynamicsCompressor();
   comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4; comp.attack.value = .003; comp.release.value = .2;
   master.connect(comp); comp.connect(ac.destination);
@@ -2781,12 +2842,14 @@ function frame(now) {
 }
 resize();
 setAudioLabels();
+Ads.init();
+if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
 showMenu();
 if (!save.seenIntro) playStory('intro', () => { save.seenIntro = true; persist(); showMenu(); });
 requestAnimationFrame(frame);
 
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
-  isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; },
+  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; },
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
   get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();

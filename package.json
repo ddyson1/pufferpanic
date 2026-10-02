@@ -1,0 +1,22 @@
+{
+  "name": "killi-and-milli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A co-op arcade maze game about two pufferfish. The game is index.html; everything else is tooling.",
+  "scripts": {
+    "serve": "npx serve . -l 5173",
+    "test": "npm run test:quick && npm run test:gameplay",
+    "test:quick": "node tests/scoring.js && node tests/ads.js && node tests/fish.js && node tests/creatures.js && node tests/bosses.js && node tests/unlocks.js && node tests/lookandsound.js && node tests/paper-look.js",
+    "test:gameplay": "node tests/gameplay.js",
+    "test:audio": "node tests/audio-levels.js && node tests/audio-packs.js",
+    "test:wiki": "node tests/wiki.js",
+    "wiki": "node tools/wiki/wikiassets.js && node tests/bosses.js && node tests/fish.js && python3 tools/wiki/wiki_gen.py && node tests/wiki.js",
+    "assets": "node tools/launchassets.js",
+    "art-samples": "node tools/art/styles.js"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^0.1.60",
+    "jsdom": "^24.0.0",
+    "node-web-audio-api": "^1.0.0"
+  }
+}

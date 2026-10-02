@@ -28,11 +28,16 @@ P pauses, R restarts. On touch devices an on-screen pad and buttons appear; two-
 ## Project layout
 
 ```
-index.html        The whole game: one self-contained file (HTML, CSS, JavaScript)
-wiki/index.html   The wiki: one self-contained file with images embedded
+index.html             The whole game: one self-contained file (HTML, CSS, JavaScript)
+wiki/index.html        The wiki: one self-contained file with images embedded
+manifest.webmanifest   Installable-app manifest (Add to Home Screen on iOS and Android)
+sw.js                  Service worker for offline play; bump CACHE when releasing
+icons/                 App icons
+marketing/             Store copy and screenshots
+LAUNCH.md              The release plan, phase by phase
 ```
 
-There is no build step. Open `index.html` in a browser, or serve the folder with any static server (for example `npx serve .`). Fonts load from Google Fonts, so the pages look best online.
+There is no build step. The game runs as an installable web app when served over HTTPS, and its `Ads` adapter talks to the Poki or CrazyGames SDK when one is loaded, and does nothing otherwise. Open `index.html` in a browser, or serve the folder with any static server (for example `npx serve .`). Fonts load from Google Fonts, so the pages look best online.
 
 Levels are plain text maps in the `LEVELS` array near the top of `index.html`. The legend is in the comment above it: `#` rock, `c` coral, `P` and `Q` the two start positions, digits for snack waves, letters for creatures and terrain. Add a map and a `waves` list and the level appears in the level select.
 
@@ -42,7 +47,7 @@ Settings, Pages, deploy from the `main` branch, root folder. The game is then at
 
 ## Credits
 
-Design, art, code and music by Devin Dyson. Built with help from Claude.
+Design, art, code and music by {YOUR NAME}. Built with help from Claude.
 
 ## License
 
