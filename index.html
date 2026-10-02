@@ -1278,7 +1278,8 @@ function updateParts(dt) {
 
 // ================= render setup (sprites) =================
 const floorCv = document.createElement('canvas'), vigCv = document.createElement('canvas'), shadeCv = document.createElement('canvas'), glowCv = document.createElement('canvas'), grainCv = document.createElement('canvas');
-let rockSpr = [], coralSpr = [];
+let rockSpr = [], coralSpr = [], kelpSpr = [], curSpr = {};
+const KELP_PH = 12, CUR_PH = 8; // animation phases prerendered for kelp and current tiles
 function rrc(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 function makeSprite(fn) {
   const s = document.createElement('canvas');
@@ -1424,6 +1425,7 @@ function buildArt() {
 function rebuildArt() {
   if (theme.pixel) { const sT = T, sD = dpr; T = PIX_T; dpr = 1; buildArt(); T = sT; dpr = sD; }
   else buildArt();
+  buildFxSprites();
   pixCv.width = COLS * PIX_T; pixCv.height = ROWS * PIX_T;
   stage.style.background = theme.stage;
 }
@@ -1496,22 +1498,46 @@ function drawFloorFx() {
     if (!theme.paper && y > 0 && S.grid[y - 1][x] !== '.') ctx.drawImage(shadeCv, x, y, 1, .4);
     const f = S.floor[y][x];
     if (f === 'h') drawVent(x, y);
-    else if (CUR[f]) drawCurrent(x, y, CUR[f]);
+    else if (CUR[f]) drawCurrent(x, y, f);
     else if (f === 'x' && S.grid[y][x] !== 'c') drawUrchin(S.urchins.get(y * COLS + x));
     else if (f === 'k') { ctx.fillStyle = 'rgba(20,70,40,0.25)'; ell(x + .5, y + .7, .42, .2); ctx.fill(); }
   }
   if (S.boss && S.boss.kind === 'queen') drawWarnings();
 }
 
+// Kelp and current tiles are drawn every frame on every such tile, and in the paper look each stroke carries a
+// blurred shadow, which is what made Kelp Maze and Current Canyon drop frames. They are prerendered here in a
+// handful of sway phases and blitted, shadow included.
+function buildFxSprites() {
+  const px = T * dpr;
+  const shadow = c => { if (theme.paper) { c.shadowColor = 'rgba(5,25,35,0.38)'; c.shadowBlur = px * .1; c.shadowOffsetX = px * .03; c.shadowOffsetY = px * .06; } };
+  const mk = (w, h, ox, oy, fn) => { const sp = document.createElement('canvas'); sp.width = Math.max(1, Math.ceil(w * px)); sp.height = Math.max(1, Math.ceil(h * px)); const c = sp.getContext('2d'); c.setTransform(px, 0, 0, px, ox * px, oy * px); fn(c); return sp; };
+  kelpSpr = [];
+  for (let k = 0; k < KELP_PH; k++) kelpSpr.push(mk(1.4, 1.4, .2, .3, c => {
+    shadow(c); c.lineCap = 'round'; const ph = k / KELP_PH * Math.PI * 2;
+    for (let i = 0; i < 4; i++) {
+      const bx = .18 + i * .21, sway = Math.sin(ph + i * 1.3) * .12;
+      c.strokeStyle = i % 2 ? 'rgba(70,150,70,0.85)' : 'rgba(110,185,80,0.85)'; c.lineWidth = .1;
+      c.beginPath(); c.moveTo(bx, .92); c.quadraticCurveTo(bx + sway, .45, bx + sway * 1.6, -.05 - (i % 2) * .1); c.stroke();
+    }
+  }));
+  curSpr = {};
+  for (const [key, d] of Object.entries(CUR)) curSpr[key] = Array.from({length:CUR_PH}, (_, j) => mk(1, 1, 0, 0, c => {
+    c.translate(.5, .5);
+    c.fillStyle = 'rgba(10,60,80,0.28)'; rrc(c, -.47, -.47, .94, .94, .14); c.fill();
+    c.beginPath(); c.rect(-.47, -.47, .94, .94); c.clip();
+    c.rotate(Math.atan2(d.y, d.x));
+    c.strokeStyle = 'rgba(190,250,255,0.45)'; c.lineWidth = .07; c.lineCap = 'round'; c.lineJoin = 'round';
+    const off = j / CUR_PH;
+    for (let k = -1; k < 3; k++) {
+      const cx = -.6 + (k / 2 + off / 2) * 1.2;
+      c.beginPath(); c.moveTo(cx - .12, -.17); c.lineTo(cx + .06, 0); c.lineTo(cx - .12, .17); c.stroke();
+    }
+  }));
+}
 function drawKelp(x, y) {
-  ctx.save();
-  ctx.lineCap = 'round';
-  for (let i = 0; i < 4; i++) {
-    const bx = x + .18 + i * .21, sway = Math.sin(time * 1.6 + x * .7 + i * 1.3) * .12;
-    ctx.strokeStyle = i % 2 ? 'rgba(70,150,70,0.85)' : 'rgba(110,185,80,0.85)'; ctx.lineWidth = .1;
-    ctx.beginPath(); ctx.moveTo(bx, y + .92); ctx.quadraticCurveTo(bx + sway, y + .45, bx + sway * 1.6, y - .05 - (i % 2) * .1); ctx.stroke();
-  }
-  ctx.restore();
+  const ph = reduceMotion ? 0 : Math.floor(((((time * 1.6 + x * .7) / (Math.PI * 2)) % 1) + 1) % 1 * KELP_PH) % KELP_PH;
+  ctx.drawImage(kelpSpr[ph], x - .2, y - .3, 1.4, 1.4);
 }
 
 function drawVent(x, y) {
@@ -1526,19 +1552,9 @@ function drawVent(x, y) {
   ctx.strokeStyle = 'rgba(255,150,90,0.55)'; ctx.lineWidth = .035; ell(x + .5, y + .55, .36, .26); ctx.stroke();
 }
 
-function drawCurrent(x, y, d) {
-  ctx.save();
-  ctx.translate(x + .5, y + .5);
-  ctx.fillStyle = 'rgba(10,60,80,0.28)'; rr(-.47, -.47, .94, .94, .14); ctx.fill();
-  ctx.beginPath(); ctx.rect(-.47, -.47, .94, .94); ctx.clip();
-  ctx.rotate(Math.atan2(d.y, d.x));
-  ctx.strokeStyle = 'rgba(190,250,255,0.45)'; ctx.lineWidth = .07; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  const off = reduceMotion ? 0 : (time * .9) % 1;
-  for (let k = -1; k < 3; k++) {
-    const cx = -.6 + (k / 2 + off / 2) * 1.2;
-    ctx.beginPath(); ctx.moveTo(cx - .12, -.17); ctx.lineTo(cx + .06, 0); ctx.lineTo(cx - .12, .17); ctx.stroke();
-  }
-  ctx.restore();
+function drawCurrent(x, y, key) {
+  const ph = reduceMotion ? 0 : Math.floor(((time * .9) % 1) * CUR_PH) % CUR_PH;
+  ctx.drawImage(curSpr[key][ph], x, y, 1, 1);
 }
 
 function drawUrchin(u) {
@@ -1591,8 +1607,8 @@ function drawRows() {
       else if (it.t === 'f') drawSeal(it.o);
       else { drawPuffer(it.o); drawShield(it.o); }
     }
+    paperShadow(false); // the kelp sprites carry their own shadow
     for (let x = 0; x < COLS; x++) if (S.floor[y][x] === 'k') drawKelp(x, y);
-    paperShadow(false);
   }
 }
 
@@ -1951,6 +1967,13 @@ function drawEel(e) {
     off.push({x:pts[i].x + .5 - dy * w, y:pts[i].y + .45 + dx * w});
   }
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // one blurred stroke for the paper shadow, then the three passes without it (27 blurred strokes per eel per frame otherwise)
+  const shadowed = ctx.shadowBlur > 0;
+  if (shadowed) {
+    ctx.strokeStyle = '#3e6a1e'; ctx.lineWidth = .2;
+    ctx.beginPath(); ctx.moveTo(off[0].x, off[0].y); for (let i = 1; i < n; i++) ctx.lineTo(off[i].x, off[i].y); ctx.stroke();
+    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+  }
   for (let pass = 0; pass < 3; pass++) {
     ctx.strokeStyle = ['#3e6a1e', '#6f9a32', '#c8e07a'][pass];
     for (let i = n - 1; i >= 1; i--) {
@@ -1958,6 +1981,7 @@ function drawEel(e) {
       ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y); ctx.lineTo(off[i - 1].x, off[i - 1].y); ctx.stroke();
     }
   }
+  if (shadowed) paperShadow(true);
   const hx = e.fx + .5, hy = e.fy + .45, d = e.dir, px = -d.y, py = d.x;
   ctx.fillStyle = '#5c8a2e'; ell(hx + d.x * .04, hy + d.y * .04, .18, .18); ctx.fill();
   ctx.fillStyle = '#fff6b0'; circ(hx + d.x * .08 + px * .07, hy + d.y * .08 + py * .07, .05); ctx.fill();
@@ -2207,6 +2231,12 @@ function drawShark(e, sc) {
 function drawTentPath(pts, w0, w1) {
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   const n = pts.length;
+  // one blurred stroke for the paper shadow, then the tapered passes without it; a blur per segment was most of the Queen's frame cost
+  if (ctx.shadowBlur > 0) {
+    ctx.strokeStyle = '#6e2463'; ctx.lineWidth = (w0 + w1) / 2;
+    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < n; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.stroke();
+    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+  }
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass ? '#c25a9e' : '#6e2463';
     for (let i = 1; i < n; i++) {
@@ -2223,11 +2253,14 @@ function drawQueenBody(cx, cy, sc, mood, alpha, flash, lookX) {
   ctx.save();
   ctx.globalAlpha *= alpha;
   ctx.translate(cx, cy); ctx.scale(sc, sc);
+  const shadowed = ctx.shadowBlur > 0;
   for (let i = 0; i < 6; i++) {
     const side = i < 3 ? -1 : 1, k = i % 3, pts = [];
     for (let j = 0; j <= 10; j++) { const s = j / 10; pts.push({x:side * (.55 + k * .3 + s * (1.1 + k * .25)), y:.55 + s * (1.3 - k * .25) + Math.sin(time * 2 + s * 4 + i) * .15 * s}); }
     drawTentPath(pts, .34, .1);
   }
+  // same trick for the body: one blurred fill under everything, then the details without blur
+  if (shadowed) { ctx.fillStyle = '#7b2a6e'; ell(0, 0, 1.45, 1.12); ctx.fill(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0; }
   const g = ctx.createRadialGradient(-.4, -.5, .1, 0, 0, 1.6);
   g.addColorStop(0, '#ec93c4'); g.addColorStop(1, '#7b2a6e');
   ctx.fillStyle = g; ell(0, 0, 1.45, 1.12); ctx.fill();
