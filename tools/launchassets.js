@@ -28,7 +28,7 @@ boot(4, w=>{ const G=w.__pp, cv=w.document.querySelector('#c').__cv(), T=cv.widt
   boot(2, w2=>{ const G2=w2.__pp, cv2=w2.document.querySelector('#c').__cv();
     const save=(name)=>{ G2.draw(); const c=createCanvas(1280,Math.round(1280*cv2.height/cv2.width)); c.getContext('2d').drawImage(cv2,0,0,c.width,c.height); fs.writeFileSync(`${require('path').join(__dirname, '..', 'marketing', 'screenshots')}/${name}.png`,c.toBuffer('image/png')); };
     G2.setTwoP(true);
-    for(const [L,n] of [[0,'01-the-shallows'],[6,'02-urchin-garden'],[10,'03-seal-cove'],[13,'04-kelp-maze'],[15,'05-lionfish-lair']]){ G2.loadLevel(L); G2.tick(2.2); for(let k=0;k<60*2.5;k++) G2.tick(1/60); save(n); }
+    for(const [L,n] of [[0,'01-the-shallows'],[6,'02-urchin-garden'],[10,'03-seal-cove'],[14,'04-kelp-maze'],[16,'05-lionfish-lair']]){ G2.loadLevel(L); G2.tick(2.2); for(let k=0;k<60*2.5;k++) G2.tick(1/60); save(n); }
     G2.loadLevel(17); G2.tick(2.2); const S=G2.S, B=S.boss; S.enemies.forEach(e=>e.stun=999); const p0=S.players[0]; p0.inv=99; tp(p0,5,9); B.tents=[]; B.spawnT=0; G2.tick(.02); const t=B.tents[0]; const cc=t.cells[Math.floor(t.cells.length/2)]; S.grid[cc.y][cc.x]='c'; S.born[cc.y][cc.x]=-9; for(let k=0;k<90;k++){G2.tick(1/60); if(t.state==='stuck') break;} tp(p0,3,8); p0.face={x:1,y:0}; for(let k=0;k<8;k++) G2.tick(1/60); save('06-kraken-queen');
     console.log('assets done'); process.exit(0); });
 });

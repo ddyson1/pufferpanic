@@ -7,7 +7,7 @@ Wiki: https://ddyson1.github.io/pufferpanic/wiki/
 
 ## What's in the game
 
-- 18 levels: 16 reefs that each introduce one creature, snack or hazard, then two boss reefs (Bruiser the shark and the Kraken Queen).
+- 18 levels: 16 reefs that each introduce one creature, snack or hazard, with Bruiser the shark guarding the way down after the twelfth and the Kraken Queen waiting at the bottom.
 - One or two players. In co-op, a caught fish returns when the next wave of snacks appears, and the reef only restarts if both are caught.
 - Nine creatures, seven snacks, six terrain types, and Nori the seal, who hands out bubble shields.
 - Scoring with streaks, best times, and one to three stars per level.

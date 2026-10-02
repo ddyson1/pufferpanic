@@ -29,9 +29,9 @@ setTimeout(()=>{
   chk(JSON.parse(w.localStorage.getItem('puffer-panic-v2')).seenIntro===true,'intro is remembered');
   // ---- level select has bosses
   chk(D.querySelectorAll('.lv').length===18,'18 levels in select');
-  chk(/Boss: Bruiser/.test(D.querySelector('[data-lv="16"]').textContent),'level 17 is labeled as a boss');
+  chk(/Boss: Bruiser/.test(D.querySelector('[data-lv="12"]').textContent),'level 13 is labeled as a boss');
   // ---- boss card before Bruiser
-  G.setTwoP(false); G.startLevel(16);
+  G.setTwoP(false); G.startLevel(12);
   chk(G.mode==='story' && G.story.id==='bruiser','Bruiser story card plays first time');
   for(let k=0;k<30;k++) G.tick(1/30); shot('card_bruiser');
   D.querySelector('#storyNext').click(); D.querySelector('#storyNext').click();
@@ -57,14 +57,14 @@ setTimeout(()=>{
   p.inv=0; p.puff=0; p.shield=false; e.crash=0; e.daze=0; e.windup=0; tp(e,5,6); tp(p,5,6); G.tick(.02);
   chk(p.dead,'touching an alert Bruiser catches you');
   // finish him
-  G.loadLevel(16); G.tick(2.2); S=G.S; B=S.boss; e=B.e; p=S.players[0]; p.inv=99;
+  G.loadLevel(12); G.tick(2.2); S=G.S; B=S.boss; e=B.e; p=S.players[0]; p.inv=99;
   let guard=0; while(B.hp>0 && guard++<20){ e.crash=2; B.hitCd=0; tp(p,Math.round(e.fx)+1,Math.round(e.fy)); p.puffCd=0; p.puff=0; G.startPuff(p); G.tick(.02); G.tick(.7); }
   chk(B.dead,'four hits defeat Bruiser');
   for(let k=0;k<20;k++) G.tick(1/30); shot('bruiser_down');
   for(let k=0;k<60;k++) G.tick(1/30);
   chk(G.mode==='won','victory screen after his exit animation');
   // ---- revive on boss hit in 2P
-  G.setTwoP(true); G.loadLevel(16); G.tick(2.2); S=G.S; B=S.boss; e=B.e;
+  G.setTwoP(true); G.loadLevel(12); G.tick(2.2); S=G.S; B=S.boss; e=B.e;
   G.killPlayer(S.players[1]); e.crash=2; const k0=S.players[0]; k0.inv=99; tp(k0,Math.round(e.fx)+1,Math.round(e.fy)); G.startPuff(k0); G.tick(.02);
   chk(!S.players[1].dead,'hitting a boss revives a caught partner');
   // ---- Kraken Queen
@@ -114,7 +114,7 @@ setTimeout(()=>{
   D.querySelector('#storyNext').click(); D.querySelector('#storyNext').click();
   chk(G.mode==='won' && /whole reef is clear/.test(D.querySelector('#card').textContent),'then the final victory card');
   // boss card does not repeat
-  G.startLevel(16); chk(G.mode==='play','boss story only plays the first time');
+  G.startLevel(12); chk(G.mode==='play','boss story only plays the first time');
   // Story button replays the intro
   D.querySelector('#bMenu').click(); D.querySelector('[data-act="story"]').click(); chk(G.mode==='story'&&G.story.id==='intro','Story button replays the intro');
   w.dispatchEvent(new w.KeyboardEvent('keydown',{code:'Escape'})); chk(G.mode==='menu','Escape skips the story');

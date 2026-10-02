@@ -288,7 +288,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 </aside>
 
 <p><b>Killi and Milli</b> is an arcade maze game for one or two players about two pufferfish who must gather every snack on the reef before the Moonlight Feast, while grumpy sea creatures close in. It is a spiritual successor to Nitrome&#8217;s <i>Bad Ice-Cream</i>: instead of firing lines of ice, the pufferfish grow and break walls of coral, and instead of melting, they can puff up to protect themselves.</p>
-<p>The game has 16 reefs that each introduce one new creature, snack or hazard, followed by two boss reefs, an illustrated story, and optional visual themes and sound packs.</p>
+<p>The game has 16 reefs that each introduce one new creature, snack or hazard, with Bruiser's Reef after the twelfth and the Kraken Queen's after the last, an illustrated story, and optional visual themes and sound packs.</p>
 
 <nav class="toc" aria-label="Contents"><b>Contents</b><ol>{toc}</ol></nav>
 
@@ -348,7 +348,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
   <h3>Bruiser the shark</h3>
   <figure class="thumb right">{bimg(B + 'b_bruiser_fight.png', 'Bruiser charging across his reef', 300)}<figcaption>Bruiser&#8217;s Reef</figcaption></figure>
   {img('bruiser', 'Bruiser the shark', 220, 'inline')}
-  <p>The boss of {lvlink(16)}. Bruiser hunts the pufferfish and, when he spots one along a row or column, roars, winds up and charges. He can see through coral but cannot swim through it. Charging into rock dazes him briefly; charging into coral breaks the block and leaves him dizzy for about 2.6 seconds, which is the only time a puff beside him hurts him. He has 4 health and gets faster, with a shorter wind-up, as he takes damage.</p>
+  <p>The boss of {lvlink(12)}. Bruiser hunts the pufferfish and, when he spots one along a row or column, roars, winds up and charges. He can see through coral but cannot swim through it. Charging into rock dazes him briefly; charging into coral breaks the block and leaves him dizzy for about 2.6 seconds, which is the only time a puff beside him hurts him. He has 4 health and gets faster, with a shorter wind-up, as he takes damage.</p>
 </div>
 <div class="boss" id="kraken-queen">
   <h3>The Kraken Queen</h3>
@@ -403,7 +403,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 
 <h2 id="trivia">Trivia</h2>
 <ul>
-<li>Every sound effect and both music tracks are synthesized in the browser as the game runs; the game contains no audio files.</li>
+<li>Every sound effect and all five music loops are synthesized in the browser as the game runs; the game contains no audio files.</li>
 <li>Sounds are panned left or right by where they happen on the reef, and snack pickups climb a musical scale when eaten in quick succession.</li>
 <li>The shark fin hat and royal crown are trophies from the two bosses, and the hearts pattern, unlocked by finishing the story, is a nod to Killi and Milli being in love.</li>
 <li>Cut paper became the default look after four art directions were compared side by side: ink and flat color, watercolor storybook, cut-paper diorama and soft clay 3D.</li>

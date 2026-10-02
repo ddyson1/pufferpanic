@@ -10,7 +10,7 @@ Dates assume a start in early October 2026. Each phase has a clear finish line; 
 
 ## Phase 2: playtest and tune (weeks 2 to 3)
 - [ ] Get five people who have never seen the game to play while you watch, without helping. Write down where they get stuck or stop having fun.
-- [ ] Watch for: levels 15 and 16 difficulty, whether people discover puffing on their own, whether co-op partners understand reviving, and whether the first boss is readable.
+- [ ] Watch for: the difficulty of the deep reefs after Bruiser, whether people discover puffing on their own, whether co-op partners understand reviving, and whether the first boss is readable.
 - [ ] Tune, then repeat with two or three new people.
 - [ ] Decide the final name and check it against the App Store, Google Play, itch.io and the USPTO trademark database.
 

@@ -46,7 +46,7 @@ setTimeout(()=>{
     D.querySelector('[data-act="menu"]').click();
     chk(/pts/.test(D.querySelector('[data-lv="0"]').textContent),'level select shows best time and points: '+D.querySelector('[data-lv="0"] small').textContent);
     // pearl value & boss points
-    G.loadLevel(16); G.tick(2.2); S=G.S; const B=S.boss, e=B.e; p=S.players[0]; p.inv=99; S.friends.forEach(n=>tp(n,13,11));
+    G.loadLevel(12); G.tick(2.2); S=G.S; const B=S.boss, e=B.e; p=S.players[0]; p.inv=99; S.friends.forEach(n=>tp(n,13,11));
     e.crash=2; tp(p,Math.round(e.fx)+1,Math.round(e.fy)); G.startPuff(p); G.tick(.02);
     chk(p.points===200,'a boss hit is worth 200 ('+p.points+')');
     let guard=0; while(!B.dead&&guard++<10){ e.crash=2; B.hitCd=0; p.puff=0; p.puffCd=0; tp(p,Math.round(e.fx)+1,Math.round(e.fy)); G.startPuff(p); G.tick(.02); G.tick(.7);} 

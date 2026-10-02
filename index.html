@@ -221,6 +221,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 // ================= config =================
 const TITLE = 'Killi and Milli';
 const COLS = 15, ROWS = 13;
+const PIXEL_BUDGET = 2.2e6;
 const PSPEED = 5.2, PUFF_T = 1.3, PUFF_CD = 4.5, STUN_T = 2.6, INV_T = 1.8;
 const UP = {x:0,y:-1}, DOWN = {x:0,y:1}, LEFT = {x:-1,y:0}, RIGHT = {x:1,y:0};
 const DIRS = {up:UP, down:DOWN, left:LEFT, right:RIGHT};
@@ -245,9 +246,9 @@ const PATTERNS = {spots:'Spots', plain:'Plain', stripes:'Stripes', freckles:'Fre
 const ACCESSORIES = {none:'None', bow:'Bow', flower:'Flower', glasses:'Glasses', cap:'Sailor cap', star:'Starfish clip', fin:'Shark fin hat', crown:'Royal crown', pearls:'Pearl necklace'};
 // How each locked piece is earned. lv is a level index (0-based); anything not listed is available from the start.
 const UNLOCKS = {
-  color:   {lavender:{lv:2}, tangerine:{lv:7}, midnight:{lv:15}, gold:{special:'allstars', text:'Earn 3 stars on every level'}},
+  color:   {lavender:{lv:2}, tangerine:{lv:7}, midnight:{lv:16}, gold:{special:'allstars', text:'Earn 3 stars on every level'}},
   pattern: {stripes:{lv:4}, freckles:{lv:11}, hearts:{lv:17, text:'Beat the Kraken Queen'}},
-  acc:     {glasses:{lv:5}, cap:{lv:9}, star:{lv:13}, fin:{lv:16, text:'Defeat Bruiser'}, crown:{lv:17, text:'Beat the Kraken Queen'}, pearls:{special:'snacks', n:500, text:'Eat 500 snacks in total'}},
+  acc:     {glasses:{lv:5}, cap:{lv:9}, star:{lv:14}, fin:{lv:12, text:'Defeat Bruiser'}, crown:{lv:17, text:'Beat the Kraken Queen'}, pearls:{special:'snacks', n:500, text:'Eat 500 snacks in total'}},
 };
 const ITEM_NAMES = {color:PALETTES, pattern:PATTERNS, acc:ACCESSORIES};
 function levelCleared(i) { return !!(save.best && (save.best['1-' + i] || save.best['2-' + i])); }
@@ -308,6 +309,9 @@ const LEVELS = [
   {name:'Clam Beds', hint:'Clams only give up their pearls while they are open. Time your approach.', waves:['clam','grape','clam'], map:[
     '###############','#1.c.......c.1#','#..c..2.2..c..#','#.....###.....#','#2.J.......J.2#','#..#..P.Q..#..#','#..#.......#..#',
     '#3....N......3#','#.....###.....#','#..c..3.3..c..#','#1.c...C...c.1#','#2....C.C....2#','###############']},
+  {name:"Bruiser's Reef", boss:'shark', story:'bruiser', hint:'Make Bruiser crash into coral, then puff right next to him while he is dizzy.', waves:[], map:[
+    '###############','#.............#','#.c..#...#..c.#','#.c.........c.#','#....c...c....#','#.#....B....#.#','#.............#',
+    '#....c.N.c....#','#.c.........c.#','#.c..#...#..c.#','#.....P.Q.....#','#.............#','###############']},
   {name:'Manta Flats', hint:'Manta rays glide straight over coral and never slow down.', waves:['krill','star','shrimp'], map:[
     '###############','#1.....A.....1#','#.c.c.c.c.c.c.#','#..2.......2..#','#.c.c..#..c.c.#','#1....P.Q....1#','#.c.c..#..c.c.#',
     '#..3.......3..#','#.c.c.c.c.c.c.#','#2.....C.....2#','#.c.c.c.c.c.c.#','#1.....A.....1#','###############']},
@@ -320,9 +324,6 @@ const LEVELS = [
   {name:'Lionfish Lair', hint:'Lionfish fan out their spines every few seconds. Keep your distance when they do.', waves:['star','shrimp','clam','krill'], map:[
     '###############','#1.....A.....1#','#.cc.x...x.cc.#','#.c2...F...2c.#','#.....ccc.....#','#1.#..P.Q..#.1#','#..#...N...#..#',
     '#..3.......3..#','#.###.4.4.###.#','#x...F...M...x#','#3.c..#.#..c.3#','#1...........1#','###############']},
-  {name:"Bruiser's Reef", boss:'shark', story:'bruiser', hint:'Make Bruiser crash into coral, then puff right next to him while he is dizzy.', waves:[], map:[
-    '###############','#.............#','#.c..#...#..c.#','#.c.........c.#','#....c...c....#','#.#....B....#.#','#.............#',
-    '#....c.N.c....#','#.c.........c.#','#.c..#...#..c.#','#.....P.Q.....#','#.............#','###############']},
   {name:'The Kraken Queen', boss:'queen', story:'queen', ending:true, hint:'Trap a tentacle in coral, then puff right next to its tip.', waves:[], map:[
     '###############','#.....BBB.....#','#.....BBB.....#','#.............#','#..#...C...#..#','#.............#','#...c.....c...#',
     '#.#....N....#.#','#...c.....c...#','#.............#','#..#..P.Q..#..#','#C...........C#','###############']},
@@ -417,6 +418,13 @@ let parts = [];
 let save = {unlocked:1, best:{}};
 try { const v = JSON.parse(localStorage.getItem('puffer-panic-v2') || 'null'); if (v && v.unlocked) save = v; } catch (e) {}
 if (!save.paperDefault) { save.theme = 'paper'; save.paperDefault = true; try { localStorage.setItem('puffer-panic-v2', JSON.stringify(save)); } catch (e) {} }
+// Bruiser's Reef moved from level 17 to level 13 (index 16 to 12) so the bosses are no longer back to back; shift saved records so nobody loses a time or a star
+if (!save.bruiserMid) {
+  const map = i => i === 16 ? 12 : (i >= 12 && i <= 15 ? i + 1 : i), best = {};
+  for (const [k, v] of Object.entries(save.best || {})) { const [m, i] = k.split('-'); best[m + '-' + map(+i)] = v; }
+  save.best = best; if (save.unlocked >= 13 && save.unlocked <= 16) save.unlocked += 1; save.bruiserMid = true;
+  try { localStorage.setItem('puffer-panic-v2', JSON.stringify(save)); } catch (e) {}
+}
 let theme = THEMES[save.theme] || THEMES.paper;
 save.stars = save.stars || {};
 save.scores = save.scores || {};
@@ -457,6 +465,7 @@ function loadLevel(i, retry) {
   persist();
   hideStyle();
   levelIdx = i;
+  if (autoTrack) track = trackForLevel(i);
   const L = LEVELS[i];
   const grid = [], floor = [], born = [], wavePos = [[], [], [], []], enemies = [], urchins = new Map(), friends = [], bossTiles = new Set();
   const starts = [null, null];
@@ -612,6 +621,7 @@ function showFish() {
 
 function showMenu() {
   mode = 'menu'; S = null; hideBanner(); Ads.stop();
+  if (autoTrack) track = TRACKS.reef;
   const coarse = !!(window.matchMedia && matchMedia('(pointer:coarse)').matches);
   card.innerHTML = `<h2>${TITLE}</h2>
     <div class="tag">Two pufferfish versus the reef</div>
@@ -1278,7 +1288,9 @@ function updateParts(dt) {
 
 // ================= render setup (sprites) =================
 const floorCv = document.createElement('canvas'), vigCv = document.createElement('canvas'), shadeCv = document.createElement('canvas'), glowCv = document.createElement('canvas'), grainCv = document.createElement('canvas');
-let rockSpr = [], coralSpr = [];
+const overlayCv = document.createElement('canvas'); // grain and vignette flattened into one layer, blitted once per frame
+let rockSpr = [], coralSpr = [], kelpSpr = [], curSpr = {};
+const KELP_PH = 12, CUR_PH = 8; // animation phases prerendered for kelp and current tiles
 function rrc(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
 function makeSprite(fn) {
   const s = document.createElement('canvas');
@@ -1424,6 +1436,8 @@ function buildArt() {
 function rebuildArt() {
   if (theme.pixel) { const sT = T, sD = dpr; T = PIX_T; dpr = 1; buildArt(); T = sT; dpr = sD; }
   else buildArt();
+  buildFxSprites();
+  buildOverlay();
   pixCv.width = COLS * PIX_T; pixCv.height = ROWS * PIX_T;
   stage.style.background = theme.stage;
 }
@@ -1468,8 +1482,7 @@ function drawScene() {
   else { paperShadow(true); drawMenuScene(); paperShadow(false); }
   if (!theme.paper) drawLight();
   drawParts();
-  if (theme.paper) { ctx.save(); ctx.globalAlpha = .6; ctx.drawImage(grainCv, 0, 0, COLS, ROWS); ctx.restore(); }
-  ctx.drawImage(vigCv, 0, 0, COLS, ROWS);
+  ctx.drawImage(overlayCv, 0, 0, COLS, ROWS);
 }
 
 function drawLight() {
@@ -1496,22 +1509,52 @@ function drawFloorFx() {
     if (!theme.paper && y > 0 && S.grid[y - 1][x] !== '.') ctx.drawImage(shadeCv, x, y, 1, .4);
     const f = S.floor[y][x];
     if (f === 'h') drawVent(x, y);
-    else if (CUR[f]) drawCurrent(x, y, CUR[f]);
+    else if (CUR[f]) drawCurrent(x, y, f);
     else if (f === 'x' && S.grid[y][x] !== 'c') drawUrchin(S.urchins.get(y * COLS + x));
     else if (f === 'k') { ctx.fillStyle = 'rgba(20,70,40,0.25)'; ell(x + .5, y + .7, .42, .2); ctx.fill(); }
   }
   if (S.boss && S.boss.kind === 'queen') drawWarnings();
 }
 
+// Kelp and current tiles are drawn every frame on every such tile, and in the paper look each stroke carries a
+// blurred shadow, which is what made Kelp Maze and Current Canyon drop frames. They are prerendered here in a
+// handful of sway phases and blitted, shadow included.
+function buildOverlay() {
+  overlayCv.width = vigCv.width; overlayCv.height = vigCv.height;
+  const c = overlayCv.getContext('2d');
+  if (theme.paper) { c.globalAlpha = .6; c.drawImage(grainCv, 0, 0); c.globalAlpha = 1; }
+  c.drawImage(vigCv, 0, 0);
+}
+function buildFxSprites() {
+  const px = T * dpr;
+  const shadow = c => { if (theme.paper) { c.shadowColor = 'rgba(5,25,35,0.38)'; c.shadowBlur = px * .1; c.shadowOffsetX = px * .03; c.shadowOffsetY = px * .06; } };
+  const mk = (w, h, ox, oy, fn) => { const sp = document.createElement('canvas'); sp.width = Math.max(1, Math.ceil(w * px)); sp.height = Math.max(1, Math.ceil(h * px)); const c = sp.getContext('2d'); c.setTransform(px, 0, 0, px, ox * px, oy * px); fn(c); return sp; };
+  kelpSpr = [];
+  for (let k = 0; k < KELP_PH; k++) kelpSpr.push(mk(1.4, 1.4, .2, .3, c => {
+    shadow(c); c.lineCap = 'round'; const ph = k / KELP_PH * Math.PI * 2;
+    for (let i = 0; i < 4; i++) {
+      const bx = .18 + i * .21, sway = Math.sin(ph + i * 1.3) * .12;
+      c.strokeStyle = i % 2 ? 'rgba(70,150,70,0.85)' : 'rgba(110,185,80,0.85)'; c.lineWidth = .1;
+      c.beginPath(); c.moveTo(bx, .92); c.quadraticCurveTo(bx + sway, .45, bx + sway * 1.6, -.05 - (i % 2) * .1); c.stroke();
+    }
+  }));
+  curSpr = {};
+  for (const [key, d] of Object.entries(CUR)) curSpr[key] = Array.from({length:CUR_PH}, (_, j) => mk(1, 1, 0, 0, c => {
+    c.translate(.5, .5);
+    c.fillStyle = 'rgba(10,60,80,0.28)'; rrc(c, -.47, -.47, .94, .94, .14); c.fill();
+    c.beginPath(); c.rect(-.47, -.47, .94, .94); c.clip();
+    c.rotate(Math.atan2(d.y, d.x));
+    c.strokeStyle = 'rgba(190,250,255,0.45)'; c.lineWidth = .07; c.lineCap = 'round'; c.lineJoin = 'round';
+    const off = j / CUR_PH;
+    for (let k = -1; k < 3; k++) {
+      const cx = -.6 + (k / 2 + off / 2) * 1.2;
+      c.beginPath(); c.moveTo(cx - .12, -.17); c.lineTo(cx + .06, 0); c.lineTo(cx - .12, .17); c.stroke();
+    }
+  }));
+}
 function drawKelp(x, y) {
-  ctx.save();
-  ctx.lineCap = 'round';
-  for (let i = 0; i < 4; i++) {
-    const bx = x + .18 + i * .21, sway = Math.sin(time * 1.6 + x * .7 + i * 1.3) * .12;
-    ctx.strokeStyle = i % 2 ? 'rgba(70,150,70,0.85)' : 'rgba(110,185,80,0.85)'; ctx.lineWidth = .1;
-    ctx.beginPath(); ctx.moveTo(bx, y + .92); ctx.quadraticCurveTo(bx + sway, y + .45, bx + sway * 1.6, y - .05 - (i % 2) * .1); ctx.stroke();
-  }
-  ctx.restore();
+  const ph = reduceMotion ? 0 : Math.floor(((((time * 1.6 + x * .7) / (Math.PI * 2)) % 1) + 1) % 1 * KELP_PH) % KELP_PH;
+  ctx.drawImage(kelpSpr[ph], x - .2, y - .3, 1.4, 1.4);
 }
 
 function drawVent(x, y) {
@@ -1526,19 +1569,9 @@ function drawVent(x, y) {
   ctx.strokeStyle = 'rgba(255,150,90,0.55)'; ctx.lineWidth = .035; ell(x + .5, y + .55, .36, .26); ctx.stroke();
 }
 
-function drawCurrent(x, y, d) {
-  ctx.save();
-  ctx.translate(x + .5, y + .5);
-  ctx.fillStyle = 'rgba(10,60,80,0.28)'; rr(-.47, -.47, .94, .94, .14); ctx.fill();
-  ctx.beginPath(); ctx.rect(-.47, -.47, .94, .94); ctx.clip();
-  ctx.rotate(Math.atan2(d.y, d.x));
-  ctx.strokeStyle = 'rgba(190,250,255,0.45)'; ctx.lineWidth = .07; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  const off = reduceMotion ? 0 : (time * .9) % 1;
-  for (let k = -1; k < 3; k++) {
-    const cx = -.6 + (k / 2 + off / 2) * 1.2;
-    ctx.beginPath(); ctx.moveTo(cx - .12, -.17); ctx.lineTo(cx + .06, 0); ctx.lineTo(cx - .12, .17); ctx.stroke();
-  }
-  ctx.restore();
+function drawCurrent(x, y, key) {
+  const ph = reduceMotion ? 0 : Math.floor(((time * .9) % 1) * CUR_PH) % CUR_PH;
+  ctx.drawImage(curSpr[key][ph], x, y, 1, 1);
 }
 
 function drawUrchin(u) {
@@ -1591,8 +1624,8 @@ function drawRows() {
       else if (it.t === 'f') drawSeal(it.o);
       else { drawPuffer(it.o); drawShield(it.o); }
     }
+    paperShadow(false); // the kelp sprites carry their own shadow
     for (let x = 0; x < COLS; x++) if (S.floor[y][x] === 'k') drawKelp(x, y);
-    paperShadow(false);
   }
 }
 
@@ -1951,6 +1984,13 @@ function drawEel(e) {
     off.push({x:pts[i].x + .5 - dy * w, y:pts[i].y + .45 + dx * w});
   }
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  // one blurred stroke for the paper shadow, then the three passes without it (27 blurred strokes per eel per frame otherwise)
+  const shadowed = ctx.shadowBlur > 0;
+  if (shadowed) {
+    ctx.strokeStyle = '#3e6a1e'; ctx.lineWidth = .2;
+    ctx.beginPath(); ctx.moveTo(off[0].x, off[0].y); for (let i = 1; i < n; i++) ctx.lineTo(off[i].x, off[i].y); ctx.stroke();
+    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+  }
   for (let pass = 0; pass < 3; pass++) {
     ctx.strokeStyle = ['#3e6a1e', '#6f9a32', '#c8e07a'][pass];
     for (let i = n - 1; i >= 1; i--) {
@@ -1958,6 +1998,7 @@ function drawEel(e) {
       ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y); ctx.lineTo(off[i - 1].x, off[i - 1].y); ctx.stroke();
     }
   }
+  if (shadowed) paperShadow(true);
   const hx = e.fx + .5, hy = e.fy + .45, d = e.dir, px = -d.y, py = d.x;
   ctx.fillStyle = '#5c8a2e'; ell(hx + d.x * .04, hy + d.y * .04, .18, .18); ctx.fill();
   ctx.fillStyle = '#fff6b0'; circ(hx + d.x * .08 + px * .07, hy + d.y * .08 + py * .07, .05); ctx.fill();
@@ -2207,6 +2248,12 @@ function drawShark(e, sc) {
 function drawTentPath(pts, w0, w1) {
   ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
   const n = pts.length;
+  // one blurred stroke for the paper shadow, then the tapered passes without it; a blur per segment was most of the Queen's frame cost
+  if (ctx.shadowBlur > 0) {
+    ctx.strokeStyle = '#6e2463'; ctx.lineWidth = (w0 + w1) / 2;
+    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); for (let i = 1; i < n; i++) ctx.lineTo(pts[i].x, pts[i].y); ctx.stroke();
+    ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0;
+  }
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass ? '#c25a9e' : '#6e2463';
     for (let i = 1; i < n; i++) {
@@ -2223,11 +2270,14 @@ function drawQueenBody(cx, cy, sc, mood, alpha, flash, lookX) {
   ctx.save();
   ctx.globalAlpha *= alpha;
   ctx.translate(cx, cy); ctx.scale(sc, sc);
+  const shadowed = ctx.shadowBlur > 0;
   for (let i = 0; i < 6; i++) {
     const side = i < 3 ? -1 : 1, k = i % 3, pts = [];
     for (let j = 0; j <= 10; j++) { const s = j / 10; pts.push({x:side * (.55 + k * .3 + s * (1.1 + k * .25)), y:.55 + s * (1.3 - k * .25) + Math.sin(time * 2 + s * 4 + i) * .15 * s}); }
     drawTentPath(pts, .34, .1);
   }
+  // same trick for the body: one blurred fill under everything, then the details without blur
+  if (shadowed) { ctx.fillStyle = '#7b2a6e'; ell(0, 0, 1.45, 1.12); ctx.fill(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowBlur = 0; }
   const g = ctx.createRadialGradient(-.4, -.5, .1, 0, 0, 1.6);
   g.addColorStop(0, '#ec93c4'); g.addColorStop(1, '#7b2a6e');
   ctx.fillStyle = g; ell(0, 0, 1.45, 1.12); ctx.fill();
@@ -2530,7 +2580,9 @@ function resize() {
     // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
     stage.style.width = hudEl.style.width = footEl.style.width = touchEl.style.width = COLS * T + 'px';
   }
-  dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  // the frame cost is fill rate, so the backing store is capped at about 2.2 million pixels; a 975 px board on a 2x screen renders at 1.56x
+  dpr = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(PIXEL_BUDGET / (COLS * T * ROWS * T)));
+  dpr = Math.max(1, Math.floor(T * dpr)) / T; // a whole number of pixels per tile, so prerendered sprites blit 1:1 instead of being resampled
   cv.width = Math.round(COLS * T * dpr); cv.height = Math.round(ROWS * T * dpr);
   cv.style.width = COLS * T + 'px'; cv.style.height = ROWS * T + 'px';
   stylePanel.style.maxWidth = COLS * T + 'px';
@@ -2798,11 +2850,37 @@ const TRACKS = {
     if (s === 0) { pad(ch, t, stepLen * 16, .022); bassNote(root, t, stepLen * 15, .08); }
     if (s % 4 === 2 && Math.random() < .35) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 1.4, 'sine', .022, at(t), 0, musicBus); tone(hz(m) * 2.01, hz(m) * 2.01, .4, 'sine', .006, at(t), 0, musicBus); }
   }},
+  tidepool: {name:'Tide pool', desc:'Slow kalimba over a low drone', bpm:64, fn(s, bar, t, stepLen) {
+    // pentatonic, one chord per bar, a drone that only moves every two bars
+    const [root, ch] = [[45, [57, 60, 64, 67]], [45, [57, 60, 64, 67]], [41, [53, 57, 60, 65]], [43, [55, 59, 62, 67]]][bar];
+    if (s === 0 && bar % 2 === 0) pad([root + 12, root + 19], t, stepLen * 32, .014);
+    if (s === 0) bassNote(root, t, stepLen * 14, .06);
+    const seq = [0, 2, 1, 3, 2, 0, 3, 1];
+    if (s % 2 === 0 && Math.random() < .85) mallet(ch[seq[(s / 2 + bar * 2) % 8]] + 12, t, .028);
+    if (s === 11 && Math.random() < .5) mallet(ch[0] + 24, t, .012);
+  }},
+  moondrift: {name:'Moon drift', desc:'Pads that breathe, almost no pulse', bpm:56, fn(s, bar, t, stepLen) {
+    const [root, ch] = [[38, [57, 62, 65]], [41, [57, 60, 65]], [36, [55, 60, 64]], [43, [55, 59, 62]]][bar];
+    if (s === 0) { pad(ch, t, stepLen * 16, .02); pad([ch[0] + 12], t + stepLen * 4, stepLen * 10, .008); bassNote(root, t, stepLen * 16, .07); }
+    if (s === 8 && Math.random() < .6) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 2.2, 'sine', .016, at(t), 0, musicBus); }
+    if (s === 4 && bar % 2 === 1) mallet(ch[2] + 12, t, .012);
+  }},
+  lantern: {name:'Lantern', desc:'A lullaby on soft mallets', bpm:80, fn(s, bar, t, stepLen) {
+    const [root, ch] = [[48, [60, 64, 67]], [45, [57, 60, 64]], [53, [57, 60, 65]], [43, [55, 59, 62]]][bar];
+    if (s === 0) { bassNote(root, t, stepLen * 12, .07); pad([ch[0], ch[2]], t, stepLen * 15, .011); }
+    // three-note cells, one per half bar, each a question then an answer
+    const cell = [[0, 1, 2], [2, 1, 0], [1, 2, 0], [0, 2, 1]][(bar + (s >= 8 ? 1 : 0)) % 4];
+    if (s % 8 === 0 || s % 8 === 3 || s % 8 === 5) mallet(ch[cell[[0, 3, 5].indexOf(s % 8)]] + (s >= 8 ? 12 : 0), t, .034);
+    if (s === 14 && Math.random() < .4) mallet(ch[1] + 24, t, .014);
+  }},
 };
-let track = TRACKS[save.track] || TRACKS.reef;
+// 'auto' (the default) follows the reef: the loops get calmer the deeper you go, and each boss has its own
+const trackForLevel = i => TRACKS[i === 17 ? 'moondrift' : i === 12 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
+let autoTrack = !save.track || save.track === 'auto';
+let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
   if (id === 'off') { musicOn = false; }
-  else { musicOn = true; track = TRACKS[id] || TRACKS.reef; save.track = id; step = 0; }
+  else { musicOn = true; autoTrack = id === 'auto' || !TRACKS[id]; track = autoTrack ? (S ? trackForLevel(levelIdx) : TRACKS.reef) : TRACKS[id]; save.track = autoTrack ? 'auto' : id; step = 0; }
   save.music = musicOn; persist(); setAudioLabels();
 }
 function scheduleMusic() {
@@ -2826,7 +2904,7 @@ const PREVIEWS = [['grow', 'Grow coral'], ['break', 'Break coral'], ['get', 'Sna
   ['roar', 'Bruiser roars'], ['crash', 'Bruiser crashes'], ['warn', 'Tentacle warning'], ['lash', 'Tentacle lash'], ['stuck', 'Tentacle stuck'], ['bosshit', 'Boss hit'], ['bossdown', 'Boss defeated'],
   ['win', 'Reef cleared'], ['click', 'Menu click']];
 function openStyle() {
-  const tw = twoP; twoP = true; loadLevel(15); twoP = tw;
+  const tw = twoP; twoP = true; loadLevel(LEVELS.findIndex(l => l.name === 'Lionfish Lair')); twoP = tw;
   mode = 'style'; S.readyT = 0; hideBanner(); overlay.hidden = true;
   stylePanel.hidden = false; resize();
   unlockAudio(); renderStyle();
@@ -2839,7 +2917,8 @@ function renderStyle() {
   const opt = (attr, id, o, on, sw) => `<button class="opt" data-${attr}="${id}" aria-pressed="${on}">${sw || ''}<b>${o.name}</b><small>${o.desc}</small></button>`;
   $('#optTheme').innerHTML = Object.entries(THEMES).map(([id, t]) => opt('theme', id, t, theme === t, `<span class="sw">${t.sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>`)).join('');
   $('#optPack').innerHTML = Object.entries(PACKS).map(([id, p]) => opt('pack', id, p, pack === p)).join('');
-  $('#optTrack').innerHTML = Object.entries(TRACKS).map(([id, t]) => opt('track', id, t, musicOn && track === t)).join('') + opt('track', 'off', {name:'No music', desc:'Just the reef ambience and effects'}, !musicOn);
+  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Follows the reef', desc:'Calmer loops the deeper you go, and each boss has its own'}, musicOn && autoTrack)
+    + Object.entries(TRACKS).map(([id, t]) => opt('track', id, t, musicOn && !autoTrack && track === t)).join('') + opt('track', 'off', {name:'No music', desc:'Just the reef ambience and effects'}, !musicOn);
   $('#previews').innerHTML = `<button class="all" id="playAll">Play all</button>` + PREVIEWS.map(([n, l]) => `<button data-pv="${n}">${l}</button>`).join('');
 }
 function preview(n) {
@@ -2874,12 +2953,14 @@ $('#bMusic').addEventListener('click', () => { if (mode === 'style') renderStyle
 
 // ================= loop =================
 let last = performance.now();
+const STEP = 1 / 120; let acc = 0;
 function frame(now) {
   let dt = (now - last) / 1000; last = now;
-  if (dt > .05) dt = .05; if (dt < 0) dt = 0;
-  time += dt;
-  if (shake > 0) shake = Math.max(0, shake - dt * 1.2);
-  update(dt); draw(); hud();
+  if (dt > .1) dt = .1; if (dt < 0) dt = 0;
+  // the simulation runs in fixed 1/120 s steps however late the frame is, so a slow frame never slows the fish or delays a key
+  acc += dt;
+  while (acc >= STEP) { time += STEP; if (shake > 0) shake = Math.max(0, shake - STEP * 1.2); update(STEP); acc -= STEP; }
+  draw(); hud();
   if (mode === 'menu' || mode === 'fish') drawPreviews();
   requestAnimationFrame(frame);
 }
@@ -2893,7 +2974,7 @@ if (!save.seenIntro) playStory('intro', () => { save.seenIntro = true; persist()
 requestAnimationFrame(frame);
 
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
-  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; },
+  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; },
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
   get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();

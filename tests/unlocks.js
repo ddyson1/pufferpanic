@@ -35,9 +35,9 @@ setTimeout(()=>{
   $('#card [data-act="fish"]').click();
   chk(G.isUnlocked('color','lavender') && !!$('[data-fcolor="lavender"]'),'"Try it on" opens the fish screen with Lavender selectable');
   $('[data-fcolor="lavender"]').click(); chk(G.getFish('killi').c2==='#bba3f0','and it can be worn');
-  for(let L=3;L<16;L++) clear(L);
+  for(let L=3;L<17;L++) clear(L); // Bruiser's Reef is level 13 (index 12) now, cleared along the way
   const got=G.unlockedSet(); chk(['pattern:stripes','acc:glasses','color:tangerine','acc:cap','pattern:freckles','acc:star','color:midnight'].every(x=>got.includes(x)),'level clears unlock stripes, glasses, tangerine, cap, freckles, starfish and midnight');
-  clear(16); chk(G.isUnlocked('acc','fin'),'defeating Bruiser unlocks the shark fin hat');
+  chk(G.isUnlocked('acc','fin'),'defeating Bruiser unlocks the shark fin hat');
   clear(17); chk(G.isUnlocked('acc','crown') && G.isUnlocked('pattern','hearts'),'beating the Kraken Queen unlocks the crown and hearts');
   chk(/Royal crown/.test($('#card').textContent),'the final clear screen (after the ending) announces the crown');
   const snacks=JSON.parse(w.localStorage.getItem('puffer-panic-v2')).stats.snacks; chk(snacks>0 && snacks<500 && !G.isUnlocked('acc','pearls'),`lifetime snacks are counted and saved (${snacks}); pearls still locked under 500`);
