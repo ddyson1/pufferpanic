@@ -12,7 +12,8 @@
     "test:wiki": "node tests/wiki.js",
     "wiki": "node tools/wiki/wikiassets.js && node tests/bosses.js && node tests/fish.js && python3 tools/wiki/wiki_gen.py && node tests/wiki.js",
     "assets": "node tools/launchassets.js",
-    "art-samples": "node tools/art/styles.js"
+    "art-samples": "node tools/art/styles.js",
+    "cover": "node tools/cover.js"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.60",
