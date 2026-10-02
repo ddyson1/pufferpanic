@@ -50,7 +50,7 @@ SNACK = OrderedDict([
 TERRAIN = [
   ('#', 'Rock', 'tile_rock', 'rock', 'Solid for everyone. Coral lines and charges stop at it.'),
   ('c', 'Coral', 'tile_coral', 'coral', 'Grown and broken by the pufferfish. Blocks most creatures, but jellyfish and manta rays pass over it, octopuses chew through it, and mantis shrimp punch it out. A snack inside coral is visible but cannot be collected until the coral is broken.'),
-  ('h', 'Hot vent', 'tile_vent', 'hot-vent', 'Safe to swim over, but coral cannot grow on it: a wall stops short at the vent with a burst of steam.'),
+  ('h', 'Hot vent', 'tile_vent', 'hot-vent', 'Erupts every few seconds, glowing brighter just before: any creature standing on it is stunned, while the fish are too light to mind. Coral cannot grow on it, so a wall stops short at the vent with a burst of steam.'),
   ('UDLR', 'Current', 'tile_current', 'current', 'Carries anything standing on it, pufferfish and creatures alike, one tile at a time in the direction of the arrows, and bends a coral line as it grows or breaks, so one press can wrap a wall around a corner. Holding a direction swims against it.'),
   ('x', 'Sea urchin', 'tile_urchin', 'urchin', 'Catches any pufferfish that swims onto it. Growing coral over it smothers it; once the coral is broken it takes three seconds to re-arm, shown by a ring.'),
   ('k', 'Kelp', 'tile_kelp', 'kelp', 'Hides you: a pufferfish fades while it is in kelp, and hunters such as eels, stingrays and swordfish lose track of it unless they are on the very next tile. Any creature that walks into the kelp can still catch you.'),

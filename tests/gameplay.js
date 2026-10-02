@@ -52,16 +52,18 @@ setTimeout(()=>{
  // both dead -> restart
  G.killPlayer(S.players[0]); G.killPlayer(S.players[1]); G.tick(.05); G.tick(1); G.tick(1); console.log('restart after wipe:',G.S!==S); if(G.S===S) fail('wipe restart');
  // vents block coral
- G.setTwoP(false); G.loadLevel(4); G.tick(2.2); S=G.S; const pv=S.players[0]; tp(pv,7,7); pv.face={x:0,y:-1}; // up from (7,7): (7,6) is '.', (7,5) Q spot '.', (7,4)'.',(7,3)'.'
- tp(pv,5,6); pv.face={x:1,y:0}; G.coralAction(pv); console.log('vent at (6,6) blocks coral:',S.grid[6][6]!=='c'); if(S.grid[6][6]==='c') fail('vent');
+ G.setTwoP(false); G.loadLevel(4); G.tick(2.2); S=G.S; const pv=S.players[0];
+ tp(pv,3,5); pv.face={x:1,y:0}; G.coralAction(pv); console.log('vent at (5,5) blocks coral:',S.grid[5][4]==='c'&&S.grid[5][5]!=='c'); if(S.grid[5][5]==='c') fail('vent');
+ // an eruption stuns a crab standing on a vent
+ { const c=S.enemies.find(e=>e.kind==='C'); tp(c,5,5); c.stun=0; S.ventT=99; G.tick(1/60); console.log('eruption stuns the crab on the vent:',c.stun>0); if(!(c.stun>0)) fail('vent stun'); }
  // currents redirect: L8 row4 col2 'U'
- G.loadLevel(7); G.tick(2.2); S=G.S; const pc=S.players[0]; S.enemies.forEach(e=>e.stun=999); tp(pc,2,5); pc.face={x:0,y:-1};
- G.coralAction(pc); console.log('current bends coral: (2,4)=',S.grid[4][2],'(2,3)=',S.grid[3][2]);
- tp(pc,4,4); pc.face={x:-1,y:0}; G.coralAction(pc); G.coralAction(pc); // clear
- // horizontal line into current R at (6,1)
- tp(pc,4,1); pc.face={x:1,y:0}; S.snacks.length=S.snacks.length; G.coralAction(pc);
- console.log('line from (4,1) right: (5,1)',S.grid[1][5],'(6,1)',S.grid[1][6],'(7,1)',S.grid[1][7],'(8,1) D-tile',S.grid[1][8],'(8,2)',S.grid[2][8]);
- if(S.grid[2][8]!=='c') fail('current redirect down');
+ G.loadLevel(7); G.tick(2.2); S=G.S; const pc=S.players[0]; S.enemies.forEach(e=>e.stun=999); tp(pc,3,2); pc.face={x:0,y:-1};
+ G.coralAction(pc); console.log('current bends coral: (3,1)=',S.grid[1][3],'(4,1)=',S.grid[1][4]); if(!(S.grid[1][3]==='c'&&S.grid[1][4]==='c')) fail('current bend');
+ G.coralAction(pc); // clear
+ // horizontal line into the D lane at (13,4) turns down it
+ tp(pc,11,4); pc.face={x:1,y:0}; G.coralAction(pc);
+ console.log('line from (11,4) right: (12,4)',S.grid[4][12],'(13,4) D-tile',S.grid[4][13],'(13,5)',S.grid[5][13]);
+ if(S.grid[5][13]!=='c') fail('current redirect down');
  // urchin kill + smother
  G.loadLevel(6); G.tick(2.2); S=G.S; S.enemies.forEach(e=>e.stun=999); const pu=S.players[0];
  tp(pu,3,5); G.tick(.05); console.log('urchin kills:',pu.dead); if(!pu.dead) fail('urchin');
