@@ -235,8 +235,8 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 }
 /* wide desktop windows: the board alone, as tall as the window; the reef info sits in a strip over the top row of rocks
    and the sound, music, pause and fullscreen buttons in the bottom right corner (see resize, which moves them in) */
-@media (pointer:fine) and (min-width:1000px){
-  .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:stretch;max-width:none;min-height:100vh;padding:12px 16px}
+@media (pointer:fine) and (min-width:900px){
+  .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:center;max-width:none;min-height:100vh;padding:12px 16px}
   .wrap.side>.hud,.wrap.side .rotate,.wrap.side .touch,.wrap.side .foot{display:none}
   .wrap.side .stage{grid-column:1;grid-row:1;margin:0}
   .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;margin:0;width:min(760px,94%);max-width:none !important;max-height:calc(100% - 24px);border-radius:16px;background:rgba(7,34,43,.96);color:#e6f6f5;overflow:auto;padding:16px 18px 8px;box-shadow:0 0 0 3000px rgba(2,20,30,.6),0 24px 60px rgba(0,0,0,.45)}
@@ -2813,9 +2813,16 @@ function updateKeysHelp() {
 
 // ================= layout =================
 let builtT = 0, builtDpr = 0, sideLayout = false, labIn = false;
-const HUD_H = 46, HUD_H2 = 76, HUD_WIDE = 800; // the info strip above the board: one row, or two rows under 800 px where two players would not fit
+const HUD_H = 46, HUD_H2 = 76, HUD_WIDE = 800;
+// The board comes in three sizes, phone (24 px tiles, 360 x 312), laptop (44, 660 x 572) and desktop (56, 840 x 728), and takes the
+// largest that fits; a window too small even for the phone size scales below it so the game still works. sizeCap steps the
+// stacked layout down one size when the measured page still overflows the window.
+const SIZES = [56, 44, 24];
+let sizeCap = Infinity, sizedFor = '';
+const snapT = maxT => SIZES.find(t => t <= Math.min(maxT, sizeCap)) || Math.max(16, Math.floor(maxT)); // the info strip above the board: one row, or two rows under 800 px where two players would not fit
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
+  const sig = (window.innerWidth || 0) + 'x' + (window.innerHeight || 0); if (sig !== sizedFor) { sizedFor = sig; sizeCap = Infinity; }
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
   const labW = !stylePanel.hidden && !sideLayout && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column in the stacked layout, see .wrap:has(.style) in the CSS
@@ -2831,11 +2838,11 @@ function resize() {
   // full height (see .wrap.side). Chosen whenever that gives a bigger board than the stacked layout.
   const innerH = window.innerHeight || 800;
   let sideMode = false;
-  if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
+  if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:900px)').matches) {
     // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
     const fullW = (window.innerWidth || 0) - 48;
-    const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24 - HUD_H) / ROWS));
-    sideMode = tSide > tStack;
+    const tStack = snapT(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = snapT(Math.min(fullW / COLS, (innerH - 24 - HUD_H) / ROWS));
+    sideMode = tSide >= tStack; // a tie goes to the side layout, which keeps the whole page in view
   }
   wrap.classList.toggle('side', sideMode);
   const hudIn = sideMode || sideTouch; // the hud and the icon buttons sit on the board on wide windows and landscape phones
@@ -2848,14 +2855,14 @@ function resize() {
   stage.classList.toggle('hudin', hudIn);
   if (sideMode) {
     const innerW = window.innerWidth || 0;
-    T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H) / ROWS)));
-    if (COLS * T < HUD_WIDE) T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H2) / ROWS)));
+    T = snapT(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H) / ROWS));
+    if (COLS * T < HUD_WIDE) T = snapT(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H2) / ROWS));
     stage.style.width = COLS * T + 'px'; stage.style.height = ''; stage.classList.remove('tall'); hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0, hudH = HUD_H; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
     const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? (pass ? hudH : HUD_H) : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
-    T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
+    T = snapT(Math.min(wrapW / COLS, availH / ROWS));
     hudH = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600 ? HUD_H2 : HUD_H; // the second pass sizes for a two-row strip when needed
     // a portrait phone's title screen: the card gets the height the pad would have taken, the board sits in the middle of it
     const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > ROWS * T + 80;
@@ -2877,6 +2884,10 @@ function resize() {
   stage.classList.toggle('narrow', hudIn && COLS * T < 600); // a landscape phone's strip keeps only the reef, the snacks and the fish
   const twoRows = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600; stage.classList.toggle('hud2', twoRows); stage.style.setProperty('--hudH', (twoRows ? HUD_H2 : HUD_H) + 'px');
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
+  // the stacked layout's chrome is measured, not computed, so check the result and step down a size if the page still scrolls
+  if (!sideMode && window.innerHeight && document.documentElement.scrollHeight > window.innerHeight + 1 && stylePanel.hidden) {
+    const i = SIZES.indexOf(T); if (i >= 0 && i < SIZES.length - 1 && SIZES[i + 1] < sizeCap) { sizeCap = SIZES[i + 1]; resize(); }
+  }
 }
 cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
 stage.addEventListener('pointerdown', () => { try { cv.focus({preventScroll:true}); } catch (e) {} });
