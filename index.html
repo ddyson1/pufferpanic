@@ -210,9 +210,10 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 /* the reef info as a strip over the top row of rocks and the icon buttons in the bottom corner, used whenever resize()
    moves them into the stage: wide desktop windows and landscape phones */
 @media (min-width:0){
-  .stage>.hud{position:relative;z-index:5;margin:0;height:46px;box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:clamp(.7rem,calc(var(--boardW,600px)/60),.86rem)}
+  .stage>.hud{position:relative;z-index:5;margin:0;height:var(--hudH,46px);box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:clamp(.7rem,calc(var(--boardW,600px)/60),.86rem)}
   .stage>.hud #hWave{display:none} /* the pips say it */
   .stage>.hud[hidden]{display:flex;visibility:hidden} /* the strip keeps its row above the board on the title screen, so the board never jumps */
+  .stage.hud2>.hud{flex-wrap:wrap;align-content:center;row-gap:4px}.stage.hud2>.hud .grp{flex-basis:100%;justify-content:center}
   .stage>.hud .grp{flex-wrap:nowrap;min-width:0}.stage>.hud .lvl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .stage>.hud .chip{background:rgba(255,255,255,.14);padding:2px 8px}
   .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
@@ -2812,7 +2813,7 @@ function updateKeysHelp() {
 
 // ================= layout =================
 let builtT = 0, builtDpr = 0, sideLayout = false, labIn = false;
-const HUD_H = 46; // the info strip's row above the board when it sits inside the stage (see .stage>.hud)
+const HUD_H = 46, HUD_H2 = 76, HUD_WIDE = 800; // the info strip above the board: one row, or two rows under 800 px where two players would not fit
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
@@ -2848,12 +2849,14 @@ function resize() {
   if (sideMode) {
     const innerW = window.innerWidth || 0;
     T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H) / ROWS)));
+    if (COLS * T < HUD_WIDE) T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H2) / ROWS)));
     stage.style.width = COLS * T + 'px'; stage.style.height = ''; stage.classList.remove('tall'); hudEl.style.width = footEl.style.width = touchEl.style.width = '';
-  } else for (let pass = 0; pass < 2; pass++) {
+  } else for (let pass = 0, hudH = HUD_H; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
-    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? HUD_H : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
+    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? (pass ? hudH : HUD_H) : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
+    hudH = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600 ? HUD_H2 : HUD_H; // the second pass sizes for a two-row strip when needed
     // a portrait phone's title screen: the card gets the height the pad would have taken, the board sits in the middle of it
     const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > ROWS * T + 80;
     stage.classList.toggle('tall', tall); stage.style.height = tall ? availH + 'px' : '';
@@ -2872,6 +2875,7 @@ function resize() {
   wrap.style.setProperty('--boardW', COLS * T + 'px'); // the hud and footer text scale with it
   stage.style.setProperty('--T', T + 'px'); // the strip over the top row of rocks in the side layout
   stage.classList.toggle('narrow', hudIn && COLS * T < 600); // a landscape phone's strip keeps only the reef, the snacks and the fish
+  const twoRows = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600; stage.classList.toggle('hud2', twoRows); stage.style.setProperty('--hudH', (twoRows ? HUD_H2 : HUD_H) + 'px');
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
 }
 cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
