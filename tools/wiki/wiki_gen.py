@@ -397,7 +397,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <tbody>
 <tr><th scope="row">Look</th><td><b>Cut paper</b>, the default (layered paper shapes with soft drop shadows, like a handmade diorama), <b>Reef</b> (daylight teal water, pink brain coral, mossy stone), <b>Twilight</b> (deep night water with glowing coral and lichen), <b>Lagoon</b> (bright shallow water, sea glass blocks, sandstone)</td></tr>
 <tr><th scope="row">Sound effects</th><td><b>Bubbly</b> (soft bloops with a watery echo), <b>Music box</b> (tinkling tines with long tails), <b>Breath</b> (airy swells and low hums), <b>Droplets</b> (water plinks and splashes)</td></tr>
-<tr><th scope="row">Music</th><td><b>Follows the reef</b> by default, which picks a loop by reef and gives each boss its own; or <b>Reef loop</b>, <b>Tide pool</b> or <b>Moon drift</b> everywhere</td></tr>
+<tr><th scope="row">Music</th><td><b>Reef by reef</b> by default, which plays five tunes in turn as you go deeper (Reef loop, Lantern, Tide pool, Deep current for Bruiser and Moon drift for the Queen), two of which it alone plays; or <b>Reef loop</b>, <b>Tide pool</b> or <b>Moon drift</b> everywhere</td></tr>
 </tbody></table></div>
 
 <h2 id="development">Development</h2>
