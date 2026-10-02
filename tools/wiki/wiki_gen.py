@@ -50,10 +50,10 @@ SNACK = OrderedDict([
 TERRAIN = [
   ('#', 'Rock', 'tile_rock', 'rock', 'Solid for everyone. Coral lines and charges stop at it.'),
   ('c', 'Coral', 'tile_coral', 'coral', 'Grown and broken by the pufferfish. Blocks most creatures, but jellyfish and manta rays pass over it, octopuses chew through it, and mantis shrimp punch it out. A snack inside coral is visible but cannot be collected until the coral is broken.'),
-  ('h', 'Hot vent', 'tile_vent', 'hot-vent', 'Safe to swim over, but coral cannot grow on it, so a wall stops short at the vent.'),
-  ('UDLR', 'Current', 'tile_current', 'current', 'Bends a coral line as it grows (or breaks) in the direction of the arrows, so one press can wrap a wall around a corner.'),
+  ('h', 'Hot vent', 'tile_vent', 'hot-vent', 'Safe to swim over, but coral cannot grow on it: a wall stops short at the vent with a burst of steam.'),
+  ('UDLR', 'Current', 'tile_current', 'current', 'Carries anything standing on it, pufferfish and creatures alike, one tile at a time in the direction of the arrows, and bends a coral line as it grows or breaks, so one press can wrap a wall around a corner. Holding a direction swims against it.'),
   ('x', 'Sea urchin', 'tile_urchin', 'urchin', 'Catches any pufferfish that swims onto it. Growing coral over it smothers it; once the coral is broken it takes three seconds to re-arm, shown by a ring.'),
-  ('k', 'Kelp', 'tile_kelp', 'kelp', 'Hides you. Hunters such as eels, stingrays and swordfish lose track of a pufferfish in kelp unless they are right next to it.'),
+  ('k', 'Kelp', 'tile_kelp', 'kelp', 'Hides you: a pufferfish fades while it is in kelp, and hunters such as eels, stingrays and swordfish lose track of it unless they are on the very next tile. Any creature that walks into the kelp can still catch you.'),
 ]
 
 def count_map(L):
@@ -397,7 +397,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <tbody>
 <tr><th scope="row">Look</th><td><b>Cut paper</b>, the default (layered paper shapes with soft drop shadows, like a handmade diorama), <b>Reef</b> (daylight teal water, pink brain coral, mossy stone), <b>Twilight</b> (deep night water with glowing coral and lichen), <b>Lagoon</b> (bright shallow water, sea glass blocks, sandstone)</td></tr>
 <tr><th scope="row">Sound effects</th><td><b>Bubbly</b> (soft synth bloops with a watery echo), <b>Chiptune</b> (square-wave blips like an old handheld)</td></tr>
-<tr><th scope="row">Music</th><td><b>Reef loop</b> (bright mallets), <b>Deep current</b> (slow pads and distant bells), or no music</td></tr>
+<tr><th scope="row">Music</th><td><b>Follows the reef</b> by default, which picks a loop by reef and gives each boss its own; or <b>Reef loop</b>, <b>Tide pool</b> or <b>Moon drift</b> everywhere</td></tr>
 </tbody></table></div>
 
 <h2 id="development">Development</h2>
