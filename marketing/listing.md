@@ -22,7 +22,7 @@ Swim through 16 reefs that each introduce something new. Bruiser the shark guard
 - Scores, streaks, best times and stars on every level.
 - Choose Killi or Milli and dress them up. Most outfits are earned by playing.
 - An illustrated story with an ending worth reaching.
-- Handmade cut-paper look, with two more looks and two sound packs to choose from.
+- Handmade cut-paper look, with three more looks and four sound packs to choose from.
 
 ## Tags
 arcade, maze, co-op, 2 player, puzzle, cute, ocean, fish, retro, family

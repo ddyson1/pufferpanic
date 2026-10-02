@@ -13,7 +13,7 @@ Wiki: https://ddyson1.github.io/pufferpanic/wiki/
 - Scoring with streaks, best times, and one to three stars per level.
 - Choose Killi or Milli and customize them. Most colors, patterns and accessories are earned by clearing levels, beating bosses, or long-term goals.
 - An illustrated story intro, boss cards, and an ending.
-- Three visual looks (Cut paper is the default), two sound packs and two music tracks, all synthesized in the browser. The game ships no audio files.
+- Three visual looks (Cut paper is the default), four sound packs and four music loops, all synthesized in the browser. The game ships no audio files.
 
 ## Controls
 

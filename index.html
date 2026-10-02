@@ -264,7 +264,7 @@ const PALETTES = {
   lavender:  {name:'Lavender',  c1:'#f3ebff', c2:'#bba3f0', belly:'#fbf8ff', spot:'#6b4fb8', fin:'#a58be6', spike:'#7d62c8', tag:'#c7b4f5'},
   tangerine: {name:'Tangerine', c1:'#ffe3c7', c2:'#ff9f4a', belly:'#fff6ec', spot:'#b8561a', fin:'#f28a36', spike:'#c96a24', tag:'#ffb066'},
   midnight:  {name:'Midnight',  c1:'#a9b9e2', c2:'#3e4f86', belly:'#dfe5f7', spot:'#e8ecff', fin:'#33447a', spike:'#2a3866', tag:'#a9b8e8'},
-  gold:      {name:'Gold',      c1:'#fff6c4', c2:'#e3b21c', belly:'#fffbe8', spot:'#a87508', fin:'#f2c43a', spike:'#9c6f06', tag:'#ffd54a'},
+  gold:      {name:'Gold',      c1:'#fff1a8', c2:'#a8650a', belly:'#ffe59a', spot:'#6a4000', fin:'#b9770e', spike:'#8a5a08', tag:'#f0b43c'},
 };
 const PATTERNS = {spots:'Spots', plain:'Plain', stripes:'Stripes', freckles:'Freckles', hearts:'Hearts'};
 const ACCESSORIES = {none:'None', bow:'Bow', flower:'Flower', glasses:'Glasses', cap:'Sailor cap', star:'Starfish clip', fin:'Shark fin hat', crown:'Royal crown', pearls:'Pearl necklace'};
@@ -365,23 +365,26 @@ const STORY = {
   queen: [{scene:'queen', text:'At the very bottom of the Trench waits the Kraken Queen, and her tentacles can reach across the whole reef. Trap one in coral, then puff right next to it.'}],
   ending: [
     {scene:'ending1', text:'With one last wobble, the Kraken Queen sank down and sighed. She had never wanted to wreck the reef. She had heard about the Moonlight Feast, and nobody had invited her.'},
-    {scene:'ending2', text:'So Killi and Milli did. That year the Moonlight Feast was the biggest the reef had ever seen, and Bruiser even brought dessert.'},
+    {scene:'invite', text:'So Killi and Milli did. Milli made the invitation out of a pearl, and Killi puffed up as big as he could to deliver it.'},
+    {scene:'ending2', text:'That year the Moonlight Feast was the biggest the reef had ever seen. Every crab, eel and jellyfish came, and the Queen sat at the head of the table.'},
+    {scene:'dessert', text:'And Bruiser even brought dessert. He carried it all the way up from the Trench without crashing into anything, which for Bruiser was a first.'},
+    {scene:'moonset', text:'They ate until the moon went down, and nobody on the reef was grumpy for a whole year. The end.'},
   ],
 };
 
 const THEMES = {
-  paper: {name:'Cut paper', desc:'Layered paper shapes with soft drop shadows, like a handmade diorama', sw:['#47a0b0', '#f07a83', '#ead6a0'], paper:true,
+  paper: {name:'Cut paper', desc:'Layered paper, soft shadows', sw:['#47a0b0', '#f07a83', '#ead6a0'], paper:true,
     layers:['#2f7f92', '#3a8fa1', '#47a0b0', '#55b0bd'], vig:'rgba(5,30,40,0.28)', rock:'#5a8b91', moss:'#86c398', coral:'#f07a83', coralLine:'rgba(255,214,208,0.9)',
     light:'200,245,245', ray:'rgba(255,255,255,0)', stage:'#2f7f92'},
-  reef: {name:'Reef', desc:'Daylight teal water, pink brain coral, mossy stone', sw:['#2f8f9a', '#ee5f6d', '#6a9ea0'],
+  reef: {name:'Reef', desc:'Daylight teal, pink coral', sw:['#2f8f9a', '#ee5f6d', '#6a9ea0'],
     floor:['#2f8f9a', '#14586a'], checker:'rgba(255,255,255,0.035)', speck:['rgba(255,238,200,0.07)', 'rgba(0,30,40,0.09)'], ripple:'rgba(255,255,255,0.055)',
     vig:'rgba(2,20,30,0.5)', shade:'rgba(0,25,35,0.38)', rockT:['#6a9ea0', '#3b6f79'], rockF:['#1f4c5b', '#0f2e3b'], moss:'rgba(128,205,150,0.32)',
     coralT:['#ffb0a6', '#ee5f6d'], coralF:['#c4404f', '#8a2234'], coralLine:'rgba(255,228,220,0.55)', light:'140,235,230', ray:'rgba(210,250,255,0.035)', stage:'#0b4a5c'},
-  twilight: {name:'Twilight', desc:'Deep night water with glowing coral and lichen', sw:['#141f4a', '#5fe3f5', '#5a5890'],
+  twilight: {name:'Twilight', desc:'Night water, glowing coral', sw:['#141f4a', '#5fe3f5', '#5a5890'],
     floor:['#1d2b62', '#070c24'], checker:'rgba(160,180,255,0.035)', speck:['rgba(170,200,255,0.06)', 'rgba(0,0,20,0.15)'], ripple:'rgba(150,180,255,0.06)',
     vig:'rgba(2,3,18,0.7)', shade:'rgba(0,0,15,0.45)', rockT:['#5a5890', '#2c2a58'], rockF:['#1c1a3e', '#0b0a1f'], moss:'rgba(110,255,220,0.22)',
     coralT:['#c6fbff', '#45cbe8'], coralF:['#2290b5', '#0d4d6e'], coralLine:'rgba(255,255,255,0.6)', light:'110,150,255', ray:'rgba(170,190,255,0.03)', glow:'90,230,255', urchin:'215,175,255', stage:'#070c24'},
-  lagoon: {name:'Lagoon', desc:'Bright shallow water, sea glass blocks, sandstone', sw:['#86e3d8', '#94e2c6', '#e8c48a'],
+  lagoon: {name:'Lagoon', desc:'Bright shallows, sea glass', sw:['#86e3d8', '#94e2c6', '#e8c48a'],
     floor:['#86e3d8', '#3fb3bd'], checker:'rgba(255,255,255,0.06)', speck:['rgba(255,250,220,0.12)', 'rgba(0,80,90,0.07)'], ripple:'rgba(255,255,255,0.12)',
     vig:'rgba(10,70,80,0.28)', shade:'rgba(0,70,80,0.25)', rockT:['#f4d9a3', '#d9a866'], rockF:['#b0784a', '#7a5030'], moss:'rgba(110,170,80,0.3)',
     coralT:['#e6fbf2', '#94e2c6'], coralF:['#5cb39a', '#327e69'], coralLine:'rgba(255,255,255,0.75)', light:'255,255,215', ray:'rgba(255,255,230,0.06)', stage:'#3fb3bd'},
@@ -1852,11 +1855,14 @@ function drawAccessory(acc, r, ex, ey) {
     for (let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2 - Math.PI / 2; circ(Math.cos(a) * .055, Math.sin(a) * .055, .045); ctx.fill(); }
     ctx.fillStyle = '#ffcf4a'; circ(0, 0, .035); ctx.fill();
   } else if (acc === 'cap') {
-    ctx.translate(-r * .05, -r * .86); ctx.rotate(-.18); ctx.scale(k, k);
-    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(0, 0, .17, .12, 0, Math.PI, 0); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#3f6fd8'; ctx.fillRect(-.17, -.035, .34, .04);
-    ctx.fillStyle = '#e6eefc'; ell(.02, .012, .19, .03); ctx.fill();
-    ctx.fillStyle = '#3f6fd8'; circ(0, -.12, .025); ctx.fill();
+    // a sailor's cap: white crown, navy band with a gold stripe, short dark visor, red pompom
+    ctx.translate(-r * .02, -r * .9); ctx.rotate(-.15); ctx.scale(k, k);
+    ctx.fillStyle = '#1e2d4d'; ctx.beginPath(); ctx.ellipse(.1, .035, .17, .045, .12, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.moveTo(-.21, .025); ctx.quadraticCurveTo(-.2, -.17, 0, -.19); ctx.quadraticCurveTo(.2, -.17, .21, .025); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#9fb2cc'; ctx.lineWidth = .012; ctx.stroke();
+    ctx.fillStyle = '#2f55a8'; ctx.fillRect(-.21, -.03, .42, .055);
+    ctx.fillStyle = '#f6c445'; ctx.fillRect(-.21, -.012, .42, .012);
+    ctx.fillStyle = '#e8463a'; circ(0, -.2, .032); ctx.fill();
   } else if (acc === 'star') {
     ctx.translate(-r * .3, -r * .9); ctx.rotate(.3); ctx.scale(k * 1.35, k * 1.35);
     ctx.fillStyle = '#ffb347'; ctx.beginPath();
@@ -1864,11 +1870,13 @@ function drawAccessory(acc, r, ex, ey) {
     ctx.closePath(); ctx.fill();
     ctx.fillStyle = 'rgba(255,240,200,0.9)'; circ(0, 0, .015); ctx.fill();
   } else if (acc === 'fin') {
-    ctx.translate(-r * .12, -r * .9); ctx.rotate(-.12); ctx.scale(k, k);
-    ctx.fillStyle = '#7f99a8';
-    ctx.beginPath(); ctx.moveTo(-.12, .03); ctx.lineTo(.03, -.22); ctx.quadraticCurveTo(.07, -.06, .13, .03); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#c9d6dd'; ctx.beginPath(); ctx.moveTo(-.07, .03); ctx.lineTo(.02, -.13); ctx.lineTo(.0, .03); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = '#58717f'; ctx.fillRect(-.14, .02, .29, .035);
+    // a dorsal fin on a headband, swept back like Bruiser's, with a pale front face
+    ctx.translate(-r * .1, -r * .9); ctx.rotate(-.1); ctx.scale(k, k);
+    ctx.fillStyle = '#7b94a3'; ctx.beginPath(); ctx.moveTo(-.17, .02); ctx.quadraticCurveTo(-.1, -.2, .06, -.32); ctx.quadraticCurveTo(.07, -.13, .18, .02); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#3c4f5a'; ctx.lineWidth = .012; ctx.stroke();
+    ctx.fillStyle = '#d3dee4'; ctx.beginPath(); ctx.moveTo(-.09, .02); ctx.quadraticCurveTo(-.03, -.14, .05, -.25); ctx.quadraticCurveTo(.03, -.1, .08, .02); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#4d6472'; rr(-.22, .0, .44, .055, .02); ctx.fill();
+    ctx.fillStyle = '#9fb3c0'; ctx.fillRect(-.22, .02, .44, .012);
   } else if (acc === 'crown') {
     ctx.translate(-r * .06, -r * .93); ctx.rotate(-.12); ctx.scale(k, k);
     ctx.fillStyle = '#f6c445';
@@ -1878,11 +1886,15 @@ function drawAccessory(acc, r, ex, ey) {
     ctx.fillStyle = '#e8463a'; circ(0, -.05, .022); ctx.fill();
     ctx.fillStyle = '#7cc4f0'; circ(-.08, -.01, .016); ctx.fill(); circ(.08, -.01, .016); ctx.fill();
   } else if (acc === 'pearls') {
-    for (let i = 0; i < 9; i++) {
-      const a = -.05 * Math.PI + i * (.62 * Math.PI / 8), x = Math.cos(a) * r * .84, y = Math.sin(a) * r * .84;
-      ctx.fillStyle = '#f7f4ff'; circ(x, y, .03 * k); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.95)'; circ(x - .01 * k, y - .01 * k, .01 * k); ctx.fill();
-    }
+    // a string of larger pearls under the chin, alternating warm and cool tints, on a thin cord
+    const pts = []; for (let i = 0; i < 9; i++) { const a = -.02 * Math.PI + i * (.66 * Math.PI / 8); pts.push([Math.cos(a) * r * .86, Math.sin(a) * r * .86]); }
+    ctx.strokeStyle = 'rgba(70,50,30,0.55)'; ctx.lineWidth = .012 * k; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
+    pts.forEach(([x, y], i) => {
+      ctx.fillStyle = 'rgba(0,25,35,0.25)'; circ(x + .01 * k, y + .012 * k, .042 * k); ctx.fill();
+      const g = ctx.createRadialGradient(x - .013 * k, y - .013 * k, 0, x, y, .045 * k);
+      g.addColorStop(0, '#ffffff'); g.addColorStop(.55, i % 2 ? '#f6e8ff' : '#e6f4ff'); g.addColorStop(1, '#b4a6c4');
+      ctx.fillStyle = g; circ(x, y, .042 * k); ctx.fill();
+    });
   }
   ctx.restore();
 }
@@ -2417,6 +2429,10 @@ function drawStory() {
   const decor = () => { [[2, 3], [3, 3], [11, 3], [12, 3], [2, 9], [12, 9], [11, 9]].forEach(([x, y]) => coral(x, y)); [[1, 10], [13, 10], [5, 11], [9, 11]].forEach(([x, y]) => drawKelp(x, y)); };
   const glow = (x, y, r, col) => { ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.globalCompositeOperation = 'lighter'; const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore(); };
   const dark = a => { ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.fillStyle = `rgba(4,8,30,${a})`; ctx.fillRect(0, 0, COLS, ROWS); ctx.restore(); };
+  const moon = (x, y, a) => { glow(x, y, 3.2, `rgba(255,250,220,${.3 * a})`); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.fillStyle = `rgba(255,246,214,${a})`; circ(x, y, .9); ctx.fill(); ctx.fillStyle = `rgba(225,215,180,${a * .5})`; circ(x - .3, y - .2, .14); ctx.fill(); circ(x + .25, y + .3, .1); ctx.fill(); ctx.restore(); };
+  const lanterns = () => { for (let i = 0; i < 5; i++) { const x = 1.8 + i * 2.85, y = 1.4 + Math.sin(time * 1.1 + i) * .12; glow(x, y, 1.1, 'rgba(255,190,100,0.28)'); ctx.fillStyle = '#f6c445'; rr(x - .18, y - .28, .36, .5, .1); ctx.fill(); ctx.fillStyle = 'rgba(255,240,200,0.9)'; rr(x - .1, y - .18, .2, .3, .06); ctx.fill(); ctx.strokeStyle = 'rgba(255,230,180,0.5)'; ctx.lineWidth = .03; ctx.beginPath(); ctx.moveTo(x, y - .28); ctx.lineTo(x, 0); ctx.stroke(); } };
+  const cake = (x, y) => { ctx.save(); ctx.translate(x, y); ctx.fillStyle = '#e8eef4'; ell(0, .32, .62, .12); ctx.fill(); ctx.fillStyle = '#f6b7c8'; rr(-.5, -.05, 1, .38, .08); ctx.fill(); ctx.fillStyle = '#fff0f4'; for (let i = 0; i < 4; i++) { ell(-.36 + i * .24, -.03, .12, .07); ctx.fill(); } ctx.fillStyle = '#f29ab4'; rr(-.32, -.38, .64, .36, .08); ctx.fill(); ctx.fillStyle = '#fff0f4'; for (let i = 0; i < 3; i++) { ell(-.2 + i * .2, -.36, .1, .06); ctx.fill(); } ctx.fillStyle = '#fffbe6'; rr(-.03, -.62, .06, .26, .02); ctx.fill(); glow(0, -.68, .5, 'rgba(255,200,90,0.5)'); ctx.fillStyle = '#ffb347'; ell(0, -.68 + Math.sin(time * 9) * .02, .06, .1); ctx.fill(); ctx.fillStyle = '#e8463a'; circ(.22, -.44, .06); ctx.fill(); ctx.restore(); };
+  const sparkle = () => { if (Math.random() < .35) parts.push({x:Math.random() * COLS, y:-.2, vx:rand(-.3, .3), vy:rand(.8, 1.6), life:7, max:7, size:rand(.05, .09), kind:'spark', col:pick(['#f6c445', '#ff8fa3', '#7cc4f0', '#8fe0a0', '#ffffff']), delay:0, ph:0}); };
   const ring6 = (cx, cy, rx, ry, types) => types.forEach((ty, i) => { const a = i / types.length * Math.PI * 2 + time * .25; snack(ty, cx - .5 + Math.cos(a) * rx, cy - .5 + Math.sin(a) * ry); });
   rockRow(0); rockRow(ROWS - 1);
   paperShadow(true);
@@ -2479,21 +2495,73 @@ function drawStory() {
       fish(0, 5.5, 10, RIGHT, (t % 3) > 2.3); fish(1, 9.5, 10, LEFT, false);
       break;
     }
-    case 'ending1':
+    case 'ending1': {
+      // the Queen settles and sighs; the fish hang back, then edge closer
       glow(7.5, 6, 4, 'rgba(255,200,230,0.12)');
+      const sink = Math.min(1, t / 2.5);
+      drawQueenBody(7.5, 3.0 + sink * 1.2, 1.2, 'calm', 1, false, 0);
+      if ((t % 4) > 3 && (t % 4) < 3.6) for (let k = 0; k < 3; k++) { ctx.fillStyle = 'rgba(200,230,255,0.7)'; circ(6.6 + k * .5, 6.2 - ((t % 4) - 3) * 2 - k * .3, .08 + k * .03); ctx.fill(); }
+      const near = Math.min(1, Math.max(0, (t - 2.5) / 3));
+      fish(0, 4.5 + near * 1.2, 9.5 + bob(0), RIGHT, false); fish(1, 10.5 - near * 1.2, 9.5 + bob(1), LEFT, false);
+      break;
+    }
+    case 'invite': {
+      // Milli brings up a pearl, the Queen brightens, Killi puffs with the effort
+      glow(7.5, 5.5, 4.5, 'rgba(255,200,230,0.18)');
+      const up = Math.min(1, t / 2.2), happy = t > 2.4;
       drawQueenBody(7.5, 4.2, 1.2, 'calm', 1, false, 0);
-      fish(0, 5.5, 9 + bob(0), RIGHT, false); fish(1, 9.5, 9 + bob(1), LEFT, false);
-      snack('pearl', 7.5, 9);
+      if (happy) for (const sd of [-1, 1]) { ctx.fillStyle = 'rgba(255,120,170,0.55)'; ell(7.5 + sd * 1.05, 4.9, .3, .16); ctx.fill(); }
+      fish(1, 7.5, 9.4 - up * 2.6 + bob(1) * .3, RIGHT, false);
+      snack('pearl', 8.4, 8.8 - up * 2.6 + Math.sin(time * 3) * .1);
+      fish(0, 5 + bob(0) * .2, 9.3, RIGHT, (t % 2.4) < 1.3);
+      if (happy) for (let k = 0; k < 3; k++) { const a = time * 1.2 + k * 2.1; ctx.fillStyle = 'rgba(255,230,120,0.8)'; circ(7.5 + Math.cos(a) * 2.6, 3.4 + Math.sin(a * 1.3) * .8, .1); ctx.fill(); }
       break;
-    case 'ending2':
-      glow(7.5, 7, 5, 'rgba(255,220,140,0.2)');
-      drawQueenBody(7.5, 2.5, .8, 'calm', 1, false, 0);
-      ring6(7.5, 7.8, 2.8, 1.6, ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon', 'krill']);
+    }
+    case 'ending2': {
+      // the feast: a moon, lanterns, the Queen at the head of the table, and every creature at it
+      moon(11.5, 2.0, 1);
+      lanterns();
+      glow(7.5, 7.5, 5, 'rgba(255,220,140,0.2)');
+      drawQueenBody(7.5, 2.6, .8, 'calm', 1, false, Math.sin(time * .5) * .5);
+      ring6(7.5, 7.8, 3.2, 1.7, ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon', 'krill', 'grape', 'pearl']);
       fish(0, 6.5, 7.3 + bob(0), RIGHT, false); fish(1, 8.5, 7.3 + bob(1), LEFT, false);
-      drawSeal({fx:10.8, fy:9.3 + bob(2) * .5, dir:LEFT, anim:time, shieldCd:1, happy:1});
-      drawEnemy(mk('K', 3.3, 9.6, RIGHT)); drawEnemy(mk('C', 12, 10.6, LEFT)); drawEnemy(mk('J', 2.3, 5, UP));
-      if (Math.random() < .35) parts.push({x:Math.random() * COLS, y:-.2, vx:rand(-.3, .3), vy:rand(.8, 1.6), life:7, max:7, size:rand(.05, .09), kind:'spark', col:pick(['#f6c445', '#ff8fa3', '#7cc4f0', '#8fe0a0', '#ffffff']), delay:0, ph:0});
+      drawSeal({fx:11.2, fy:8.6 + bob(2) * .5, dir:LEFT, anim:time, shieldCd:1, happy:1});
+      drawEnemy(mk('C', 3.2 + bob(3) * .3, 9.8, RIGHT)); drawEnemy(mk('C', 11.6, 10.6 + bob(4) * .3, LEFT)); drawEnemy(mk('J', 2.3, 5 + bob(5), UP));
+      drawEnemy(mk('O', 12.6, 6 + bob(6) * .4, LEFT)); drawEnemy(mk('M', 4.4, 10.8, RIGHT)); drawEnemy(mk('E', 2.6 + Math.sin(time * .7) * .4, 7.8, RIGHT));
+      drawEnemy(Object.assign(mk('F', 12.4, 9, LEFT), {ph:'calm', ft:9})); drawEnemy(mk('A', 10.4, 4.6 + bob(7) * .5, LEFT));
+      sparkle();
       break;
+    }
+    case 'dessert': {
+      // Bruiser swims in from the left, very carefully, with a cake balanced on his nose; the fish bounce when he arrives
+      moon(11.5, 2.0, 1);
+      lanterns();
+      glow(7.5, 7.5, 5, 'rgba(255,220,140,0.2)');
+      drawQueenBody(7.5, 2.6, .8, 'calm', 1, false, -.6);
+      const bx = Math.min(4.6, -3.5 + t * 2.3), here = t > 3.6;
+      ring6(9, 8.2, 2.4, 1.3, ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp']);
+      fish(0, 8.2, 6.3 + bob(0) - (here && (t % 1.6) < .5 ? .35 : 0), LEFT, false); fish(1, 10.2, 6.5 + bob(1) - (here && (t % 1.6) > .8 && (t % 1.6) < 1.3 ? .35 : 0), LEFT, false);
+      drawSeal({fx:11.6, fy:9.2 + bob(2) * .5, dir:LEFT, anim:time, shieldCd:1, happy:1});
+      drawEnemy(mk('C', 12.2, 10.6, LEFT)); drawEnemy(mk('J', 12.8, 5 + bob(5), UP));
+      drawEnemy(Object.assign(mk('K', bx, 8.2 + Math.sin(time * 1.4) * .08, RIGHT), {sc:2.2, anim:time * .4}));
+      cake(bx + 1.55, 8.05 + Math.sin(time * 1.4) * .08); // the plate rests on his nose
+      if (here) sparkle();
+      break;
+    }
+    case 'moonset': {
+      // the moon slides down behind the rocks and the lanterns are all that is left
+      const k = Math.min(1, t / 7);
+      moon(11.5, 2.0 + k * 8.5, 1 - k * .6);
+      lanterns();
+      glow(7.5, 7.5, 5, `rgba(255,220,140,${.2 - k * .1})`);
+      drawQueenBody(7.5, 2.6, .8, 'calm', 1, false, 0);
+      ring6(7.5, 7.8, 3.2, 1.7, ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon', 'krill', 'grape', 'pearl']);
+      fish(0, 6.5, 7.3 + bob(0), RIGHT, false); fish(1, 8.5, 7.3 + bob(1), LEFT, false);
+      drawSeal({fx:11.2, fy:8.6 + bob(2) * .5, dir:LEFT, anim:time, shieldCd:1, happy:1});
+      drawEnemy(Object.assign(mk('K', 3.2, 9.6, RIGHT), {sc:2, anim:time * .3})); drawEnemy(mk('C', 11.6, 10.6, LEFT)); drawEnemy(mk('J', 2.3, 5 + bob(5), UP));
+      dark(k * .45);
+      break;
+    }
   }
   paperShadow(false);
 }
@@ -2767,6 +2835,11 @@ function noise(dur, vol, f1, f2, ftype, q, delay, pan, dest) {
   env(g, t0, vol, .005, dur);
   s.connect(f); f.connect(g); g.connect(dest || out(pan)); s.start(t0, Math.random() * .5); s.stop(t0 + dur + .05);
 }
+function tine(f, vol, delay, pan, tail) { const d = tail || .8; vol *= .7; tone(f, f, d, 'sine', vol, delay, pan); tone(f * 3.03, f * 3.03, d * .25, 'sine', vol * .35, delay, pan); tone(f * 6.2, f * 6.2, .04, 'sine', vol * .25, delay, pan); }
+function breath(dur, vol, f1, f2, delay, pan) { noise(dur, vol, f1, f2, 'bandpass', .9, delay, pan); }
+function hum(f1, f2, dur, vol, delay, pan) { tone(f1, f2, dur, 'sine', vol, delay, pan); tone(f1 * 2.01, f2 * 2.01, dur * .8, 'triangle', vol * .18, delay, pan); }
+function drop(f, vol, delay, pan) { tone(f * 1.5, f, .08, 'sine', vol, delay, pan); tone(f * 3, f * 1.4, .03, 'sine', vol * .4, delay, pan); noise(.015, vol * .5, 3000, 6000, 'bandpass', 1, delay, pan); }
+function splash(dur, vol, delay, pan) { noise(dur, vol, 2500, 400, 'lowpass', 1, delay, pan); }
 function bloop(f, delay, pan, vol) { tone(f, f * 1.9, .09, 'sine', vol, delay, pan); tone(f * 2, f * 3.2, .06, 'sine', vol * .3, delay, pan); }
 function wobble(f1, f2, dur, vol, rate, depth, delay, pan) {
   const t0 = ac.currentTime + (delay || 0), o = ac.createOscillator(), g = ac.createGain(), l = ac.createOscillator(), lg = ac.createGain();
@@ -2782,7 +2855,7 @@ function comboNote() { combo = time - lastGet < .9 ? combo + 1 : 0; lastGet = ti
 
 // Three sound packs. Each defines every effect: (o, pan, pm = fish pitch, k = block count)
 const PACKS = {
-  bubbly: {name:'Bubbly', desc:'Soft synth bloops with a watery echo', echo:.22, lp:6500, fx:{
+  bubbly: {name:'Bubbly', desc:'Soft bloops, watery echo', echo:.22, lp:6500, fx:{
     grow(o, pan, pm, k) { tone(520 * pm, 980 * pm, .12, 'triangle', .07, 0, pan); for (let i = 0; i < k; i++) { tone(1200 + i * 90, 1500 + i * 90, .04, 'sine', .035, i * .03, pan); noise(.03, .05, 3000, 2000, 'bandpass', 3, i * .03, pan); } },
     break(o, pan, pm, k) { for (let i = 0; i < k; i++) noise(.12, .14, 1800, 500, 'bandpass', 1.2, i * .03, pan); tone(200, 70, .16, 'square', .035, 0, pan); },
     bonk(o, pan) { tone(170, 120, .09, 'sine', .08, 0, pan); noise(.03, .04, 900, 600, 'lowpass', 1, 0, pan); },
@@ -2811,34 +2884,92 @@ const PACKS = {
     stuck(o, pan) { tone(300, 180, .15, 'sine', .12, 0, pan); tone(240, 140, .2, 'sine', .1, .1, pan); noise(.15, .08, 800, 400, 'bandpass', 3, 0, pan); },
     bossdown() { [60, 55, 52, 48].forEach((m, i) => tone(hz(m), hz(m) * .98, .3, 'triangle', .08, i * .18)); [72, 76, 79, 84].forEach((m, i) => bloop(hz(m), .9 + i * .08, 0, .08)); },
   }},
-  chip: {name:'Chiptune', desc:'Square-wave blips like an old handheld', echo:0, lp:14000, fx:{
-    grow(o, pan, pm, k) { [0, 4, 7].forEach((s, i) => sq(hz(84 + s) * pm, .03, .045, i * .03, pan)); for (let i = 0; i < k; i++) sq(1800 + i * 120, .015, .025, .09 + i * .03, pan); },
-    break(o, pan, pm, k) { for (let i = 0; i < k; i++) noise(.07, .13, 5000, 2500, 'lowpass', .7, i * .03, pan); sq(300, .12, .045, 0, pan, 90); },
-    bonk(o, pan) { sq(150, .06, .05, 0, pan, 110); },
-    get(o, pan, pm) { const m = comboNote(); sq(hz(m) * pm, .04, .05, 0, pan); sq(hz(m + 7) * pm, .07, .05, .04, pan); },
-    wave() { [0, 4, 7, 12, 16, 19].forEach((s, i) => sq(hz(72 + s), .05, .045, i * .05, (i / 5 - .5) * .8)); },
-    puff(o, pan, pm) { sq(180 * pm, .28, .05, 0, pan, 820 * pm); noise(.2, .06, 2000, 6000, 'lowpass', .7, .05, pan); },
-    stun(o, pan) { [88, 84, 91].forEach((m, i) => tone(hz(m), hz(m), .06, 'triangle', .07, i * .05, pan)); },
-    die(o, pan, pm) { for (let i = 0; i < 8; i++) sq(hz(72 - i * 2) * pm, .06, .05, i * .06, pan); },
-    win() { [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => sq(hz(m), .1, .05, i * .1)); [48, 55, 60].forEach((m, i) => tone(hz(m), hz(m), .3, 'triangle', .1, i * .3)); },
-    charge(o, pan) { sq(150, .35, .05, 0, pan, 1200); for (let i = 0; i < 6; i++) noise(.02, .1, 6000, 5000, 'highpass', 1, i * .05, pan); },
-    thud(o, pan) { tone(100, 40, .2, 'triangle', .16, 0, pan); noise(.1, .12, 800, 200, 'lowpass', 1, 0, pan); },
-    punch(o, pan, pm, k) { noise(.08, .3, 6000, 3000, 'lowpass', .7, 0, pan); sq(400, .12, .05, 0, pan, 80); for (let i = 0; i < k; i++) noise(.05, .08, 4000, 2000, 'lowpass', .7, .03 + i * .025, pan); },
-    blink(o, pan) { for (let i = 0; i < 4; i++) sq(i % 2 ? 2400 : 1800, .025, .035, i * .03, pan); },
-    revive(o, pan) { [0, 4, 7, 12].forEach((s, i) => sq(hz(79 + s), .05, .045, i * .05, pan)); },
-    click() { sq(1000, .02, .035); },
-    shield(o, pan, pm) { [0, 4, 7, 12].forEach((s, i) => sq(hz(84 + s) * pm, .04, .045, i * .04, pan)); },
-    pop(o, pan) { noise(.06, .3, 6000, 3000, 'lowpass', .7, 0, pan); sq(600, .08, .05, 0, pan, 150); },
-    boop(o, pan) { sq(440, .07, .06, 0, pan, 330); sq(494, .08, .05, .1, pan, 370); },
-    rise(o, pan) { noise(.4, .15, 1500, 6000, 'lowpass', .7, 0, pan); sq(90, .35, .04, 0, pan, 200); },
-    flare(o, pan) { for (let i = 0; i < 5; i++) sq(1600 + i * 200, .02, .035, i * .03, pan); },
-    roar(o, pan) { sq(80, .5, .06, 0, pan, 50); noise(.5, .12, 2000, 800, 'lowpass', .7, 0, pan); },
-    crash(o, pan) { noise(.3, .35, 6000, 1500, 'lowpass', .7, 0, pan); sq(120, .3, .07, 0, pan, 40); },
-    bosshit(o, pan) { for (let i = 0; i < 6; i++) sq(hz(84 - i * 3), .05, .06, i * .04, pan); noise(.2, .25, 6000, 2000, 'lowpass', .7, 0, pan); },
-    warn(o, pan) { sq(65, .7, .05, 0, pan, 70); tone(65, 70, .7, 'triangle', .12, 0, pan); },
-    lash(o, pan) { noise(.15, .2, 3000, 8000, 'lowpass', .7, 0, pan); sq(200, .15, .04, 0, pan, 90); },
-    stuck(o, pan) { sq(300, .08, .05, 0, pan, 200); sq(260, .1, .05, .09, pan, 160); },
-    bossdown() { [60, 55, 52, 48, 72, 76, 79, 84].forEach((m, i) => sq(hz(m), .12, .05, i * .12)); },
+  musicbox: {name:'Music box', desc:'Tinkling tines, long tails', echo:.28, lp:12000, fx:{
+    grow(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 5); i++) tine(hz(79 + [0, 2, 4, 7, 9][i]) * pm, .07, i * .05, pan); },
+    break(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 5); i++) tine(hz(76 - [0, 2, 4, 7, 9][i]) * pm, .06, i * .05, pan); noise(.04, .03, 2500, 1500, 'bandpass', 2, 0, pan); },
+    bonk(o, pan) { tine(hz(55), .07, 0, pan, .25); },
+    get(o, pan, pm) { tine(hz(comboNote() + 12) * pm, .09, 0, pan); },
+    wave() { [0, 4, 7, 12, 16, 19].forEach((st, i) => tine(hz(72 + st), .06, i * .07, (i / 5 - .5) * .8)); },
+    puff(o, pan, pm) { [0, 4, 7].forEach((st, i) => tine(hz(67 + st) * pm, .08, i * .02, pan)); noise(.3, .05, 300, 1800, 'lowpass', 1, 0, pan); },
+    stun(o, pan) { for (let i = 0; i < 6; i++) tine(hz(91 + (i % 2) * 3), .035, i * .05, pan, .25); },
+    die(o, pan, pm) { [0, -1, -3, -5, -8, -12].forEach((st, i) => tine(hz(74 + st) * pm, .07, i * .12, pan)); },
+    win() { [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => tine(hz(m), .08, i * .11, 0)); [60, 64, 67].forEach(m => tine(hz(m), .05, .8, 0, 1.6)); },
+    charge(o, pan) { for (let i = 0; i < 8; i++) tine(hz(64 + i * 2), .04, i * .045, pan, .2); },
+    thud(o, pan) { tone(110, 42, .28, 'sine', .14, 0, pan); tine(hz(43), .07, 0, pan, .5); },
+    punch(o, pan, pm, k) { tine(hz(60), .08, 0, pan, .15); tine(hz(67), .06, .05, pan, .15); for (let i = 0; i < k; i++) noise(.06, .06, 1800, 600, 'bandpass', 1.5, .02 + i * .025, pan); },
+    blink(o, pan) { tine(hz(96), .04, 0, pan); tine(hz(103), .03, .05, pan); },
+    revive(o, pan) { [0, 4, 7, 12].forEach((st, i) => tine(hz(76 + st), .06, i * .08, pan)); },
+    click() { tine(hz(84), .035, 0, 0, .3); },
+    shield(o, pan, pm) { [0, 7, 12, 19].forEach((st, i) => tine(hz(79 + st) * pm, .05, i * .04, pan)); },
+    pop(o, pan) { tine(hz(91), .07, 0, pan, .3); noise(.04, .12, 3000, 1500, 'bandpass', 2, 0, pan); },
+    boop(o, pan) { tine(hz(67), .09, 0, pan, .4); tine(hz(69), .08, .12, pan, .4); },
+    rise(o, pan) { noise(.5, .1, 200, 1200, 'lowpass', 1, 0, pan); [0, 3, 7].forEach((st, i) => tine(hz(48 + st), .06, .1 + i * .1, pan)); },
+    flare(o, pan) { for (let i = 0; i < 5; i++) tine(hz(88 + (i * 5) % 7), .035, i * .03, pan, .2); },
+    roar(o, pan) { tone(95, 60, .6, 'sine', .08, 0, pan); [0, 1, 6].forEach((st, i) => tine(hz(45 + st), .06, i * .06, pan, .9)); },
+    crash(o, pan) { tone(80, 35, .5, 'sine', .22, 0, pan); noise(.2, .18, 2500, 400, 'bandpass', .8, 0, pan); [12, 7, 4, 0].forEach((st, i) => tine(hz(72 + st), .05, .1 + i * .07, pan)); },
+    bosshit(o, pan) { [0, 3, 7].forEach((st, i) => tine(hz(60 + st), .08, i * .02, pan)); noise(.2, .14, 3000, 500, 'bandpass', 1, 0, pan); },
+    warn(o, pan) { for (let i = 0; i < 4; i++) tine(hz(41), .09, i * .2, pan, .5); },
+    lash(o, pan) { noise(.2, .14, 500, 3000, 'bandpass', 1.2, 0, pan); [7, 4, 0].forEach((st, i) => tine(hz(72 + st), .05, i * .04, pan, .3)); },
+    stuck(o, pan) { tine(hz(55), .09, 0, pan, .2); tine(hz(53), .08, .1, pan, .2); tine(hz(55), .07, .2, pan, .2); },
+    bossdown() { [60, 55, 52, 48].forEach((m, i) => tine(hz(m), .08, i * .18, 0, 1.2)); [72, 76, 79, 84, 91].forEach((m, i) => tine(hz(m), .07, .9 + i * .09, 0)); },
+  }},
+  breath: {name:'Breath', desc:'Airy swells and low hums', echo:.35, lp:7000, fx:{
+    grow(o, pan, pm, k) { breath(.25 + k * .03, .14, 400 * pm, 2200 * pm, 0, pan); hum(110 * pm, 160 * pm, .3, .05, 0, pan); },
+    break(o, pan, pm, k) { breath(.22, .16, 2400, 400, 0, pan); hum(140 * pm, 70 * pm, .25, .05, 0, pan); },
+    bonk(o, pan) { hum(120, 80, .12, .1, 0, pan); breath(.06, .06, 600, 300, 0, pan); },
+    get(o, pan, pm) { const f = hz(comboNote()) * pm; breath(.09, .12, f, f * 1.5, 0, pan); hum(f / 2, f / 2, .12, .04, 0, pan); },
+    wave() { breath(.9, .1, 300, 2600, 0, 0); [55, 62, 67].forEach((m, i) => hum(hz(m), hz(m) * 1.01, 1.0, .035, i * .1, 0)); },
+    puff(o, pan, pm) { breath(.45, .2, 200, 1600, 0, pan); hum(90 * pm, 180 * pm, .4, .08, 0, pan); },
+    stun(o, pan) { for (let i = 0; i < 4; i++) breath(.07, .1, 1800, 2600, i * .08, pan); },
+    die(o, pan, pm) { hum(260 * pm, 60 * pm, 1.0, .09, 0, pan); breath(.8, .1, 1200, 200, .1, pan); },
+    win() { [48, 55, 60, 64].forEach((m, i) => hum(hz(m), hz(m), 1.4, .05, i * .08, 0)); breath(1.2, .1, 500, 3000, 0, 0); breath(.6, .08, 3000, 800, 1.0, 0); },
+    charge(o, pan) { breath(.5, .18, 300, 2800, 0, pan); hum(80, 200, .45, .05, 0, pan); },
+    thud(o, pan) { hum(90, 36, .3, .18, 0, pan); breath(.15, .1, 500, 150, 0, pan); },
+    punch(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 4); i++) breath(.05, .18, 1500, 900, i * .04, pan); hum(120, 60, .15, .06, 0, pan); },
+    blink(o, pan) { breath(.06, .08, 3500, 5000, 0, pan); hum(880, 1320, .1, .025, 0, pan); },
+    revive(o, pan) { breath(.5, .12, 400, 2600, 0, pan); [0, 7, 12].forEach((st, i) => hum(hz(64 + st), hz(64 + st), .5, .035, i * .1, pan)); },
+    click() { breath(.04, .07, 2000, 3000, 0, 0); },
+    shield(o, pan, pm) { breath(.4, .1, 600, 3200, 0, pan); hum(hz(79) * pm, hz(79) * pm * 1.02, .5, .04, 0, pan); },
+    pop(o, pan) { breath(.07, .25, 2500, 1200, 0, pan); hum(300, 150, .12, .07, 0, pan); },
+    boop(o, pan) { hum(330, 300, .1, .1, 0, pan); hum(360, 320, .12, .09, .12, pan); breath(.08, .05, 800, 500, 0, pan); },
+    rise(o, pan) { breath(.6, .16, 150, 1200, 0, pan); hum(70, 140, .5, .08, 0, pan); },
+    flare(o, pan) { breath(.25, .14, 3000, 7000, 0, pan); },
+    roar(o, pan) { hum(70, 45, .7, .1, 0, pan); breath(.7, .16, 250, 90, 0, pan); },
+    crash(o, pan) { hum(70, 30, .5, .22, 0, pan); breath(.3, .3, 2000, 250, 0, pan); },
+    bosshit(o, pan) { hum(200, 50, .4, .09, 0, pan); breath(.3, .22, 3500, 500, 0, pan); hum(hz(60), hz(60), .3, .05, .1, pan); },
+    warn(o, pan) { hum(55, 70, .8, .16, 0, pan); breath(.8, .08, 120, 400, 0, pan); },
+    lash(o, pan) { breath(.25, .22, 400, 3200, 0, pan); hum(150, 75, .2, .06, 0, pan); },
+    stuck(o, pan) { hum(240, 150, .18, .1, 0, pan); hum(200, 120, .2, .09, .1, pan); breath(.15, .06, 700, 300, 0, pan); },
+    bossdown() { hum(hz(55), hz(43), 1.2, .09, 0, 0); breath(1.0, .12, 1500, 200, 0, 0); [60, 64, 67, 72].forEach((m, i) => hum(hz(m), hz(m), 1.2, .04, 1.0 + i * .1, 0)); },
+  }},
+  drops: {name:'Droplets', desc:'Water plinks and splashes', echo:.3, lp:9000, fx:{
+    grow(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 6); i++) drop((700 + i * 160) * pm, .09, i * .045, pan); },
+    break(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 6); i++) { drop((1400 - i * 150) * pm, .08, i * .045, pan); } splash(.18, .12, 0, pan); },
+    bonk(o, pan) { drop(220, .11, 0, pan); splash(.05, .05, 0, pan); },
+    get(o, pan, pm) { drop(hz(comboNote() + 12) * pm, .12, 0, pan); },
+    wave() { [0, 4, 7, 12, 16, 19].forEach((st, i) => drop(hz(79 + st), .08, i * .07, (i / 5 - .5) * .8)); splash(.5, .06, 0, 0); },
+    puff(o, pan, pm) { splash(.35, .18, 0, pan); [0, 5, 9].forEach((st, i) => drop(hz(72 + st) * pm, .09, .05 + i * .06, pan)); },
+    stun(o, pan) { for (let i = 0; i < 5; i++) drop(1900 + (i % 2) * 300, .05, i * .06, pan); },
+    die(o, pan, pm) { [12, 8, 5, 0, -5, -12].forEach((st, i) => drop(hz(72 + st) * pm, .09, i * .11, pan)); splash(.6, .1, .3, pan); },
+    win() { [72, 76, 79, 84, 79, 84, 88].forEach((m, i) => drop(hz(m), .1, i * .1, 0)); splash(.8, .08, .6, 0); [60, 64, 67].forEach((m, i) => drop(hz(m), .07, 1.0 + i * .05, 0)); },
+    charge(o, pan) { for (let i = 0; i < 10; i++) drop(400 + i * 90, .05, i * .035, pan); splash(.4, .1, 0, pan); },
+    thud(o, pan) { tone(110, 42, .28, 'sine', .14, 0, pan); splash(.2, .14, 0, pan); drop(160, .09, .02, pan); },
+    punch(o, pan, pm, k) { splash(.07, .22, 0, pan); drop(300, .1, 0, pan); for (let i = 0; i < Math.min(k, 4); i++) drop(900 - i * 100, .06, .04 + i * .03, pan); },
+    blink(o, pan) { drop(2400, .06, 0, pan); drop(3200, .04, .05, pan); },
+    revive(o, pan) { [0, 4, 7, 12].forEach((st, i) => drop(hz(76 + st), .08, i * .08, pan)); splash(.3, .05, 0, pan); },
+    click() { drop(1200, .06, 0, 0); },
+    shield(o, pan, pm) { splash(.35, .07, 0, pan); [0, 7, 12, 19].forEach((st, i) => drop(hz(79 + st) * pm, .07, i * .05, pan)); },
+    pop(o, pan) { splash(.08, .3, 0, pan); drop(1600, .1, 0, pan); drop(500, .08, .03, pan); },
+    boop(o, pan) { drop(520, .13, 0, pan); drop(560, .12, .12, pan); },
+    rise(o, pan) { splash(.55, .16, 0, pan); for (let i = 0; i < 5; i++) drop(250 + i * 120, .07, .1 + i * .07, pan); },
+    flare(o, pan) { for (let i = 0; i < 6; i++) drop(2000 + (i * 7 % 5) * 300, .05, i * .03, pan); },
+    roar(o, pan) { tone(95, 60, .6, 'sine', .08, 0, pan); splash(.6, .14, 0, pan); for (let i = 0; i < 4; i++) drop(180 - i * 20, .08, i * .12, pan); },
+    crash(o, pan) { tone(80, 35, .5, 'sine', .22, 0, pan); splash(.3, .3, 0, pan); for (let i = 0; i < 5; i++) drop(rand(500, 1200), .07, .05 + i * .07, pan); },
+    bosshit(o, pan) { splash(.25, .22, 0, pan); [0, 3, 7].forEach((st, i) => drop(hz(60 + st), .1, i * .03, pan)); },
+    warn(o, pan) { for (let i = 0; i < 4; i++) { drop(140, .12, i * .2, pan); } tone(60, 75, .8, 'sine', .1, 0, pan); },
+    lash(o, pan) { splash(.25, .22, 0, pan); for (let i = 0; i < 4; i++) drop(1200 - i * 250, .06, i * .04, pan); },
+    stuck(o, pan) { drop(300, .12, 0, pan); drop(260, .11, .1, pan); drop(300, .1, .2, pan); },
+    bossdown() { [60, 55, 52, 48].forEach((m, i) => drop(hz(m), .1, i * .18, 0)); splash(.9, .1, .5, 0); [72, 76, 79, 84, 91].forEach((m, i) => drop(hz(m), .09, .9 + i * .08, 0)); },
   }},
 };
 let pack = PACKS[save.pack] || PACKS.bubbly;
@@ -2894,7 +3025,7 @@ const TRACKS = {
     if (s === 0) { pad(ch, t, stepLen * 16, .022); bassNote(root, t, stepLen * 15, .08); }
     if (s % 4 === 2 && Math.random() < .35) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 1.4, 'sine', .022, at(t), 0, musicBus); tone(hz(m) * 2.01, hz(m) * 2.01, .4, 'sine', .006, at(t), 0, musicBus); }
   }},
-  tidepool: {name:'Tide pool', desc:'Slow kalimba over a low drone', bpm:64, fn(s, bar, t, stepLen) {
+  tidepool: {name:'Tide pool', desc:'Slow kalimba over a drone', bpm:64, fn(s, bar, t, stepLen) {
     // pentatonic, one chord per bar, a drone that only moves every two bars
     const [root, ch] = [[45, [57, 60, 64, 67]], [45, [57, 60, 64, 67]], [41, [53, 57, 60, 65]], [43, [55, 59, 62, 67]]][bar];
     if (s === 0 && bar % 2 === 0) pad([root + 12, root + 19], t, stepLen * 32, .014);
@@ -2903,7 +3034,7 @@ const TRACKS = {
     if (s % 2 === 0 && Math.random() < .85) mallet(ch[seq[(s / 2 + bar * 2) % 8]] + 12, t, .028);
     if (s === 11 && Math.random() < .5) mallet(ch[0] + 24, t, .012);
   }},
-  moondrift: {name:'Moon drift', desc:'Pads that breathe, almost no pulse', bpm:56, fn(s, bar, t, stepLen) {
+  moondrift: {name:'Moon drift', desc:'Breathing pads, no pulse', bpm:56, fn(s, bar, t, stepLen) {
     const [root, ch] = [[38, [57, 62, 65]], [41, [57, 60, 65]], [36, [55, 60, 64]], [43, [55, 59, 62]]][bar];
     if (s === 0) { pad(ch, t, stepLen * 16, .02); pad([ch[0] + 12], t + stepLen * 4, stepLen * 10, .008); bassNote(root, t, stepLen * 16, .07); }
     if (s === 8 && Math.random() < .6) { const m = ch[(Math.random() * 3) | 0] + 24; tone(hz(m), hz(m), 2.2, 'sine', .016, at(t), 0, musicBus); }
@@ -2963,8 +3094,8 @@ function renderStyle() {
   const opt = (attr, id, o, on, sw) => `<button class="opt" data-${attr}="${id}" aria-pressed="${on}">${sw || ''}<b>${o.name}</b><small>${o.desc}</small></button>`;
   $('#optTheme').innerHTML = Object.entries(THEMES).map(([id, t]) => opt('theme', id, t, theme === t, `<span class="sw">${t.sw.map(c => `<i style="background:${c}"></i>`).join('')}</span>`)).join('');
   $('#optPack').innerHTML = Object.entries(PACKS).map(([id, p]) => opt('pack', id, p, pack === p)).join('');
-  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Follows the reef', desc:'Calmer loops the deeper you go, and each boss has its own'}, musicOn && autoTrack)
-    + Object.entries(TRACKS).map(([id, t]) => opt('track', id, t, musicOn && !autoTrack && track === t)).join('') + opt('track', 'off', {name:'No music', desc:'Just the reef ambience and effects'}, !musicOn);
+  $('#optTrack').innerHTML = opt('track', 'auto', {name:'Follows the reef', desc:'Calmer the deeper you go'}, musicOn && autoTrack)
+    + ['reef', 'tidepool', 'moondrift'].map(id => opt('track', id, TRACKS[id], musicOn && !autoTrack && track === TRACKS[id])).join('');
   $('#previews').innerHTML = `<button class="all" id="playAll">Play all</button>` + PREVIEWS.map(([n, l]) => `<button data-pv="${n}">${l}</button>`).join('');
 }
 function preview(n) {
@@ -3020,7 +3151,7 @@ if (!save.seenIntro) playStory('intro', () => { save.seenIntro = true; persist()
 requestAnimationFrame(frame);
 
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
-  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; },
+  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; }, get palettes() { return PALETTES; },
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
   get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();
