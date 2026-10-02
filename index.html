@@ -33,7 +33,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 :root[data-theme="dark"]{--bg:#03141c;--fg:#d5eef0;--muted:#82a7b0;--chip:#0c2a35;--line:#163c49;--accent:#3bc2cf;color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1000px;margin:0 auto;padding:12px 12px 24px}
+.wrap{max-width:1000px;margin:0 auto;padding:12px 12px 14px}
 @media (min-width:1000px){
   .wrap:has(.style:not([hidden])){display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:16px;align-items:start;max-width:1200px}
   .wrap:has(.style:not([hidden])) #optTrack{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -111,12 +111,15 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .board b{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:1.7rem;color:#fff;font-variant-numeric:tabular-nums}
 .board em{font-style:normal;font-size:.8rem;color:var(--gold)}
 .scores{display:flex;gap:10px;justify-content:center;margin-top:6px;font-weight:700}
-.foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:12px auto 0;color:var(--muted);font-size:clamp(.86rem,calc(var(--boardW,600px)/64),1.02rem);line-height:1.7}
+.foot{display:flex;justify-content:center;align-items:flex-start;gap:12px;flex-wrap:wrap;margin:10px auto 0;color:var(--muted);font-size:clamp(.86rem,calc(var(--boardW,600px)/64),1.02rem);line-height:1.7}
 kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
-.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:clamp(.85rem,calc(var(--boardW,600px)/64),1rem);white-space:nowrap}
+.tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 10px;font-size:clamp(.85rem,calc(var(--boardW,600px)/64),1rem);white-space:nowrap}
 .touch{display:none;justify-content:space-between;align-items:center;margin:12px auto 0;gap:12px;user-select:none;-webkit-user-select:none}
-@media (pointer:coarse){.touch{display:flex}.keys{display:none}}
+.keys{display:none} /* the controls text is shown in the pause and Controls cards instead of under the board */
+.help{font-size:.92rem;line-height:1.9;color:#bfe0e2;max-width:48ch;margin:6px auto 2px}
+.help kbd{background:rgba(255,255,255,.14);color:#e6f6f5}
+@media (pointer:coarse){.touch{display:flex}}
 @media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
   .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px}
   .wrap>*{grid-column:2}
@@ -196,6 +199,23 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .overlay{container-type:size}
 @container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
+/* wide desktop windows: hud chips down the left, buttons down the right, the board as tall as the window */
+@media (pointer:fine) and (min-width:1000px){
+  .wrap.side{display:grid;grid-template-columns:200px minmax(0,1fr) 200px;column-gap:16px;align-items:center;max-width:none;min-height:100vh;padding:12px 16px}
+  .wrap.side .hud{display:contents}
+  .wrap.side .hud .grp{flex-direction:column;align-items:flex-start;gap:8px;grid-row:1}
+  .wrap.side .hud .grp:first-child{grid-column:1;align-self:center;justify-self:end;align-items:flex-end;text-align:right}
+  .wrap.side .hud .grp:last-child{grid-column:3;align-self:start;align-items:flex-start;justify-self:start;padding-top:4px}
+  .wrap.side .lvl{margin:0 0 4px;line-height:1.1}
+  .wrap.side .hud .chip{white-space:normal;max-width:200px;text-align:inherit}
+  .wrap.side .stage{grid-column:2;grid-row:1}
+  .wrap.side .foot{grid-column:3;grid-row:1;align-self:end;justify-self:start;margin:0;width:auto}
+  .wrap.side .tools{flex-direction:column;align-items:flex-start}
+  .wrap.side .rotate,.wrap.side .touch{display:none}
+  .wrap.side:has(.style:not([hidden])){grid-template-columns:200px minmax(0,1fr) 340px;max-width:none}
+  .wrap.side:has(.style:not([hidden])) .hud .grp:last-child,.wrap.side:has(.style:not([hidden])) .foot{display:none}
+  .wrap.side .style:not([hidden]){grid-column:3;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
+}
 </style>
 </head>
 <body>
@@ -231,7 +251,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 
   <div class="foot">
     <span class="keys" id="keys"></span>
-    <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bFull">Fullscreen</button></span>
+    <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bHelp">Controls</button><button id="bFull">Fullscreen</button></span>
   </div>
 
   <section class="style" id="stylePanel" hidden aria-label="Look and sound">
@@ -693,7 +713,7 @@ function continueLevel() {
 function pause() {
   if (mode !== 'play') return;
   mode = 'paused'; Ads.stop();
-  card.innerHTML = `<h3>Paused</h3><div class="row"><button class="btn" data-act="resume">Resume</button><button class="btn ghost" data-act="retry">Restart</button><button class="btn ghost" data-act="menu">Levels</button></div>`;
+  card.innerHTML = `<h3>Paused</h3><p class="help">${keysEl.innerHTML}</p><div class="row"><button class="btn" data-act="resume">Resume</button><button class="btn ghost" data-act="retry">Restart</button><button class="btn ghost" data-act="menu">Levels</button></div>`;
   overlay.hidden = false;
 }
 function resume() { if (mode !== 'paused') return; mode = 'play'; overlay.hidden = true; for (const p of S.players) p.held.length = 0; if (S.readyT <= 0) Ads.play(); }
@@ -2687,15 +2707,29 @@ function resize() {
   // the board gets the height left over by the hud, footer and touch pad plus the 56px of margins around
   // them, so the page never scrolls in a fixed frame such as an itch.io embed. Those wrap differently at
   // each width, so size twice and let them settle. 150 is the fallback before anything has laid out.
-  for (let pass = 0; pass < 2; pass++) {
+  // Wide desktop windows: the hud chips go down the left, the buttons down the right, and the board takes the
+  // full height (see .wrap.side). Chosen whenever that gives a bigger board than the stacked layout.
+  const innerH = window.innerHeight || 800;
+  let sideMode = false;
+  if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
+    // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
+    const fullW = (window.innerWidth || 0) - 32 - (labW ? labW + 216 : 432); // two 200px columns, or one plus the lab
+    const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24) / ROWS));
+    sideMode = tSide > tStack;
+  }
+  wrap.classList.toggle('side', sideMode);
+  if (sideMode) {
+    T = Math.max(16, Math.floor(Math.min(((window.innerWidth || 0) - 32 - (labW ? labW + 216 : 432)) / COLS, (innerH - 24) / ROWS)));
+    stage.style.width = COLS * T + 'px'; hudEl.style.width = footEl.style.width = touchEl.style.width = '';
+  } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
-    const chromeH = Math.max(sideTouch ? 48 : 150, hudEl.offsetHeight + footEl.offsetHeight + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 56));
+    const chromeH = Math.max(sideTouch ? 48 : 100, hudEl.offsetHeight + footEl.offsetHeight + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
     // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
     stage.style.width = touchEl.style.width = COLS * T + 'px';
     // the hud and footer take at least 600px (within the window) so a narrow board cannot wrap them taller, which would shrink the board further
-    const barW = Math.max(COLS * T, Math.min(wrapW, 600)) + 'px';
+    const barW = Math.max(COLS * T, Math.min(wrapW, 660)) + 'px';
     footEl.style.width = barW; hudEl.style.width = sideTouch ? '' : barW;
   }
   // the frame cost is fill rate, so the backing store is capped at about 2.2 million pixels; a 975 px board on a 2x screen renders at 1.56x
@@ -2779,6 +2813,14 @@ touchEl.querySelectorAll('[data-dir]').forEach(b => {
 $('#tAct').addEventListener('pointerdown', e => { e.preventDefault(); unlockAudio(); if (mode === 'play' && playerN(0)) playerN(0).bufAct = true; });
 $('#tPuff').addEventListener('pointerdown', e => { e.preventDefault(); unlockAudio(); if (mode === 'play' && playerN(0)) playerN(0).bufPuff = true; });
 $('#bMenu').addEventListener('click', e => { e.currentTarget.blur(); showMenu(); });
+$('#bHelp').addEventListener('click', e => {
+  e.currentTarget.blur();
+  if (mode === 'play') { pause(); return; } // the pause card carries the controls
+  if (mode !== 'menu' && mode !== 'fish') return;
+  mode = 'menu'; S = null;
+  card.innerHTML = `<h3>Controls</h3><p class="help">${keysEl.innerHTML}</p><div class="row"><button class="btn" data-act="menu">Done</button></div>`;
+  overlay.hidden = false;
+});
 $('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); openStyle(); });
 $('#bPause').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'play') pause(); else if (mode === 'paused') resume(); });
 $('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted || adMute ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
