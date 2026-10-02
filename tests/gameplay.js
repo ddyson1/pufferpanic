@@ -57,8 +57,8 @@ setTimeout(()=>{
  // an eruption stuns a crab standing on a vent
  { const c=S.enemies.find(e=>e.kind==='C'); tp(c,5,5); c.stun=0; S.ventT=99; G.tick(1/60); console.log('eruption stuns the crab on the vent:',c.stun>0); if(!(c.stun>0)) fail('vent stun'); }
  // currents redirect: L8 row4 col2 'U'
- G.loadLevel(7); G.tick(2.2); S=G.S; const pc=S.players[0]; S.enemies.forEach(e=>e.stun=999); tp(pc,3,2); pc.face={x:0,y:-1};
- G.coralAction(pc); console.log('current bends coral: (3,1)=',S.grid[1][3],'(4,1)=',S.grid[1][4]); if(!(S.grid[1][3]==='c'&&S.grid[1][4]==='c')) fail('current bend');
+ G.loadLevel(7); G.tick(2.2); S=G.S; const pc=S.players[0]; S.enemies.forEach(e=>e.stun=999); tp(pc,4,2); pc.face={x:0,y:-1};
+ G.coralAction(pc); console.log('current bends coral: (4,1)=',S.grid[1][4],'(5,1)=',S.grid[1][5]); if(!(S.grid[1][4]==='c'&&S.grid[1][5]==='c')) fail('current bend');
  G.coralAction(pc); // clear
  // horizontal line into the D lane at (13,4) turns down it
  tp(pc,11,4); pc.face={x:1,y:0}; G.coralAction(pc);
