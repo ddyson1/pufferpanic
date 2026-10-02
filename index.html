@@ -61,6 +61,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-
 .chip.sb b{font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:1rem;min-width:3.2ch;text-align:right}
 .chip.sb.flash b{color:var(--gold)}
 .pchip .pts{font-weight:700;min-width:2.5ch;text-align:right}
+.pchip.hid{opacity:.7}.pchip.hid .dot{box-shadow:0 0 0 2px #4fb37a}
 .stage{position:relative;margin:0 auto;border-radius:18px;overflow:hidden;background:#0b4a5c;box-shadow:0 18px 40px rgba(2,40,52,.3),inset 0 0 0 1px rgba(255,255,255,.05)}
 canvas{display:block;touch-action:none}
 canvas:focus{outline:none}
@@ -318,7 +319,7 @@ const LEVELS = [
   {name:'Urchin Garden', hint:'Urchins sting. Smother one in coral to make it safe for a while. Moon pearls hop around.', waves:['grape','moon','star'], map:[
     '###############','#1..x.....x..1#','#..x...2...x..#','#.x..c...c..x.#','#...c.....c...#','#2.x..P.Q..x.2#','#...c.....c...#',
     '#.x..c...c..x.#','#..x...3...x..#','#1..x..J..x..1#','#......3......#','#3.J.......J.3#','###############']},
-  {name:'Current Canyon', hint:'Currents bend your coral walls. The octopus chews through them.', waves:['krill','pearl','shrimp'], map:[
+  {name:'Current Canyon', hint:'Currents carry you along, and bend your coral walls. The octopus chews through them.', waves:['krill','pearl','shrimp'], map:[
     '###############','#1....R.D....1#','#.###.....###.#','#.#2..c.c..2#.#','#.U.........D.#','#1....P.Q....1#','#.U.........D.#',
     '#.#3..c.c..3#.#','#.###.....###.#','#1....U.L....1#','#......O......#','#C...2...2...C#','###############']},
   {name:'Mantis Den', hint:'The mantis shrimp punches out a whole wall at once.', waves:['star','grape','krill'], map:[
@@ -476,7 +477,7 @@ const tentAt = (x, y) => !!(S.boss && S.boss.tents && S.boss.tents.some(t => t.s
 const friendAt = (x, y) => S.friends.some(n => (n.x === x && n.y === y) || (n.tx === x && n.ty === y));
 const canPlace = (x, y) => inb(x, y) && S.grid[y][x] === '.' && S.floor[y][x] !== 'h' && !occupied(x, y, null) && !playerAt(x, y) && !friendAt(x, y) && !tentAt(x, y);
 const hiddenP = p => S.floor[Math.round(p.fy)][Math.round(p.fx)] === 'k';
-const visibleTo = e => alive().filter(p => !hiddenP(p) || Math.abs(p.fx - e.fx) + Math.abs(p.fy - e.fy) <= 1.5);
+const visibleTo = e => alive().filter(p => !hiddenP(p) || Math.abs(p.fx - e.fx) + Math.abs(p.fy - e.fy) <= 1.1); // only a hunter on the next tile sees into the kelp
 let shake = 0;
 function addShake(v) { if (!reduceMotion) shake = Math.max(shake, v); }
 
@@ -771,6 +772,7 @@ function updatePlayer(p, dt) {
   if (p.inv > 0) p.inv -= dt;
   if (p.puffCd > 0) p.puffCd = Math.max(0, p.puffCd - dt);
   if (p.puff > 0) { p.puff = Math.max(0, p.puff - dt); return; }
+  const hid = hiddenP(p); if (hid && !p.inKelp) sfx('rustle', {x:p.fx, p:p.id}); p.inKelp = hid;
   const h = p.held.length ? DIRS[p.held[p.held.length - 1]] : null;
   if (h) p.face = h;
   // puff right away, even between cells; coral waits for the next cell so it grows from where the fish stands
@@ -781,10 +783,12 @@ function updatePlayer(p, dt) {
   for (let g = 0; g < 3 && rem > 0; g++) {
     if (!p.moving) {
       if (p.bufAct) { p.bufAct = false; coralAction(p); }
+      p.drift = false;
       if (h) { const nx = p.x + h.x, ny = p.y + h.y; if (inb(nx, ny) && S.grid[ny][nx] === '.') { p.tx = nx; p.ty = ny; p.moving = true; } }
+      else { const cur = CUR[S.floor[p.y][p.x]]; if (cur) { const nx = p.x + cur.x, ny = p.y + cur.y; if (inb(nx, ny) && S.grid[ny][nx] === '.') { p.tx = nx; p.ty = ny; p.moving = true; p.drift = true; } } } // a current carries an idle fish
       if (!p.moving) break;
     }
-    const left = advance(p, PSPEED, rem);
+    const left = advance(p, p.drift ? PSPEED * .45 : PSPEED, rem);
     if (left < 0) break;
     rem = left;
   }
@@ -802,14 +806,14 @@ const harmless = e => (e.kind === 'Y' && e.state !== 'hunt') || (e.kind === 'K' 
 function coralAction(p) {
   let dir = p.face, x = p.x + dir.x, y = p.y + dir.y, i = 0, g = 0;
   if (isBlock(x, y)) {
-    while (isBlock(x, y) && g++ < 80) { breakBlock(x, y, i * 0.03); i++; const f = S.floor[y][x]; if (CUR[f]) dir = CUR[f]; x += dir.x; y += dir.y; }
+    while (isBlock(x, y) && g++ < 80) { breakBlock(x, y, i * 0.03); i++; const f = S.floor[y][x]; if (CUR[f]) { dir = CUR[f]; ring(x + .5, y + .5, 'rgba(190,250,255,0.8)'); } x += dir.x; y += dir.y; }
     sfx('break', {x:p.fx, p:p.id, n:i});
   } else if (canPlace(x, y)) {
-    while (canPlace(x, y) && g++ < 80) { S.grid[y][x] = 'c'; S.born[y][x] = time + i * 0.03; i++; const f = S.floor[y][x]; if (CUR[f]) dir = CUR[f]; x += dir.x; y += dir.y; }
+    while (canPlace(x, y) && g++ < 80) { S.grid[y][x] = 'c'; S.born[y][x] = time + i * 0.03; i++; const f = S.floor[y][x]; if (CUR[f]) { dir = CUR[f]; ring(x + .5, y + .5, 'rgba(190,250,255,0.8)'); } x += dir.x; y += dir.y; }
     sfx('grow', {x:p.fx, p:p.id, n:i});
-    if (inb(x, y) && S.floor[y][x] === 'h' && S.grid[y][x] === '.') steam(x, y, i * 0.03);
+    if (inb(x, y) && S.floor[y][x] === 'h' && S.grid[y][x] === '.') { steam(x, y, i * 0.03, true); sfx('vent', {x, p:p.id}); }
   } else {
-    if (inb(x, y) && S.floor[y][x] === 'h') steam(x, y, 0);
+    if (inb(x, y) && S.floor[y][x] === 'h') { steam(x, y, 0, true); sfx('vent', {x, p:p.id}); }
     sfx('bonk', {x:p.fx, p:p.id});
   }
 }
@@ -980,6 +984,9 @@ function decide(e) {
     if (!FLY[e.kind] && (t === 'c' || snackAt(x, y, null))) return false;
     return !occupied(x, y, e);
   };
+  // a current carries any walking or swimming creature along; flyers and Bruiser are too big or too high for it
+  const cur = CUR[S.floor[e.y][e.x]];
+  if (cur && !FLY[e.kind] && e.kind !== 'K' && free(cur)) { e.dir = cur; e.tx = e.x + cur.x; e.ty = e.y + cur.y; e.moving = true; return; }
   let d = null;
   if (e.kind === 'K') {
     if (e.charge) {
@@ -1297,7 +1304,7 @@ function collectCheck() {
 // ================= particles =================
 function sparkle(x, y, col) { for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2; parts.push({x, y, vx:Math.cos(a) * 1.6, vy:Math.sin(a) * 1.6, life:.45, max:.45, size:.05, kind:'spark', col, delay:0, ph:0}); } }
 function ring(x, y, col) { parts.push({x, y, vx:0, vy:0, life:.4, max:.4, size:.2, kind:'ring', col, delay:0, ph:0}); }
-function steam(x, y, delay) { for (let i = 0; i < 6; i++) parts.push({x:x + rand(.25, .75), y:y + .6, vx:rand(-.3, .3), vy:-rand(.8, 1.6), life:.7, max:.7, size:rand(.05, .1), kind:'steam', delay, ph:0}); }
+function steam(x, y, delay, big) { for (let i = 0; i < (big ? 18 : 6); i++) parts.push({x:x + rand(.2, .8), y:y + .6, vx:rand(-.5, .5), vy:-rand(.8, big ? 2.6 : 1.6), life:big ? 1.1 : .7, max:big ? 1.1 : .7, size:rand(.05, big ? .16 : .1), kind:'steam', delay, ph:0}); }
 function updateParts(dt) {
   if (Math.random() < dt * 2.2) parts.push({x:Math.random() * COLS, y:ROWS + .2, vx:0, vy:-rand(.5, 1.1), life:14, max:14, size:rand(.03, .08), kind:'amb', delay:0, ph:Math.random() * 6});
   if (S) for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS; x++) if (S.floor[y][x] === 'h' && Math.random() < dt * 1.2)
@@ -1778,6 +1785,7 @@ function drawPuffer(p, alphaMul) {
   let lift = 0, alpha = alphaMul || 1;
   if (p.dead) { const k = 1 - p.deathT / 1.4; lift = -k * .8; alpha *= Math.max(0, 1 - k * .9); }
   if (!p.dead && p.inv > 0 && Math.floor(time * 12) % 2) alpha *= .4;
+  if (!p.dead && S && mode !== 'style' && p.held && hiddenP(p)) alpha *= .5; // hidden in kelp
   if (!p.dead) shadow(p.fx + .5, p.fy + .88, r * .9);
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -2648,6 +2656,7 @@ function hud() {
     const chip = hPlayers.children[i]; if (!chip) return;
     chip.classList.toggle('out', p.dead);
     const pts = chip.querySelector('.pts'); if (pts) setText(pts, 'pp' + i, p.points.toLocaleString());
+    chip.classList.toggle('hid', !p.dead && hiddenP(p));
     chip.querySelector('.meter i').style.width = (p.dead || p.puff > 0 ? 0 : (1 - p.puffCd / (PUFF_CD + PUFF_T)) * 100).toFixed(0) + '%';
   });
 }
@@ -2883,6 +2892,8 @@ const PACKS = {
     lash(o, pan) { noise(.25, .22, 500, 3000, 'bandpass', 1.2, 0, pan); tone(160, 80, .2, 'triangle', .07, 0, pan); },
     stuck(o, pan) { tone(300, 180, .15, 'sine', .12, 0, pan); tone(240, 140, .2, 'sine', .1, .1, pan); noise(.15, .08, 800, 400, 'bandpass', 3, 0, pan); },
     bossdown() { [60, 55, 52, 48].forEach((m, i) => tone(hz(m), hz(m) * .98, .3, 'triangle', .08, i * .18)); [72, 76, 79, 84].forEach((m, i) => bloop(hz(m), .9 + i * .08, 0, .08)); },
+    vent(o, pan) { noise(.45, .16, 1200, 4000, 'bandpass', .8, 0, pan); tone(180, 320, .3, 'sine', .05, 0, pan); },
+    rustle(o, pan) { noise(.18, .07, 2500, 5000, 'bandpass', 1.2, 0, pan); noise(.12, .05, 1800, 3500, 'bandpass', 1.2, .08, pan); },
   }},
   musicbox: {name:'Music box', desc:'Tinkling tines, long tails', echo:.28, lp:12000, fx:{
     grow(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 5); i++) tine(hz(79 + [0, 2, 4, 7, 9][i]) * pm, .07, i * .05, pan); },
@@ -2912,6 +2923,8 @@ const PACKS = {
     lash(o, pan) { noise(.2, .14, 500, 3000, 'bandpass', 1.2, 0, pan); [7, 4, 0].forEach((st, i) => tine(hz(72 + st), .05, i * .04, pan, .3)); },
     stuck(o, pan) { tine(hz(55), .09, 0, pan, .2); tine(hz(53), .08, .1, pan, .2); tine(hz(55), .07, .2, pan, .2); },
     bossdown() { [60, 55, 52, 48].forEach((m, i) => tine(hz(m), .08, i * .18, 0, 1.2)); [72, 76, 79, 84, 91].forEach((m, i) => tine(hz(m), .07, .9 + i * .09, 0)); },
+    vent(o, pan) { noise(.4, .12, 1500, 4500, 'bandpass', .8, 0, pan); tine(hz(84), .05, .05, pan, .3); },
+    rustle(o, pan) { noise(.15, .06, 3000, 6000, 'bandpass', 1.2, 0, pan); tine(hz(96), .025, .05, pan, .2); },
   }},
   breath: {name:'Breath', desc:'Airy swells and low hums', echo:.35, lp:7000, fx:{
     grow(o, pan, pm, k) { breath(.25 + k * .03, .14, 400 * pm, 2200 * pm, 0, pan); hum(110 * pm, 160 * pm, .3, .05, 0, pan); },
@@ -2941,6 +2954,8 @@ const PACKS = {
     lash(o, pan) { breath(.25, .22, 400, 3200, 0, pan); hum(150, 75, .2, .06, 0, pan); },
     stuck(o, pan) { hum(240, 150, .18, .1, 0, pan); hum(200, 120, .2, .09, .1, pan); breath(.15, .06, 700, 300, 0, pan); },
     bossdown() { hum(hz(55), hz(43), 1.2, .09, 0, 0); breath(1.0, .12, 1500, 200, 0, 0); [60, 64, 67, 72].forEach((m, i) => hum(hz(m), hz(m), 1.2, .04, 1.0 + i * .1, 0)); },
+    vent(o, pan) { breath(.5, .2, 800, 4000, 0, pan); hum(120, 240, .35, .05, 0, pan); },
+    rustle(o, pan) { breath(.2, .1, 2500, 5000, 0, pan); },
   }},
   drops: {name:'Droplets', desc:'Water plinks and splashes', echo:.3, lp:9000, fx:{
     grow(o, pan, pm, k) { for (let i = 0; i < Math.min(k, 6); i++) drop((700 + i * 160) * pm, .09, i * .045, pan); },
@@ -2970,6 +2985,8 @@ const PACKS = {
     lash(o, pan) { splash(.25, .22, 0, pan); for (let i = 0; i < 4; i++) drop(1200 - i * 250, .06, i * .04, pan); },
     stuck(o, pan) { drop(300, .12, 0, pan); drop(260, .11, .1, pan); drop(300, .1, .2, pan); },
     bossdown() { [60, 55, 52, 48].forEach((m, i) => drop(hz(m), .1, i * .18, 0)); splash(.9, .1, .5, 0); [72, 76, 79, 84, 91].forEach((m, i) => drop(hz(m), .09, .9 + i * .08, 0)); },
+    vent(o, pan) { splash(.4, .18, 0, pan); for (let i = 0; i < 4; i++) drop(900 + i * 200, .06, i * .06, pan); },
+    rustle(o, pan) { noise(.15, .07, 2500, 5000, 'bandpass', 1.2, 0, pan); drop(1800, .04, .05, pan); },
   }},
 };
 let pack = PACKS[save.pack] || PACKS.bubbly;
@@ -3079,7 +3096,7 @@ const PREVIEWS = [['grow', 'Grow coral'], ['break', 'Break coral'], ['get', 'Sna
   ['bonk', 'Bump'], ['charge', 'Swordfish charge'], ['thud', 'Swordfish crash'], ['punch', 'Mantis punch'], ['blink', 'Moon pearl'],
   ['die', 'Caught'], ['revive', 'Revive'], ['shield', 'Bubble shield'], ['pop', 'Shield pops'], ['boop', 'Nori boops'], ['rise', 'Stingray bursts out'], ['flare', 'Lionfish flare'],
   ['roar', 'Bruiser roars'], ['crash', 'Bruiser crashes'], ['warn', 'Tentacle warning'], ['lash', 'Tentacle lash'], ['stuck', 'Tentacle stuck'], ['bosshit', 'Boss hit'], ['bossdown', 'Boss defeated'],
-  ['win', 'Reef cleared'], ['click', 'Menu click']];
+  ['win', 'Reef cleared'], ['vent', 'Vent hiss'], ['rustle', 'Kelp rustle'], ['click', 'Menu click']];
 function openStyle() {
   const tw = twoP; twoP = true; loadLevel(LEVELS.findIndex(l => l.name === 'Lionfish Lair')); twoP = tw;
   mode = 'style'; S.readyT = 0; hideBanner(); overlay.hidden = true;
@@ -3151,7 +3168,7 @@ if (!save.seenIntro) playStory('intro', () => { save.seenIntro = true; persist()
 requestAnimationFrame(frame);
 
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
-  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; }, get palettes() { return PALETTES; },
+  Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; }, get palettes() { return PALETTES; }, hud,
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
   get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();
