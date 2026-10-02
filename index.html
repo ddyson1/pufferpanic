@@ -225,10 +225,11 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .stage>.mini button.off{color:rgba(230,246,245,.5)}
   .wrap.side .banner{top:calc(var(--T,40px) + 10px)}
   .wrap.side .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
-  .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;top:0;right:0;bottom:0;z-index:6;margin:0;width:min(450px,54%);max-width:none !important;max-height:none;border-radius:0;background:rgba(7,34,43,.94);color:#e6f6f5;overflow:auto;padding:16px 16px 8px;box-shadow:-12px 0 30px rgba(0,0,0,.25)}
+  .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;margin:0;width:min(760px,94%);max-width:none !important;max-height:calc(100% - 24px);border-radius:16px;background:rgba(7,34,43,.96);color:#e6f6f5;overflow:auto;padding:16px 18px 8px;box-shadow:0 0 0 3000px rgba(2,20,30,.6),0 24px 60px rgba(0,0,0,.45)}
+  .wrap.side .stage>.style .opts{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
+  .wrap.side .stage>.style .opt{padding:10px 11px}.wrap.side .stage>.style .opt b{font-size:.98rem}.wrap.side .stage>.style .opt small{font-size:.82rem}
   .stage>.style .opt{background:rgba(255,255,255,.08)}.stage>.style .opt[aria-pressed="true"]{background:rgba(255,255,255,.16)}
   .stage>.style .lead,.stage>.style summary{color:#9fc3c9}.stage>.style .previews button{background:rgba(255,255,255,.1);color:#e6f6f5;box-shadow:none}
-  .stage>.mini{right:auto;left:10px}
   .mini #bStyle.on{background:var(--accent);color:var(--bg)}
   .wrap.side:has(.style:not([hidden])){grid-template-columns:auto;justify-content:center;max-width:none}
   .wrap.side .style{padding:18px 18px 8px}.wrap.side .style .opt{padding:12px 13px;gap:6px}.wrap.side .style .opt b{font-size:1.02rem}.wrap.side .style .opt small{font-size:.86rem}
@@ -274,7 +275,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
         <button id="bSound" aria-label="Sound on" title="Sound on"><svg viewBox="0 0 24 24"><polygon points="3,9 7,9 12,5 12,19 7,15 3,15"/><path class="s" d="M15.5 9.5a3.6 3.6 0 0 1 0 5"/><path class="s" d="M18 7a7 7 0 0 1 0 10"/><path class="s x" d="M4 20L20 4"/></svg></button>
         <button id="bMusic" aria-label="Music on" title="Music on"><svg viewBox="0 0 24 24"><path class="s" d="M9 17V6l10-2.5V15"/><circle cx="6.5" cy="17.5" r="2.6"/><circle cx="16.5" cy="15.5" r="2.6"/><path class="s x" d="M4 20L20 4"/></svg></button>
         <button id="bPause" aria-label="Pause" title="Pause"><svg viewBox="0 0 24 24"><g class="main"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></g><polygon class="alt" points="7,4 20,12 7,20"/></svg></button>
-        <button id="bStyle" aria-label="Look and sound" title="Look and sound"><svg viewBox="0 0 24 24"><g class="s"><circle cx="12" cy="12" r="3.4"/><path d="M18.2 12.0L21.6 12.0"/> <path d="M16.4 16.4L18.8 18.8"/> <path d="M12.0 18.2L12.0 21.6"/> <path d="M7.6 16.4L5.2 18.8"/> <path d="M5.8 12.0L2.4 12.0"/> <path d="M7.6 7.6L5.2 5.2"/> <path d="M12.0 5.8L12.0 2.4"/> <path d="M16.4 7.6L18.8 5.2"/></g></svg></button>
+        <button id="bStyle" aria-label="Look and sound" title="Look and sound"><svg viewBox="0 0 24 24"><path fill-rule="evenodd" stroke="none" d="M19.18,10.21 L21.88,10.44 L21.88,13.56 L19.18,13.79 L18.34,15.81 L20.09,17.88 L17.88,20.09 L15.81,18.34 L13.79,19.18 L13.56,21.88 L10.44,21.88 L10.21,19.18 L8.19,18.34 L6.12,20.09 L3.91,17.88 L5.66,15.81 L4.82,13.79 L2.12,13.56 L2.12,10.44 L4.82,10.21 L5.66,8.19 L3.91,6.12 L6.12,3.91 L8.19,5.66 L10.21,4.82 L10.44,2.12 L13.56,2.12 L13.79,4.82 L15.81,5.66 L17.88,3.91 L20.09,6.12 L18.34,8.19 Z M12 8.6a3.4 3.4 0 1 0 0 6.8a3.4 3.4 0 1 0 0-6.8Z"/></svg></button>
         <button id="bFull" aria-label="Fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><g class="main s"><path d="M4 9V4h5"/><path d="M15 4h5v5"/><path d="M20 15v5h-5"/><path d="M9 20H4v-5"/></g><g class="alt s"><path d="M9 4v5H4"/><path d="M20 9h-5V4"/><path d="M15 20v-5h5"/><path d="M4 15h5v5"/></g></svg></button>
       </span>
       <button id="bMenu">Levels</button><button id="bHelp">Controls</button>
@@ -2893,7 +2894,13 @@ window.addEventListener('keydown', e => {
 });
 window.addEventListener('keyup', e => { const b = binding(e.code); if (b && b.dir) releaseDir(b.p, b.dir); });
 window.addEventListener('blur', () => { if (S) for (const p of S.players) p.held.length = 0; pause(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+// a hidden tab pauses the reef and stops the audio outright, on the menu and in the lab too; the interval that feeds
+// the music keeps firing in the background otherwise, and the tune would carry on with the window out of sight
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { pause(); if (ac) { try { ac.suspend(); } catch (e) {} } }
+  else if (ac && ac.state === 'suspended') { try { ac.resume(); } catch (e) {} }
+});
+window.addEventListener('pagehide', () => { if (ac) { try { ac.suspend(); } catch (e) {} } });
 
 touchEl.querySelectorAll('[data-dir]').forEach(b => {
   const n = b.dataset.dir;
@@ -2915,7 +2922,7 @@ $('#bHelp').addEventListener('click', e => { e.currentTarget.blur(); showControl
 $('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'style') closeStyle(); else openStyle(); });
 $('#bPause').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'play') pause(); else if (mode === 'paused') resume(); });
 $('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted || adMute ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
-$('#bMusic').addEventListener('click', e => { unlockAudio(); musicOn = !musicOn; save.music = musicOn; persist(); setAudioLabels(); e.currentTarget.blur(); });
+$('#bMusic').addEventListener('click', e => { unlockAudio(); musicOn = !musicOn; save.music = musicOn; persist(); if (!musicOn && musicBus) musicBus.gain.setTargetAtTime(0, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
 
 // ================= sound =================
 // Everything is synthesized with Web Audio: no audio files.
@@ -3231,7 +3238,7 @@ function applyTrack(id) {
 }
 function scheduleMusic() {
   if (!ac) return;
-  const on = !muted && musicOn && mode !== 'paused' && ac.currentTime >= musicDuckUntil;
+  const on = !muted && musicOn && mode !== 'paused' && !document.hidden && ac.currentTime >= musicDuckUntil;
   musicBus.gain.setTargetAtTime(on ? (mode === 'play' ? .9 : .7) : 0, ac.currentTime, .3);
   const STEP = 60 / track.bpm / 4;
   if (nextStep < ac.currentTime - .5) nextStep = ac.currentTime + .05;
@@ -3322,7 +3329,7 @@ requestAnimationFrame(frame);
 window.__pp = {LEVELS, loadLevel, draw, coralAction, pressDir, releaseDir, startPuff, killPlayer,
   Ads, continueLevel, isUnlocked, unlockedSet, showFish, getFish, drawPreviews, award, fmtTime, bfsStep, startLevel, playStory, storyNext, endStory, bossHit, spawnTent, get story() { return story; }, openStyle, preview, applyPack, applyTrack, setTheme(id) { theme = THEMES[id]; rebuildArt(); }, get packs() { return PACKS; }, get tracks() { return TRACKS; }, get track() { return track; }, get palettes() { return PALETTES; }, hud,
   audioTest(c, ahead) { ac = c; musicAhead = ahead || .25; nextStep = 0; buildAudio(); }, sfx, scheduleMusic, setMode(m) { mode = m; },
-  get S() { return S; }, get mode() { return mode; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
+  get S() { return S; }, get mode() { return mode; }, get ac() { return ac; }, setTwoP(v) { twoP = v; }, tick(dt) { time += dt; update(dt); }};
 })();
 </script>
 </body>
