@@ -210,21 +210,23 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 /* the reef info as a strip over the top row of rocks and the icon buttons in the bottom corner, used whenever resize()
    moves them into the stage: wide desktop windows and landscape phones */
 @media (min-width:0){
-  .stage>.hud{position:absolute;left:0;right:0;top:0;z-index:5;margin:0;min-height:var(--T,40px);padding:5px 10px;gap:4px 8px;color:#e6f6f5;background:linear-gradient(rgba(2,26,36,.78),rgba(2,26,36,.5));font-size:clamp(.72rem,calc(var(--boardW,600px)/48),.9rem)}
-  .stage>.hud[hidden]{display:none}
-  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:3px 9px}
+  .stage>.hud{position:relative;z-index:5;margin:0;height:46px;box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:clamp(.7rem,calc(var(--boardW,600px)/60),.86rem)}
+  .stage>.hud #hWave{display:none} /* the pips say it */
+  .stage>.hud[hidden]{display:flex;visibility:hidden} /* the strip keeps its row above the board on the title screen, so the board never jumps */
+  .stage>.hud .grp{flex-wrap:nowrap;min-width:0}.stage>.hud .lvl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:2px 8px}
   .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
   .stage>.hud .chip.sb small{opacity:.7}
   .stage>.hud .pips i{background:rgba(255,255,255,.3)}.stage>.hud .pips i.on{background:var(--accent)}.stage>.hud .pips i.done{background:rgba(255,255,255,.6)}.stage>.hud .pips i.boss{background:#e8463a}
-  .stage>.hud .lvl{font-size:clamp(.9rem,calc(var(--boardW,600px)/40),1.1rem);color:var(--gold)}
+  .stage>.hud .lvl{font-size:clamp(.85rem,calc(var(--boardW,600px)/46),1.05rem);color:var(--gold)}
   .stage>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
   .stage>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
   .stage>.mini button.off{color:rgba(230,246,245,.5)}
-  .stage.hudin .banner{top:calc(var(--T,40px) + 10px)}
-  .stage.hudin .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
+  .stage.hudin .banner{top:56px}
+  .stage.hudin .overlay{padding:14px 14px 58px}
   .stage.tall{display:flex;align-items:center;justify-content:center}
-  .stage.narrow>.hud .chip.sb,.stage.narrow>.hud #hWave{display:none}.stage.narrow>.hud #hWave+.pips{margin-left:2px}
-  .stage.narrow>.hud{padding:3px 8px;gap:3px 6px}.stage.narrow>.hud .chip{padding:2px 7px}
+  .stage.narrow>.hud .chip.sb{display:none}
+  .stage.narrow>.hud{padding:0 8px;gap:4px}.stage.narrow>.hud .chip{padding:2px 7px}
   .wrap.inmenu .touch{display:none} /* the pad has nothing to do on the title screen */
 }
 /* wide desktop windows: the board alone, as tall as the window; the reef info sits in a strip over the top row of rocks
@@ -2789,6 +2791,7 @@ function updateKeysHelp() {
 
 // ================= layout =================
 let builtT = 0, builtDpr = 0, sideLayout = false, labIn = false;
+const HUD_H = 46; // the info strip's row above the board when it sits inside the stage (see .stage>.hud)
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
@@ -2809,25 +2812,25 @@ function resize() {
   if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
     // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
     const fullW = (window.innerWidth || 0) - 48;
-    const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24) / ROWS));
+    const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24 - HUD_H) / ROWS));
     sideMode = tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
   const hudIn = sideMode || sideTouch; // the hud and the icon buttons sit on the board on wide windows and landscape phones
   if (hudIn !== sideLayout) {
     sideLayout = hudIn;
-    if (hudIn) stage.append(hudEl, miniEl);
+    if (hudIn) { stage.prepend(hudEl); stage.append(miniEl); }
     else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); hudEl.hidden = false; }
   }
   if (sideMode !== labIn) { labIn = sideMode; if (sideMode) stage.append(stylePanel); else footEl.after(stylePanel); }
   stage.classList.toggle('hudin', hudIn);
   if (sideMode) {
     const innerW = window.innerWidth || 0;
-    T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24) / ROWS)));
+    T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24 - HUD_H) / ROWS)));
     stage.style.width = COLS * T + 'px'; stage.style.height = ''; stage.classList.remove('tall'); hudEl.style.width = footEl.style.width = touchEl.style.width = '';
   } else for (let pass = 0; pass < 2; pass++) {
     const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
-    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? 0 : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
+    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? HUD_H : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
     // a portrait phone's title screen: the card gets the height the pad would have taken, the board sits in the middle of it
