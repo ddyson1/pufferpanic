@@ -246,9 +246,9 @@ const PATTERNS = {spots:'Spots', plain:'Plain', stripes:'Stripes', freckles:'Fre
 const ACCESSORIES = {none:'None', bow:'Bow', flower:'Flower', glasses:'Glasses', cap:'Sailor cap', star:'Starfish clip', fin:'Shark fin hat', crown:'Royal crown', pearls:'Pearl necklace'};
 // How each locked piece is earned. lv is a level index (0-based); anything not listed is available from the start.
 const UNLOCKS = {
-  color:   {lavender:{lv:2}, tangerine:{lv:7}, midnight:{lv:15}, gold:{special:'allstars', text:'Earn 3 stars on every level'}},
+  color:   {lavender:{lv:2}, tangerine:{lv:7}, midnight:{lv:16}, gold:{special:'allstars', text:'Earn 3 stars on every level'}},
   pattern: {stripes:{lv:4}, freckles:{lv:11}, hearts:{lv:17, text:'Beat the Kraken Queen'}},
-  acc:     {glasses:{lv:5}, cap:{lv:9}, star:{lv:13}, fin:{lv:16, text:'Defeat Bruiser'}, crown:{lv:17, text:'Beat the Kraken Queen'}, pearls:{special:'snacks', n:500, text:'Eat 500 snacks in total'}},
+  acc:     {glasses:{lv:5}, cap:{lv:9}, star:{lv:14}, fin:{lv:12, text:'Defeat Bruiser'}, crown:{lv:17, text:'Beat the Kraken Queen'}, pearls:{special:'snacks', n:500, text:'Eat 500 snacks in total'}},
 };
 const ITEM_NAMES = {color:PALETTES, pattern:PATTERNS, acc:ACCESSORIES};
 function levelCleared(i) { return !!(save.best && (save.best['1-' + i] || save.best['2-' + i])); }
@@ -309,6 +309,9 @@ const LEVELS = [
   {name:'Clam Beds', hint:'Clams only give up their pearls while they are open. Time your approach.', waves:['clam','grape','clam'], map:[
     '###############','#1.c.......c.1#','#..c..2.2..c..#','#.....###.....#','#2.J.......J.2#','#..#..P.Q..#..#','#..#.......#..#',
     '#3....N......3#','#.....###.....#','#..c..3.3..c..#','#1.c...C...c.1#','#2....C.C....2#','###############']},
+  {name:"Bruiser's Reef", boss:'shark', story:'bruiser', hint:'Make Bruiser crash into coral, then puff right next to him while he is dizzy.', waves:[], map:[
+    '###############','#.............#','#.c..#...#..c.#','#.c.........c.#','#....c...c....#','#.#....B....#.#','#.............#',
+    '#....c.N.c....#','#.c.........c.#','#.c..#...#..c.#','#.....P.Q.....#','#.............#','###############']},
   {name:'Manta Flats', hint:'Manta rays glide straight over coral and never slow down.', waves:['krill','star','shrimp'], map:[
     '###############','#1.....A.....1#','#.c.c.c.c.c.c.#','#..2.......2..#','#.c.c..#..c.c.#','#1....P.Q....1#','#.c.c..#..c.c.#',
     '#..3.......3..#','#.c.c.c.c.c.c.#','#2.....C.....2#','#.c.c.c.c.c.c.#','#1.....A.....1#','###############']},
@@ -321,9 +324,6 @@ const LEVELS = [
   {name:'Lionfish Lair', hint:'Lionfish fan out their spines every few seconds. Keep your distance when they do.', waves:['star','shrimp','clam','krill'], map:[
     '###############','#1.....A.....1#','#.cc.x...x.cc.#','#.c2...F...2c.#','#.....ccc.....#','#1.#..P.Q..#.1#','#..#...N...#..#',
     '#..3.......3..#','#.###.4.4.###.#','#x...F...M...x#','#3.c..#.#..c.3#','#1...........1#','###############']},
-  {name:"Bruiser's Reef", boss:'shark', story:'bruiser', hint:'Make Bruiser crash into coral, then puff right next to him while he is dizzy.', waves:[], map:[
-    '###############','#.............#','#.c..#...#..c.#','#.c.........c.#','#....c...c....#','#.#....B....#.#','#.............#',
-    '#....c.N.c....#','#.c.........c.#','#.c..#...#..c.#','#.....P.Q.....#','#.............#','###############']},
   {name:'The Kraken Queen', boss:'queen', story:'queen', ending:true, hint:'Trap a tentacle in coral, then puff right next to its tip.', waves:[], map:[
     '###############','#.....BBB.....#','#.....BBB.....#','#.............#','#..#...C...#..#','#.............#','#...c.....c...#',
     '#.#....N....#.#','#...c.....c...#','#.............#','#..#..P.Q..#..#','#C...........C#','###############']},
@@ -418,6 +418,13 @@ let parts = [];
 let save = {unlocked:1, best:{}};
 try { const v = JSON.parse(localStorage.getItem('puffer-panic-v2') || 'null'); if (v && v.unlocked) save = v; } catch (e) {}
 if (!save.paperDefault) { save.theme = 'paper'; save.paperDefault = true; try { localStorage.setItem('puffer-panic-v2', JSON.stringify(save)); } catch (e) {} }
+// Bruiser's Reef moved from level 17 to level 13 (index 16 to 12) so the bosses are no longer back to back; shift saved records so nobody loses a time or a star
+if (!save.bruiserMid) {
+  const map = i => i === 16 ? 12 : (i >= 12 && i <= 15 ? i + 1 : i), best = {};
+  for (const [k, v] of Object.entries(save.best || {})) { const [m, i] = k.split('-'); best[m + '-' + map(+i)] = v; }
+  save.best = best; if (save.unlocked >= 13 && save.unlocked <= 16) save.unlocked += 1; save.bruiserMid = true;
+  try { localStorage.setItem('puffer-panic-v2', JSON.stringify(save)); } catch (e) {}
+}
 let theme = THEMES[save.theme] || THEMES.paper;
 save.stars = save.stars || {};
 save.scores = save.scores || {};
@@ -2868,7 +2875,7 @@ const TRACKS = {
   }},
 };
 // 'auto' (the default) follows the reef: the loops get calmer the deeper you go, and each boss has its own
-const trackForLevel = i => TRACKS[i >= 17 ? 'moondrift' : i >= 16 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
+const trackForLevel = i => TRACKS[i === 17 ? 'moondrift' : i === 12 ? 'deep' : i >= 10 ? 'tidepool' : i >= 6 ? 'lantern' : 'reef'];
 let autoTrack = !save.track || save.track === 'auto';
 let track = autoTrack ? TRACKS.reef : (TRACKS[save.track] || TRACKS.reef);
 function applyTrack(id) {
@@ -2897,7 +2904,7 @@ const PREVIEWS = [['grow', 'Grow coral'], ['break', 'Break coral'], ['get', 'Sna
   ['roar', 'Bruiser roars'], ['crash', 'Bruiser crashes'], ['warn', 'Tentacle warning'], ['lash', 'Tentacle lash'], ['stuck', 'Tentacle stuck'], ['bosshit', 'Boss hit'], ['bossdown', 'Boss defeated'],
   ['win', 'Reef cleared'], ['click', 'Menu click']];
 function openStyle() {
-  const tw = twoP; twoP = true; loadLevel(15); twoP = tw;
+  const tw = twoP; twoP = true; loadLevel(LEVELS.findIndex(l => l.name === 'Lionfish Lair')); twoP = tw;
   mode = 'style'; S.readyT = 0; hideBanner(); overlay.hidden = true;
   stylePanel.hidden = false; resize();
   unlockAudio(); renderStyle();

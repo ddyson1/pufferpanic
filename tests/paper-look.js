@@ -21,9 +21,9 @@ setTimeout(()=>{
   const saved=JSON.parse(w.localStorage.getItem('puffer-panic-v2'));
   console.log('existing player with a saved look switched to Cut paper once:', saved.theme, saved.paperDefault);
   G.setTwoP(true);
-  for(const [L,n] of [[0,'shallows'],[13,'kelp'],[15,'lion'],[17,'queen']]){ G.loadLevel(L); G.tick(2.2); for(let k=0;k<60*2;k++) G.tick(1/60); if(L===17){ const B=G.S.boss; B.spawnT=0; G.tick(.02); for(let k=0;k<70;k++) G.tick(1/60);} shot(n); }
+  for(const [L,n] of [[0,'shallows'],[14,'kelp'],[16,'lion'],[17,'queen']]){ G.loadLevel(L); G.tick(2.2); for(let k=0;k<60*2;k++) G.tick(1/60); if(L===17){ const B=G.S.boss; B.spawnT=0; G.tick(.02); for(let k=0;k<70;k++) G.tick(1/60);} shot(n); }
   // timing: paper vs reef, same scene
-  G.loadLevel(15); G.tick(2.2); for(let k=0;k<60;k++) G.tick(1/60);
+  G.loadLevel(16); G.tick(2.2); for(let k=0;k<60;k++) G.tick(1/60);
   const time=()=>{const t0=process.hrtime.bigint(); for(let i=0;i<40;i++) G.draw(); return Number(process.hrtime.bigint()-t0)/1e6/40;};
   const paperMs=time(); G.setTheme('reef'); const reefMs=time(); G.setTheme('paper');
   console.log(`avg frame draw at 2x resolution: cut paper ${paperMs.toFixed(1)} ms, reef ${reefMs.toFixed(1)} ms`);

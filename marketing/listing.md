@@ -14,7 +14,7 @@ A co-op arcade maze game. Grow coral walls to trap crabs, eels and stingrays, pu
 ## Long description
 Killi and Milli are in charge of the snacks for the reef's Moonlight Feast. The night before, something huge wakes up in the Trench and every grumpy creature on the reef starts to move.
 
-Swim through 16 reefs that each introduce something new, then face two bosses: Bruiser the shark and the Kraken Queen. Your one tool is coral. Grow a wall to block the way, break it to get through, and puff up into a spiky ball when a creature gets too close. Nori the seal will swim by to help.
+Swim through 16 reefs that each introduce something new. Bruiser the shark guards the way to the deep, and the Kraken Queen waits at the bottom. Your one tool is coral. Grow a wall to block the way, break it to get through, and puff up into a spiky ball when a creature gets too close. Nori the seal will swim by to help.
 
 - Play alone or with a friend on one keyboard. A caught fish comes back with the next wave of snacks.
 - Nine creatures with their own tricks: crabs walk in lines, jellyfish float over walls, eels hunt you, swordfish charge, stingrays burst out of the sand, and more.

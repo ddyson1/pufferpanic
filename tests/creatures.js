@@ -34,22 +34,22 @@ setTimeout(()=>{
   const d0=Math.abs(n3.fx-pl.fx)+Math.abs(n3.fy-pl.fy); for(let k=0;k<60*5;k++){G.tick(1/60);S.enemies.forEach(e=>e.stun=999);} const d1=Math.abs(n3.fx-pl.fx)+Math.abs(n3.fy-pl.fy);
   chk(d1<d0,`Nori swims over to say hi (distance ${d0} -> ${d1.toFixed(1)})`);
   // Manta over coral
-  G.loadLevel(12); G.tick(2.2); S=G.S; const m=S.enemies.find(e=>e.kind==='A'); S.players[0].inv=999; S.enemies.forEach(e=>{if(e!==m)e.stun=999});
+  G.loadLevel(13); G.tick(2.2); S=G.S; const m=S.enemies.find(e=>e.kind==='A'); S.players[0].inv=999; S.enemies.forEach(e=>{if(e!==m)e.stun=999});
   tp(m,6,1); m.dir={x:0,y:1}; S.grid[2][6]='c';
   let overCoral=false; for(let k=0;k<60*8;k++){G.tick(1/60); if(S.grid[Math.round(m.fy)][Math.round(m.fx)]==='c') overCoral=true;} chk(overCoral,'manta glides over coral');
   // Stingray
-  G.loadLevel(14); G.tick(2.2); S=G.S; const y=S.enemies.find(e=>e.kind==='Y'); const py=S.players[0]; S.enemies.forEach(e=>{if(e!==y)e.stun=999}); S.friends.forEach(f=>tp(f,13,11));
+  G.loadLevel(15); G.tick(2.2); S=G.S; const y=S.enemies.find(e=>e.kind==='Y'); const py=S.players[0]; S.enemies.forEach(e=>{if(e!==y)e.stun=999}); S.friends.forEach(f=>tp(f,13,11));
   tp(py,13,5); y.t=0; G.tick(.1); chk(y.state==='buried','stingray stays buried when you are far');
   tp(py,y.x+1,y.y); py.inv=0; G.tick(.05); chk(y.state==='rising','stingray bursts out when you get close');
   chk(!py.dead,'rising stingray is not yet dangerous');
   G.tick(.6); chk(y.state==='hunt','then hunts');
   tp(py,y.x,y.y); py.fx=y.fx; py.fy=y.fy; G.tick(.02); chk(py.dead,'hunting stingray catches you');
   // Lionfish flare radius
-  G.loadLevel(15); G.tick(2.2); S=G.S; const f=S.enemies.find(e=>e.kind==='F'); const pf=S.players[0]; S.enemies.forEach(e=>{if(e!==f)e.stun=999}); S.friends.forEach(nn=>tp(nn,13,11));
+  G.loadLevel(16); G.tick(2.2); S=G.S; const f=S.enemies.find(e=>e.kind==='F'); const pf=S.players[0]; S.enemies.forEach(e=>{if(e!==f)e.stun=999}); S.friends.forEach(nn=>tp(nn,13,11));
   tp(f,7,7); f.ph='calm'; f.ft=99; tp(pf,8,7); pf.fx=8.1; G.tick(.02); chk(!pf.dead,'calm lionfish at 1.1 tiles is safe');
   f.ph='flare'; f.ft=1; f.x=f.tx=7; f.fx=7; G.tick(.02); chk(pf.dead,'flared lionfish at 1.1 tiles catches you');
   // Kelp hides you from eels
-  G.loadLevel(13); G.tick(2.2); S=G.S; const ek=S.enemies.find(e=>e.kind==='E'); const pk=S.players[0]; pk.inv=99;
+  G.loadLevel(14); G.tick(2.2); S=G.S; const ek=S.enemies.find(e=>e.kind==='E'); const pk=S.players[0]; pk.inv=99;
   chk(S.floor[6][6]==='k','kelp tile exists at (6,6)');
   S.enemies.forEach(e=>e.stun=999); ek.stun=0;
   tp(ek,1,4); tp(pk,6,6); const hid=G.bfsStep(ek,false); tp(pk,7,7); const open=G.bfsStep(ek,false);
@@ -64,6 +64,6 @@ setTimeout(()=>{
   while(G.mode==='play' && guard++<200){ S.enemies.forEach(e=>e.stun=999); const sn=G.S.snacks[0]; if(!sn){G.tick(.3);continue;} tp(ps,sn.x,sn.y); G.tick(.3); }
   chk(/★★★/.test(w.document.querySelector('#card').textContent),'clean clear earns 3 stars');
   // Screenshots
-  for(const [L,name] of [[10,'seal'],[13,'kelp'],[15,'lion']]){ G.setTwoP(true); G.loadLevel(L); for(let k=0;k<60*3.5;k++) G.tick(1/60); if(name==='lion'){G.S.players[0].shield=true; G.S.players[0].dead=false;} G.draw(); fs.writeFileSync(`${require('path').join(__dirname, 'out')}/new_${name}.png`, w.document.querySelector('#c').__png()); }
+  for(const [L,name] of [[10,'seal'],[14,'kelp'],[16,'lion']]){ G.setTwoP(true); G.loadLevel(L); for(let k=0;k<60*3.5;k++) G.tick(1/60); if(name==='lion'){G.S.players[0].shield=true; G.S.players[0].dead=false;} G.draw(); fs.writeFileSync(`${require('path').join(__dirname, 'out')}/new_${name}.png`, w.document.querySelector('#c').__png()); }
   console.log('errors:',errs.length?errs.slice(0,3):'none'); console.log(ok&&!errs.length?'ALL NEW CHECKS PASSED':'SOME FAILED'); process.exit(0);
 },400);
