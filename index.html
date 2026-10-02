@@ -115,7 +115,7 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
 .tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 10px;font-size:clamp(.85rem,calc(var(--boardW,600px)/64),1rem);white-space:nowrap}
-.tools button[hidden]{display:none}
+.tools button[hidden],.mini button[hidden]{display:none}
 .mini{display:inline-flex;gap:6px}
 .mini button{width:34px;height:34px;padding:0;border-radius:11px;display:inline-flex;align-items:center;justify-content:center}
 .mini svg{width:20px;height:20px;fill:currentColor;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -207,28 +207,25 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .overlay{container-type:size}
 @container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
-/* wide desktop windows: the board and one right pane (reef, score, fish, buttons) centered together, the board as tall as the window */
+/* wide desktop windows: the board alone, as tall as the window; the reef info sits in a strip over the top row of rocks
+   and the sound, music, pause and fullscreen buttons in the bottom right corner (see resize, which moves them in) */
 @media (pointer:fine) and (min-width:1000px){
-  .wrap.side{display:grid;grid-template-columns:auto 260px;justify-content:center;column-gap:16px;align-items:stretch;max-width:none;min-height:100vh;padding:12px 16px}
-  .wrap.side .hud,.wrap.side .rotate,.wrap.side .touch{display:none}
+  .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:stretch;max-width:none;min-height:100vh;padding:12px 16px}
+  .wrap.side>.hud,.wrap.side .rotate,.wrap.side .touch,.wrap.side .foot{display:none}
   .wrap.side .stage{grid-column:1;grid-row:1;margin:0}
-  .wrap.side .pane{display:flex;flex-direction:column;gap:16px;grid-column:2;grid-row:1;min-width:0;background:var(--chip);border-radius:18px;padding:16px;font-size:.95rem}
-  .wrap.side .pane .grp{display:flex;flex-direction:column;align-items:stretch;gap:8px}
-  .wrap.side .pane .lvl{font-size:1.3rem;margin:0 0 2px;line-height:1.15}
-  .wrap.side .pane .chip{white-space:normal;justify-content:space-between;padding:6px 12px;background:var(--bg)}
-  .wrap.side .pane .grp.score{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .wrap.side .pane .grp.score .chip.sb{flex-direction:column;align-items:flex-start;gap:0;padding:8px 12px;background:var(--bg);color:var(--fg)}
-  .wrap.side .pane .grp.score .chip.sb small{opacity:.6}
-  .wrap.side .pane .grp.score .chip.sb b{font-size:1.25rem;text-align:left;min-width:0}
-  .wrap.side .pane .grp.score #hPlayers{grid-column:1/-1}
-  .wrap.side .pane .foot{margin:auto 0 0;width:auto;justify-content:stretch}
-  .wrap.side .pane .tools{flex-direction:column;align-items:stretch;gap:6px;width:100%}
-  .wrap.side .pane .tools button{text-align:left;padding:8px 14px;background:var(--bg)}
-  .wrap.side .pane .mini{order:1;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;margin-top:4px}
-  .wrap.side .pane .mini button{width:auto;height:40px;padding:0;border-radius:12px;justify-content:center}
-  .wrap.side .pane .mini button[hidden]{display:none}
+  .stage>.hud{position:absolute;left:0;right:0;top:0;z-index:5;margin:0;min-height:var(--T,40px);padding:6px 12px;gap:6px 10px;color:#e6f6f5;background:linear-gradient(rgba(2,26,36,.78),rgba(2,26,36,.5));font-size:.9rem}
+  .stage>.hud[hidden]{display:none}
+  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:3px 9px}
+  .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
+  .stage>.hud .chip.sb small{opacity:.7}
+  .stage>.hud .pips i{background:rgba(255,255,255,.3)}.stage>.hud .pips i.on{background:var(--accent)}.stage>.hud .pips i.done{background:rgba(255,255,255,.6)}.stage>.hud .pips i.boss{background:#e8463a}
+  .stage>.hud .lvl{font-size:1.1rem;color:var(--gold)}
+  .stage>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
+  .stage>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
+  .stage>.mini button.off{color:rgba(230,246,245,.5)}
+  .wrap.side .banner{top:calc(var(--T,40px) + 10px)}
+  .wrap.side .overlay{padding:calc(var(--T,40px) + 8px) 14px 58px}
   .wrap.side:has(.style:not([hidden])){grid-template-columns:auto var(--labW,480px);justify-content:start;max-width:none}
-  .wrap.side:has(.style:not([hidden])) .pane{display:none}
   .wrap.side .style:not([hidden]){grid-column:2;grid-row:1;align-self:center;position:static;max-height:calc(100vh - 24px)}
   .wrap.side .style{padding:18px 18px 8px}.wrap.side .style .opt{padding:12px 13px;gap:6px}.wrap.side .style .opt b{font-size:1.02rem}.wrap.side .style .opt small{font-size:.86rem}
   .wrap.side .style .head h3{font-size:1.45rem}.wrap.side .style .lead{font-size:.92rem}.wrap.side .srow{margin-bottom:20px}
@@ -279,7 +276,6 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
     </span>
   </div>
 
-  <aside class="pane" id="pane" hidden aria-label="Game panel"></aside>
   <section class="style" id="stylePanel" hidden aria-label="Look and sound">
     <div class="head"><h3>Look and sound</h3><button class="btn" id="styleDone">Done</button></div>
     <p class="lead">The reef is a live demo. Swim around with the arrow keys; every choice applies right away and is saved.</p>
@@ -719,7 +715,7 @@ function showMenu() {
       const st = save.stars[`${twoP ? 2 : 1}-${i}`] || 0, sc = save.scores[`${twoP ? 2 : 1}-${i}`];
       return `<button class="lv" data-lv="${i}" ${locked ? 'disabled' : ''}><b>${i + 1}</b><span>${L.boss ? 'Boss: ' : ''}${L.name}<small>${locked ? 'Locked' : b ? `<i class="st">${'★'.repeat(st)}<em>${'★'.repeat(3 - st)}</em></i> ${fmtTime(b)}${sc ? `, ${sc.toLocaleString()} pts` : ''}` : 'Not cleared yet'}</small></span></button>`;
     }).join('')}</div>
-    <div class="row"><button class="btn ghost" data-act="story">Story</button><button class="btn ghost" data-act="style">Look and sound</button></div>`;
+    <div class="row"><button class="btn ghost" data-act="story">Story</button><button class="btn ghost" data-act="style">Look and sound</button><button class="btn ghost" data-act="help">Controls</button></div>`;
   overlay.hidden = false;
   hideStyle();
   buildHudPlayers();
@@ -753,6 +749,7 @@ card.addEventListener('click', e => {
   if (b.dataset.lv) { startLevel(+b.dataset.lv); return; }
   const a = b.dataset.act;
   if (a === 'style') { openStyle(); return; }
+  if (a === 'help') { showControls(); return; }
   if (a === 'fish') { fishEdit = twoP ? 'killi' : (save.pick === 'milli' ? 'milli' : 'killi'); showFish(); return; }
   if (a === 'fishdone') { showMenu(); return; }
   if (a === 'fishreset') { save.fish = save.fish || {}; delete save.fish[fishEdit]; persist(); showFish(); return; }
@@ -2721,6 +2718,7 @@ function hud() {
   const showBoard = !!S && (mode === 'play' || mode === 'paused' || mode === 'won');
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
+  hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story');
   const tk = mode + (document.fullscreenElement ? 'F' : '');
   if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; }
   if (showBoard) {
@@ -2774,8 +2772,8 @@ function updateKeysHelp() {
 }
 
 // ================= layout =================
-let builtT = 0, builtDpr = 0, paneMode = false;
-const hudGroups = [...$('#hud').children];
+let builtT = 0, builtDpr = 0, sideLayout = false;
+const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
@@ -2784,7 +2782,6 @@ function resize() {
   const touchH = touchDisp !== 'none' && !sideTouch ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
   const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - labW - sideW) || 600;
-  const hudEl = $('#hud'), footEl = $('.foot');
   // the board gets the height left over by the hud, footer and touch pad plus the 56px of margins around
   // them, so the page never scrolls in a fixed frame such as an itch.io embed. Those wrap differently at
   // each width, so size twice and let them settle. 150 is the fallback before anything has laid out.
@@ -2794,24 +2791,24 @@ function resize() {
   let sideMode = false;
   if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:1000px)').matches) {
     // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
-    const fullW = (window.innerWidth || 0) - 48 - 260; // the board plus the pane
+    const fullW = (window.innerWidth || 0) - 48;
     const tStack = Math.floor(Math.min(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS)), tSide = Math.floor(Math.min(fullW / COLS, (innerH - 24) / ROWS));
     sideMode = tSide > tStack;
   }
   wrap.classList.toggle('side', sideMode);
   wrap.style.paddingLeft = '';
-  if (sideMode !== paneMode) { // the hud groups and the footer live in the pane in the side layout, in their usual places otherwise
-    paneMode = sideMode; const pane = $('#pane');
-    if (sideMode) { pane.append(...hudGroups, footEl); pane.hidden = false; }
-    else { hudEl.append(...hudGroups); stylePanel.before(footEl); pane.hidden = true; }
+  if (sideMode !== sideLayout) { // the hud and the icon buttons sit on the board in the side layout, in their usual places otherwise
+    sideLayout = sideMode;
+    if (sideMode) stage.append(hudEl, miniEl);
+    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); hudEl.hidden = false; }
   }
   if (sideMode) {
     const innerW = window.innerWidth || 0;
-    T = Math.max(16, Math.floor(Math.min((innerW - 48 - 260) / COLS, (innerH - 24) / ROWS)));
+    T = Math.max(16, Math.floor(Math.min((innerW - 48) / COLS, (innerH - 24) / ROWS)));
     if (labW) {
-      // the lab opens in the pane's place without moving or shrinking the board: it takes the room to the board's right,
-      // 480 px at most, 340 at least; only when even 340 will not fit does the board give way
-      const boardW = COLS * T, left = Math.round(16 + (innerW - 32 - (boardW + 16 + 260)) / 2), room = innerW - left - boardW - 16 - 16;
+      // the lab takes the room to the board's right, 480 px at most, 340 at least. The board keeps its size and place
+      // when that fits, slides left when it must, and only shrinks when even 340 px will not fit beside it
+      const boardW = COLS * T, centered = Math.round((innerW - boardW) / 2), left = Math.max(16, Math.min(centered, innerW - 32 - boardW - 340)), room = innerW - left - boardW - 32;
       if (room >= 340) { wrap.style.paddingLeft = left + 'px'; wrap.style.setProperty('--labW', Math.min(480, room) + 'px'); }
       else { T = Math.max(16, Math.floor(Math.min((innerW - 48 - 340) / COLS, (innerH - 24) / ROWS))); wrap.style.setProperty('--labW', '340px'); }
     }
@@ -2834,6 +2831,7 @@ function resize() {
   cv.style.width = COLS * T + 'px'; cv.style.height = ROWS * T + 'px';
   stylePanel.style.maxWidth = COLS * T + 'px';
   wrap.style.setProperty('--boardW', COLS * T + 'px'); // the hud and footer text scale with it
+  stage.style.setProperty('--T', T + 'px'); // the strip over the top row of rocks in the side layout
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
 }
 cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
@@ -2909,14 +2907,14 @@ touchEl.querySelectorAll('[data-dir]').forEach(b => {
 $('#tAct').addEventListener('pointerdown', e => { e.preventDefault(); unlockAudio(); if (mode === 'play' && playerN(0)) playerN(0).bufAct = true; });
 $('#tPuff').addEventListener('pointerdown', e => { e.preventDefault(); unlockAudio(); if (mode === 'play' && playerN(0)) playerN(0).bufPuff = true; });
 $('#bMenu').addEventListener('click', e => { e.currentTarget.blur(); showMenu(); });
-$('#bHelp').addEventListener('click', e => {
-  e.currentTarget.blur();
+function showControls() {
   if (mode === 'play') { pause(); return; } // the pause card carries the controls
   if (mode !== 'menu' && mode !== 'fish') return;
   mode = 'menu'; S = null;
   card.innerHTML = `<h3>Controls</h3><p class="help">${keysEl.innerHTML}</p><div class="row"><button class="btn" data-act="menu">Done</button></div>`;
   overlay.hidden = false;
-});
+}
+$('#bHelp').addEventListener('click', e => { e.currentTarget.blur(); showControls(); });
 $('#bStyle').addEventListener('click', e => { e.currentTarget.blur(); openStyle(); });
 $('#bPause').addEventListener('click', e => { e.currentTarget.blur(); if (mode === 'play') pause(); else if (mode === 'paused') resume(); });
 $('#bSound').addEventListener('click', e => { unlockAudio(); muted = !muted; save.muted = muted; persist(); if (master) master.gain.setTargetAtTime(muted || adMute ? 0 : .9, ac.currentTime, .05); setAudioLabels(); e.currentTarget.blur(); });
