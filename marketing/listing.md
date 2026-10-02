@@ -18,7 +18,7 @@ Your one tool is coral. Grow a wall to block the way, break it to get through, a
 
 - Play alone or with a friend on one keyboard. A caught fish comes back with the next wave of snacks.
 - Nine creatures with their own tricks: crabs walk in lines, jellyfish float over walls, eels hunt you, swordfish charge, stingrays burst out of the sand.
-- Currents that push you along, kelp to hide in, vents that lift you over walls.
+- Currents that carry you along, kelp to hide in, vents that erupt and stun whatever stands on them.
 - Snacks that run away, pearls that teleport, clams that open and close.
 - Scores, streaks, best times and stars on every level.
 - Choose Killi or Milli and dress them up. Most outfits are earned by playing.
