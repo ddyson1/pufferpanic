@@ -65,6 +65,16 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-
 canvas{display:block;touch-action:none}
 .overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;background:radial-gradient(ellipse at center,rgba(2,30,42,.55),rgba(2,20,30,.82));color:#e6f6f5;text-align:center}
 .overlay[hidden],.banner[hidden]{display:none}
+/* panels ease in rather than popping; display:none to shown restarts the animation each time */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.overlay:not([hidden]){animation:fadeIn .25s ease-out}
+.overlay:not([hidden]) .card{animation:cardIn .3s ease-out}
+.banner:not([hidden]){animation:cardIn .25s ease-out}
+.story:not([hidden]){animation:slideUp .3s ease-out}
+.stage.fresh canvas{animation:fadeIn .35s ease-out}
+@media (prefers-reduced-motion:reduce){.overlay,.card,.banner,.story,.stage.fresh canvas{animation:none !important}}
 .card{width:100%;max-width:520px;max-height:100%;overflow:auto;padding:4px}
 .card h2{margin:0;font-family:"Grandstander",system-ui,sans-serif;font-weight:900;font-size:clamp(1.9rem,6vw,3rem);line-height:.95;color:var(--gold);letter-spacing:-.01em;text-shadow:0 3px 0 #a5640f,0 6px 18px rgba(0,0,0,.35)}
 .card h3{margin:0 0 4px;font-family:"Grandstander",system-ui,sans-serif;font-weight:800;font-size:clamp(1.5rem,5vw,2.1rem);color:var(--gold)}
@@ -101,6 +111,14 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .tools button{background:var(--chip);color:var(--fg);border:0;border-radius:999px;padding:5px 12px;font-size:.85rem;white-space:nowrap}
 .touch{display:none;justify-content:space-between;align-items:center;margin:12px auto 0;gap:12px;user-select:none;-webkit-user-select:none}
 @media (pointer:coarse){.touch{display:flex}.keys{display:none}}
+@media (pointer:coarse) and (orientation:landscape) and (max-height:520px){
+  .wrap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px}
+  .wrap>*{grid-column:2}
+  .touch{display:contents}
+  .pad{grid-column:1;grid-row:1/span 2}
+  .acts{grid-column:3;grid-row:1/span 2;flex-direction:column}
+  .foot{display:none}
+}
 .pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);gap:4px}
 .pad button,.acts button{touch-action:none;border:0;background:var(--chip);color:var(--fg);font-weight:800;display:flex;align-items:center;justify-content:center}
 .pad button{border-radius:14px}
@@ -202,7 +220,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 
   <div class="foot">
     <span class="keys" id="keys"></span>
-    <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button></span>
+    <span class="tools"><button id="bSound">Sound on</button><button id="bMusic">Music on</button><button id="bPause">Pause</button><button id="bStyle">Look and sound</button><button id="bMenu">Levels</button><button id="bFull">Fullscreen</button></span>
   </div>
 
   <section class="style" id="stylePanel" hidden aria-label="Look and sound">
@@ -505,6 +523,7 @@ function loadLevel(i, retry) {
   if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
   buildHudPlayers();
   showBanner(retry ? 'Try again' : `${i + 1}. ${L.name}`, retry ? L.name : L.hint);
+  stage.classList.remove('fresh'); void stage.offsetWidth; stage.classList.add('fresh'); // restart the fade-in
 }
 
 function makeFriend(x, y) {
@@ -566,7 +585,7 @@ function levelWon() {
     ${board}${scores}
     <p>${S.catches === 0 ? 'Nobody got caught.' : `Caught ${S.catches} ${S.catches === 1 ? 'time' : 'times'}.`}</p>${unlockRow}
     <div class="row">${last ? '' : '<button class="btn" data-act="next">Next reef</button>'}<button class="btn ghost" data-act="retry">Play again</button><button class="btn ghost" data-act="menu">Levels</button></div>`;
-  overlay.hidden = false;
+  S.wonT = .8; // a beat before the card: the board holds, the jingle plays, the last particles settle
   hideBanner();
   if (LEVELS[levelIdx].ending) {
     const html = card.innerHTML;
@@ -706,6 +725,7 @@ function update(dt) {
     friendCheck();
     return;
   }
+  if (mode === 'won' && S && S.wonT > 0) { S.wonT -= dt; if (S.wonT <= 0) overlay.hidden = false; }
   if (mode !== 'play' || !S) return;
   if (S.readyT > 0) { S.readyT -= dt; if (S.readyT <= 0) { hideBanner(); Ads.play(); } return; }
   if (S.failT > 0) {
@@ -1483,6 +1503,8 @@ function drawScene() {
   if (!theme.paper) drawLight();
   drawParts();
   ctx.drawImage(overlayCv, 0, 0, COLS, ROWS);
+  // after a wipe the reef fades to dark over the last part of the pause, and the next load fades back in
+  if (S && S.failT > 0 && S.failT < .6) { ctx.fillStyle = `rgba(2,18,28,${(.85 * (1 - S.failT / .6)).toFixed(3)})`; ctx.fillRect(0, 0, COLS, ROWS); }
 }
 
 function drawLight() {
@@ -2567,18 +2589,21 @@ function resize() {
   // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
   const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
   const labW = !stylePanel.hidden && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column, see .wrap:has(.style) in the CSS
-  const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - labW) || 600;
-  const touchH = getComputedStyle(touchEl).display !== 'none' ? touchEl.offsetHeight + 20 : 0;
+  const touchDisp = getComputedStyle(touchEl).display, sideTouch = touchDisp === 'contents'; // landscape phones put the pad beside the board
+  const touchH = touchDisp !== 'none' && !sideTouch ? touchEl.offsetHeight + 20 : 0;
+  const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
+  const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - labW - sideW) || 600;
   const hudEl = $('#hud'), footEl = $('.foot');
   // the board gets the height left over by the hud, footer and touch pad plus the 56px of margins around
   // them, so the page never scrolls in a fixed frame such as an itch.io embed. Those wrap differently at
   // each width, so size twice and let them settle. 150 is the fallback before anything has laid out.
   for (let pass = 0; pass < 2; pass++) {
-    const chromeH = Math.max(150, hudEl.offsetHeight + footEl.offsetHeight + touchH + 56);
+    const chromeH = Math.max(sideTouch ? 48 : 150, hudEl.offsetHeight + footEl.offsetHeight + touchH + (sideTouch ? 24 : 56));
     const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
     T = Math.max(16, Math.floor(Math.min(wrapW / COLS, availH / ROWS)));
     // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
-    stage.style.width = hudEl.style.width = footEl.style.width = touchEl.style.width = COLS * T + 'px';
+    stage.style.width = footEl.style.width = touchEl.style.width = COLS * T + 'px';
+    hudEl.style.width = sideTouch ? '' : COLS * T + 'px'; // in landscape the hud spans the column so it stays one row
   }
   // the frame cost is fill rate, so the backing store is capped at about 2.2 million pixels; a 975 px board on a 2x screen renders at 1.56x
   dpr = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(PIXEL_BUDGET / (COLS * T * ROWS * T)));
@@ -2589,6 +2614,11 @@ function resize() {
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
 }
 window.addEventListener('resize', resize);
+const bFull = $('#bFull');
+if (document.fullscreenEnabled && document.documentElement.requestFullscreen) {
+  bFull.addEventListener('click', () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); });
+  document.addEventListener('fullscreenchange', () => { bFull.textContent = document.fullscreenElement ? 'Exit fullscreen' : 'Fullscreen'; });
+} else bFull.hidden = true;
 
 // ================= input =================
 function binding(code) {
