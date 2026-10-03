@@ -15,7 +15,7 @@ Config (constants, `LEVELS` text maps with a legend comment, `STORY`, `THEMES`, 
 
 ## Conventions and decisions already made
 - Product copy: no em dashes, no exclamation points, no emoji. Sentence case. Plain verbs.
-- Names: Killi (not Killo), Milli, Nori the seal, Bruiser the shark, the Kraken Queen. Store copy never mentions Bad Ice-Cream or Nitrome.
+- Names: Killi (not Killo), Milli, Niko the seal, Bruiser the shark, the Kraken Queen. Store copy never mentions Bad Ice-Cream or Nitrome.
 - Default look is Cut paper. Reef, Twilight and Lagoon remain as options. A Retro pixel look, a Wooden sound pack and an Arcade tide music track were built and deliberately cut; do not bring them back.
 - Scoring: snack values in `SNACK_PTS`, streak bonus, 200 per boss hit, 1,000 for the defeating hit. Stars come from catches (0 = 3 stars, 1 to 2 = 2, more = 1).
 - Unlocks are defined in `UNLOCKS` and checked by `isUnlocked`; `fishCfg` falls back to defaults for anything locked. Unlock announcements compare against `S.unlocksAtStart`, taken at level start, because milestones can be crossed mid-level.

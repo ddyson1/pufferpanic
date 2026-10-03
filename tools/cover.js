@@ -41,10 +41,10 @@ boot(4, w => {
   for (const e of E) e.stun = 0;
   const types = ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon'], pos = [[5.3, 7.4], [9.6, 7.4], [6.0, 8.5], [8.6, 8.8], [3.4, 8.5], [11.6, 8.6], [7.4, 5.0]];
   S.snacks.forEach((s, i) => { if (i < pos.length) { tp(s, pos[i][0], pos[i][1]); s.type = types[i]; s.born = -9; s.wait = 0; s.open = true; } else tp(s, -5, -5); });
-  // Nori's name tag is drawn above her; render once without her and paste her body back in from a frame with her
-  G.draw(); const withNori = createCanvas(cv.width, cv.height); withNori.getContext('2d').drawImage(cv, 0, 0);
+  // Niko's name tag is drawn above her; render once without her and paste her body back in from a frame with her
+  G.draw(); const withNiko = createCanvas(cv.width, cv.height); withNiko.getContext('2d').drawImage(cv, 0, 0);
   S.friends.length = 0; G.draw();
-  cv.getContext('2d').drawImage(withNori, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T);
+  cv.getContext('2d').drawImage(withNiko, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T);
   const W = 1260, H = 1000, c = createCanvas(W, H), x = c.getContext('2d');
   const tw = 9.2, th = tw * H / W, x0 = 7.5 - tw / 2, y0 = 6.45 - th / 2;
   x.drawImage(cv, x0 * T, y0 * T, tw * T, th * T, 0, 0, W, H);

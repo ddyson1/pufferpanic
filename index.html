@@ -358,7 +358,7 @@ function getFish(who) { const c = fishCfg(who); return {...PALETTES[c.color], na
 
 // Legend: # rock  . water  c coral  P Killi  Q Milli  1-4 snack waves
 // Enemies: C crab  J jellyfish  E eel  O octopus  S swordfish  M mantis shrimp
-// More enemies: A manta ray  Y stingray  F lionfish.  Friend: N Nori the seal
+// More enemies: A manta ray  Y stingray  F lionfish.  Friend: N Niko the seal
 // Floor: h hot vent  x urchin  k kelp (hides you)  U D L R current (bends coral walls)
 const LEVELS = [
   {name:'The Shallows', hint:'Crabs walk in straight lines. Grow coral to wall them off.', waves:['krill','pearl'], map:[
@@ -391,7 +391,7 @@ const LEVELS = [
   {name:'The Trench', hint:'Everything lives down here. Stay together.', waves:['krill','shrimp','moon','star'], map:[
     '###############','#O.....1.....J#','#.cc.##.##.cc.#','#.c2...x...2c.#','#.....ccc.....#','#1.#..P.Q..#.1#','#..#.h...h.#..#',
     '#..2.......2..#','#.###.3.3.###.#','#x....4.4....x#','#3.c..#.#..c.3#','#1...S.E.....1#','###############']},
-  {name:'Seal Cove', hint:'This is Nori. She bumps enemies out of the way, and swimming past her gives you a bubble shield.', waves:['krill','pearl'], map:[
+  {name:'Seal Cove', hint:'This is Niko. She bumps enemies out of the way, and swimming past her gives you a bubble shield.', waves:['krill','pearl'], map:[
     '###############','#1.....2.....1#','#.###.....###.#','#.#E..c.c..E#.#','#.....c.c.....#','#2....N......2#','#.###.....###.#',
     '#1....P.Q....1#','#.#.c.....c.#.#','#.#.c..2..c.#.#','#.............#','#1...C...C...1#','###############']},
   {name:'Clam Beds', hint:'Clams only give up their pearls while they are open. Time your approach.', waves:['clam','grape','clam'], map:[
@@ -423,7 +423,7 @@ const STORY = {
     {scene:'feast', text:'Once a year, on the night of the roundest moon, the whole reef gathers for the Moonlight Feast. Lanterns on the kelp, songs from the clams, and more snacks than anyone can count. This year, for the first time, the snacks are Killi and Milli\'s job.'},
     {scene:'tremor', text:'The night before the feast, a rumble rolls up from the Trench and the whole reef feels it. Jellyfish wake up cross. Eels stop pretending to be friendly. Every crab sets off in a straight line, and the snacks scatter into every corner of the reef.'},
     {scene:'plan', text:'Milli makes a plan, because that is what Milli does. Every snack, every reef, before the moon is up. Coral to wall the grumpy ones off, coral broken to get through, and a good puff when something gets too close. Killi nods through all of it and is already gone.'},
-    {scene:'nori', text:'Whatever woke up is still down there, and the reef gets grumpier the deeper it goes. But somewhere past the sandbar a seal called Nori has spotted two very small fish heading the wrong way, and she has decided they could use a friend.'},
+    {scene:'nori', text:'Whatever woke up is still down there, and the reef gets grumpier the deeper it goes. But somewhere past the sandbar a seal called Niko has spotted two very small fish heading the wrong way, and she has decided they could use a friend.'},
   ],
   bruiser: [{scene:'bruiser', text:'Halfway down lives Bruiser, who guards the way to the deep and has never once looked where he is going. He charges at anything that moves. A coral wall in his path will give him something to think about, briefly, and that is your moment.'}],
   queen: [{scene:'queen', text:'At the bottom of the Trench sits the Kraken Queen, crown and all, and she has been in a mood for a very long time. Her tentacles reach across the whole reef. Catch one in coral, then puff right at its tip while it is stuck.'}],
@@ -602,7 +602,7 @@ function loadLevel(i, retry) {
 
 function makeFriend(x, y) {
   const n = makeActor(x, y);
-  Object.assign(n, {kind:'N', name:'Nori', speed:3.4, shieldCd:0, dir:pick(DLIST), wait:0});
+  Object.assign(n, {kind:'N', name:'Niko', speed:3.4, shieldCd:0, dir:pick(DLIST), wait:0});
   return n;
 }
 function makeEnemy(k, x, y) {
@@ -2071,8 +2071,8 @@ function drawTags() {
   ctx.lineJoin = 'round'; // miter joins put spikes on the M and N of the outlined names
   for (const n of S.friends) {
     const x = (n.fx + .5) * T, y = (n.fy - .02) * T;
-    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(2,26,36,0.75)'; ctx.strokeText('Nori', x, y);
-    ctx.fillStyle = '#ffd6e0'; ctx.fillText('Nori', x, y);
+    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(2,26,36,0.75)'; ctx.strokeText('Niko', x, y);
+    ctx.fillStyle = '#ffd6e0'; ctx.fillText('Niko', x, y);
   }
   for (const q of S.popups) {
     const k = q.t, x = q.x * T, y = (q.y - k * .9) * T;
@@ -3293,7 +3293,7 @@ function scheduleMusic() {
 // ================= look and sound lab =================
 const PREVIEWS = [['grow', 'Grow coral'], ['break', 'Break coral'], ['get', 'Snack'], ['wave', 'New wave'], ['puff', 'Puff'], ['stun', 'Stun'],
   ['bonk', 'Bump'], ['charge', 'Swordfish charge'], ['thud', 'Swordfish crash'], ['punch', 'Mantis punch'], ['blink', 'Moon pearl'],
-  ['die', 'Caught'], ['revive', 'Revive'], ['shield', 'Bubble shield'], ['pop', 'Shield pops'], ['boop', 'Nori boops'], ['rise', 'Stingray bursts out'], ['flare', 'Lionfish flare'],
+  ['die', 'Caught'], ['revive', 'Revive'], ['shield', 'Bubble shield'], ['pop', 'Shield pops'], ['boop', 'Niko boops'], ['rise', 'Stingray bursts out'], ['flare', 'Lionfish flare'],
   ['roar', 'Bruiser roars'], ['crash', 'Bruiser crashes'], ['warn', 'Tentacle warning'], ['lash', 'Tentacle lash'], ['stuck', 'Tentacle stuck'], ['bosshit', 'Boss hit'], ['bossdown', 'Boss defeated'],
   ['win', 'Reef cleared'], ['vent', 'Vent hiss'], ['rustle', 'Kelp rustle'], ['click', 'Menu click']];
 function openStyle() {

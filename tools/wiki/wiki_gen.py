@@ -98,7 +98,7 @@ for i, L in enumerate(LV):
             waves.append(f"{n} {SNACK[t]['plural']}")
         sent = f'This level has {andlist(enemies)}, and the pufferfish need to collect {andlist(waves)}, in that order.'
     feats = []
-    if c['N']: feats.append('Nori the seal')
+    if c['N']: feats.append('Niko the seal')
     if c['h']: feats.append(plural(c['h'], 'hot vent', 'hot vents'))
     if c['x']: feats.append(plural(c['x'], 'sea urchin', 'sea urchins'))
     if c['k']: feats.append(f"kelp beds ({c['k']} tiles)")
@@ -112,7 +112,7 @@ for i, L in enumerate(LV):
         if first.get(k) == i and i > 0: intro.append(f'<a href="#snacks">{v["plural"]}</a>')
     for ch, nm, *_ in TERRAIN:
         if first.get(ch) == i and ch not in '#c': intro.append(f'<a href="#terrain">{nm.lower()}s</a>' if not nm.endswith('p') else f'<a href="#terrain">{nm.lower()}</a>')
-    if first.get('N') == i: intro.append('<a href="#nori">Nori the seal</a>')
+    if first.get('N') == i: intro.append('<a href="#nori">Niko the seal</a>')
     if L.get('boss') == 'shark': intro.append('<a href="#bruiser">Bruiser</a>')
     if L.get('boss') == 'queen': intro.append('<a href="#kraken-queen">the Kraken Queen</a>')
     head = f'Level {i+1}: {html.escape(L["name"])}'
@@ -311,7 +311,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <div class="chars">
   <div class="char" id="killi"><div class="pair">{img('killi', 'Killi', 140)}{img('killi_puffed', 'Killi puffed up', 140)}</div><h3>Killi</h3><p>A golden pufferfish with brown spots who puffs first and asks questions later. Player one.</p></div>
   <div class="char" id="milli"><div class="pair">{img('milli', 'Milli', 140)}{img('milli_shield', 'Milli inside a bubble shield', 140)}</div><h3>Milli</h3><p>A pale blue pufferfish with dark blue spots and a single eyelash, who always has a plan. Player two. Her sounds are pitched a little higher than Killi&#8217;s.</p></div>
-  <div class="char" id="nori">{img('nori', 'Nori the seal', 220)}<h3>Nori</h3><p>A friendly harbor seal. She wanders the reef, swims over when the pufferfish are far away, bumps creatures out of the way, and hands out <a href="#bubble-shield">bubble shields</a>. First appears in {lvlink(first['N'])}.</p></div>
+  <div class="char" id="nori">{img('nori', 'Niko the seal', 220)}<h3>Niko</h3><p>A friendly harbor seal. She wanders the reef, swims over when the pufferfish are far away, bumps creatures out of the way, and hands out <a href="#bubble-shield">bubble shields</a>. First appears in {lvlink(first['N'])}.</p></div>
 </div>
 
 <h3 id="customization">Choosing and customizing your fish</h3>
@@ -325,7 +325,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <h3 id="puff">Puffing up</h3>
 <p>Puffing turns a pufferfish into a spiky ball for 1.3 seconds. While puffed it cannot move but cannot be caught, and any creature nearby is stunned for 2.6 seconds. Puffing then needs 4.5 seconds to recharge, shown by the meter next to each name in the score strip. Bosses are the exception: see <a href="#bosses">Bosses</a>.</p>
 <h3 id="bubble-shield">Bubble shield</h3>
-<p>Swimming past <a href="#nori">Nori</a> wraps a pufferfish in a bubble that absorbs one hit, stuns the creature that hit it, and pops. Nori needs about seven seconds to make another, shown by a small bubble over her head when one is ready.</p>
+<p>Swimming past <a href="#nori">Niko</a> wraps a pufferfish in a bubble that absorbs one hit, stuns the creature that hit it, and pops. Niko needs about seven seconds to make another, shown by a small bubble over her head when one is ready.</p>
 <h3 id="co-op">Co-op and getting caught</h3>
 <p>In two-player mode, a caught pufferfish is out until the next wave of snacks appears, then returns at its starting spot with a moment of invulnerability. In boss reefs, landing a hit on the boss brings a caught partner back. The reef only restarts if both pufferfish are caught at the same time.</p>
 <h3 id="scoring">Score and time</h3>
@@ -373,7 +373,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 
 <h2 id="story">Story</h2>
 <p>An illustrated five-panel intro plays the first time the game is opened, and can be replayed from the Story button on the title screen.</p>
-<p>In the warm shallows live two pufferfish, Killi and Milli, who are in charge of the snacks for the reef&#8217;s yearly Moonlight Feast. The night before the feast, something huge wakes in the Trench and every grumpy creature on the reef starts to move. To save the feast, the two set out to gather every snack, reef by reef, and soon make a friend in Nori the seal. Each boss gets its own story card the first time it is reached.</p>
+<p>In the warm shallows live two pufferfish, Killi and Milli, who are in charge of the snacks for the reef&#8217;s yearly Moonlight Feast. The night before the feast, something huge wakes in the Trench and every grumpy creature on the reef starts to move. To save the feast, the two set out to gather every snack, reef by reef, and soon make a friend in Niko the seal. Each boss gets its own story card the first time it is reached.</p>
 <div class="gallery">
   <figure>{bimg(B + 'b_intro1.png', 'The Moonlight Feast snacks', 300)}<figcaption>The Moonlight Feast</figcaption></figure>
   <figure>{bimg(B + 'b_intro2.png', 'A giant eye opens in the deep', 300)}<figcaption>Something wakes in the Trench</figcaption></figure>
@@ -401,7 +401,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 </tbody></table></div>
 
 <h2 id="development">Development</h2>
-<p>The game began as a pufferfish take on <i>Bad Ice-Cream</i> under the working title <i>Puffer Panic</i>, and was renamed <i>Killi and Milli</i> when two-player co-op was added. Later updates added the second half of the creature roster, Nori, the two boss reefs and the story.</p>
+<p>The game began as a pufferfish take on <i>Bad Ice-Cream</i> under the working title <i>Puffer Panic</i>, and was renamed <i>Killi and Milli</i> when two-player co-op was added. Later updates added the second half of the creature roster, Niko, the two boss reefs and the story.</p>
 <p>Several ideas from the original&#8217;s enemies were adapted rather than copied: the swordfish&#8217;s line-of-sight charge echoes the log men, the mantis shrimp&#8217;s wall punch echoes the blue squid, the shrimp and moon pearl echo the fleeing pears and teleporting cherries, and currents, hot vents and urchins echo the arrow tiles, hot tiles and campfires.</p>
 
 <h2 id="trivia">Trivia</h2>
@@ -411,14 +411,14 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <li>The shark fin hat and royal crown are trophies from the two bosses, and the hearts pattern, unlocked by finishing the story, is a nod to Killi and Milli being in love.</li>
 <li>Cut paper became the default look after four art directions were compared side by side: ink and flat color, watercolor storybook, cut-paper diorama and soft clay 3D.</li>
 <li>A Retro pixel look, a Wooden sound pack and an upbeat chiptune track called Arcade tide were made for the Look and sound panel, then cut.</li>
-<li>Nori is the only character, other than the pufferfish, who appears in both boss reefs.</li>
+<li>Niko is the only character, other than the pufferfish, who appears in both boss reefs.</li>
 <li>The Kraken Queen is the only creature whose body is part of the arena itself.</li>
 </ul>
 
 <div class="navbox" role="navigation" aria-label="Killi and Milli topics">
   <div class="nt">Killi and Milli</div>
   <table>
-    <tr><th scope="row">Characters</th><td><a href="#killi">Killi</a><a href="#milli">Milli</a><a href="#nori">Nori</a><a href="#customization">Customization</a></td></tr>
+    <tr><th scope="row">Characters</th><td><a href="#killi">Killi</a><a href="#milli">Milli</a><a href="#nori">Niko</a><a href="#customization">Customization</a></td></tr>
     <tr><th scope="row">Enemies</th><td>{''.join(f'<a href="#{v["id"]}">{v["name"]}</a>' for v in ENEMY.values())}</td></tr>
     <tr><th scope="row">Bosses</th><td><a href="#bruiser">Bruiser</a><a href="#kraken-queen">Kraken Queen</a></td></tr>
     <tr><th scope="row">Snacks</th><td>{''.join(f'<a href="#snack-{k}">{v["name"]}</a>' for k, v in SNACK.items())}</td></tr>
