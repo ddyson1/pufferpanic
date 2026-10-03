@@ -23,6 +23,9 @@ The `Ads` adapter in `index.html` already calls both SDKs: init and loading fini
 
 ## CrazyGames
 
+`npm run portal:bundle crazygames` assembles everything below into `dist/crazygames-submission.zip`, with the form text from `marketing/portals/crazygames-submission.md`.
+
+
 Apply at the CrazyGames developer portal with the `dist/killi-and-milli-crazygames.zip` upload (index.html at the root). Fields they ask for, with the file to use:
 - Cover 16:9: `marketing/portals/cover-16x9-1920x1080.png`
 - Cover 4:3: `marketing/portals/cover-4x3-1600x1200.png`
