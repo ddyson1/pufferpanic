@@ -55,7 +55,7 @@ Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players
 
 ## itch.io page settings
 - Kind of project: HTML. Upload the zip built with `npm run itch` (index.html, sw.js, manifest.webmanifest, icons/) and tick "This file will be played in the browser".
-- Embed: Embed in page, viewport 864 x 854, Mobile friendly on, Fullscreen button on, Automatically start on page load off, Enable scrollbars off. At that size the board is drawn at exactly its reference scale with the icon row under it and no empty band; the game scales itself to any other frame, and offers its own Fullscreen button too.
+- Embed: Embed in page, viewport 1024 x 820, Mobile friendly on, Fullscreen button on, Automatically start on page load off, Enable scrollbars off. Any frame 900 or wider gets the wide layout: the board alone with the icon buttons in its corner and the title card over it, which at 1024 x 820 draws the board a touch above its reference scale with dark margins at the sides. A narrower frame gets the stacked layout with the icon row under the board, and 864 x 854 is the exact-scale size for that. The game scales itself to any frame and offers its own Fullscreen button too.
 - Classification: Games. Genre: Action. Tags from the list above (itch allows ten, drop "short" and "casual" first).
 - Pricing: No payments, or Donate with a suggested $0.
 - Community: Comments. Visibility: Public once the cover and screenshots are uploaded.
