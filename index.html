@@ -2148,24 +2148,21 @@ function drawCrab(e) {
 }
 
 function drawJelly(e) {
+  // cut from three cards: a dark bell, a mid bell and a pale cap, with four paper strips. Every piece casts a small
+  // shadow on the one beneath it, which is what makes it read as layered paper.
   const pulse = Math.sin(e.anim * 4) * .035;
   ctx.translate(e.fx + .5, e.fy + .3);
-  ctx.strokeStyle = 'rgba(238,186,255,0.75)'; ctx.lineWidth = .032; ctx.lineCap = 'round';
-  for (let i = 0; i < 4; i++) {
-    const x0 = -.15 + i * .1;
-    ctx.beginPath(); ctx.moveTo(x0, .05);
-    for (let k = 1; k <= 5; k++) ctx.lineTo(x0 + Math.sin(e.anim * 5 + i + k * .9) * .04, .05 + k * .08);
-    ctx.stroke();
-  }
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const piece = (path, col) => { ctx.save(); ctx.translate(.022, .036); ctx.fillStyle = 'rgba(8,10,40,0.32)'; ctx.beginPath(); path(); ctx.fill(); ctx.restore(); ctx.fillStyle = col; ctx.beginPath(); path(); ctx.fill(); };
+  const strip = (x0, w, ph) => { const path = () => { ctx.moveTo(x0, .05); for (let k = 1; k <= 4; k++) ctx.lineTo(x0 + Math.sin(e.anim * 5 + ph + k * .9) * .04, .05 + k * .09); };
+    ctx.save(); ctx.translate(.022, .036); ctx.strokeStyle = 'rgba(8,10,40,0.32)'; ctx.lineWidth = w; ctx.beginPath(); path(); ctx.stroke(); ctx.restore(); ctx.strokeStyle = '#c9a6ec'; ctx.lineWidth = w; ctx.beginPath(); path(); ctx.stroke(); };
+  const dome = (r, ry, y, scallops) => () => { ctx.ellipse(0, y, r, ry, 0, Math.PI, 0); if (scallops) { for (let i = 0; i <= scallops; i++) ctx.lineTo(r - i * (2 * r) / scallops, y + (i % 2 ? .05 : 0)); } ctx.closePath(); };
   const rx = .29 + pulse, ry = .27 - pulse;
-  const g = ctx.createRadialGradient(-.05, -.1, .02, 0, 0, .32);
-  g.addColorStop(0, 'rgba(240,200,255,0.85)'); g.addColorStop(1, 'rgba(190,110,250,0.6)');
-  ctx.fillStyle = g;
-  ctx.beginPath(); ctx.ellipse(0, .04, rx, ry, 0, Math.PI, 0);
-  for (let i = 0; i <= 6; i++) ctx.lineTo(rx - i * (2 * rx) / 6, .04 + (i % 2 ? .05 : 0));
-  ctx.closePath(); ctx.fill();
-  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ell(-.09, -.09, .08, .045); ctx.fill();
-  ctx.fillStyle = '#3b1d52'; circ(-.07, -.01, .024); ctx.fill(); circ(.07, -.01, .024); ctx.fill();
+  strip(-.15, .05, 0); strip(-.05, .04, 1); strip(.05, .05, 2); strip(.15, .04, 3);
+  piece(dome(rx, ry, .04, 6), '#8e55c8');
+  piece(dome(rx * .8, ry * .8, .02, 0), '#b483e6');
+  piece(dome(rx * .5, ry * .5, -.02, 0), '#d9bdf7');
+  ctx.fillStyle = '#3b1d52'; circ(-.07, -.01, .026); ctx.fill(); circ(.07, -.01, .026); ctx.fill();
 }
 
 function drawEel(e) {
