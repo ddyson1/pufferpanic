@@ -62,5 +62,15 @@ Arrows or WASD to swim. Space grows or breaks coral. Shift puffs up. Two players
 - Cover image: `marketing/cover-630x500.png` (itch shows it at 315 x 250, so the title stays large). The key art was made with an image model from the game's own character sheet and cast cover, so tick the generative AI disclosure in the project's settings (itch asks for it, and some browse pages leave disclosed projects out). Screenshots: the ten in `marketing/screenshots/`, in the order they are numbered (the first six are reefs, then co-op, Bruiser, the fish card and the lab).
 - Theme: background #0e5a68, link and button color #f6c445, text on a light card.
 
+## itch.io page dressing
+The description editor is rich text, not Markdown: asterisks and hashes show up as typed. Use the toolbar instead: the Heading style for section titles, bold for the first words of a line, the list button for bullets, and the image button to upload pictures. Suggested order, top to bottom:
+1. `marketing/gameplay.gif` as the first thing on the page (upload it as an image; itch animates gifs).
+2. The three story paragraphs from the long description.
+3. `marketing/itch/cast-strip.png`, then the How it plays section as a heading with its four bullets.
+4. The co-op and extras sections.
+5. `marketing/itch/controls-960x330.png` in place of the controls bullets.
+6. The rating line, then a link to the wiki.
+Edit theme: upload `marketing/itch/banner-960x420.png` as the banner (it replaces the title text, so it carries the title), `marketing/itch/background-1920x1440.jpg` as the background image set to cover and fixed, background color #0e5a68, text on a light card, link and button color #f6c445, font the default. Keep the screenshots in the right column and set the gameplay video field to the YouTube or Vimeo upload of `marketing/gameplay.mp4`.
+
 ## Press kit
 Screenshots are in `marketing/screenshots/` (1280 px wide): 01 to 06 come from `npm run assets`; 07 to 10 (co-op, Bruiser, the fish card, the lab) are browser captures of the side layout at 1280 x 720. The store cover is `marketing/cover-630x500.png` (itch.io size; `cover-1260x1000.png` is the 2x version), cut from the key art in `marketing/keyart.png`, a 2000 x 1500 cut paper reef scene with the title on it, generated with the character sheet in `marketing/reference/` and the cast cover as references. `npm run cover` renders the plain cast cover from the game into `marketing/cast-cover-*.png`. `marketing/gameplay.mp4` is a 49 second gameplay montage (1440 x 1080, with the reef music) recorded from the game by `npm run montage`, and `marketing/gameplay.gif` is a short loop of its first clips for the store page. Icons are in `icons/`. The comic and style explorations can be exported from the design canvases.
