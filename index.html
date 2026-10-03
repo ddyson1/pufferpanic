@@ -2171,29 +2171,37 @@ function drawEel(e) {
     const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
     let dx = a.x - b.x, dy = a.y - b.y; const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
     const w = i === 0 ? 0 : Math.sin(e.anim * 8 + i * .9) * .06 * Math.min(1, i / 3);
-    off.push({x:pts[i].x + .5 - dy * w, y:pts[i].y + .45 + dx * w});
+    off.push({x:pts[i].x + .5 - dy * w, y:pts[i].y + .45 + dx * w, nx: -dy, ny: dx});
   }
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  // the silhouette pass gets one stroke; the body is three tapered passes
   if (silMode()) {
     ctx.lineWidth = .24;
     ctx.beginPath(); ctx.moveTo(off[0].x, off[0].y); for (let i = 1; i < n; i++) ctx.lineTo(off[i].x, off[i].y); ctx.stroke();
     ell(e.fx + .5, e.fy + .45, .2, .2); ctx.fill();
     return;
   }
-  for (let pass = 0; pass < 3; pass++) {
-    ctx.strokeStyle = ['#3e6a1e', '#6f9a32', '#c8e07a'][pass];
-    for (let i = n - 1; i >= 1; i--) {
-      ctx.lineWidth = [.28, .2, .06][pass] * (1 - (i / n) * .7);
-      ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y); ctx.lineTo(off[i - 1].x, off[i - 1].y); ctx.stroke();
-    }
-  }
+  const body = (cols, ws) => { for (let pass = 0; pass < cols.length; pass++) { ctx.strokeStyle = cols[pass];
+    for (let i = n - 1; i >= 1; i--) { ctx.lineWidth = ws[pass] * (1 - (i / n) * .7); ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y); ctx.lineTo(off[i - 1].x, off[i - 1].y); ctx.stroke(); } } };
   const hx = e.fx + .5, hy = e.fy + .45, d = e.dir, px = -d.y, py = d.x;
-  ctx.fillStyle = '#5c8a2e'; ell(hx + d.x * .04, hy + d.y * .04, .18, .18); ctx.fill();
-  ctx.fillStyle = '#fff6b0'; circ(hx + d.x * .08 + px * .07, hy + d.y * .08 + py * .07, .05); ctx.fill();
-  ctx.fillStyle = '#111'; circ(hx + d.x * .1 + px * .07, hy + d.y * .1 + py * .07, .025); ctx.fill();
-  ctx.strokeStyle = '#2d4a14'; ctx.lineWidth = .025;
-  ctx.beginPath(); ctx.moveTo(hx + d.x * .17 - px * .02, hy + d.y * .17 - py * .02); ctx.lineTo(hx + d.x * .06 - px * .09, hy + d.y * .06 - py * .09); ctx.stroke();
+  const P = (f, s) => [hx + d.x * f + px * s, hy + d.y * f + py * s];
+  {
+    // moray: a fin ridge along the back, wide head with an open toothy mouth, eyes on top
+    ctx.strokeStyle = 'rgba(200,224,120,0.55)';
+    for (let i = n - 1; i >= 1; i--) { ctx.lineWidth = .4 * (1 - (i / n) * .6); ctx.beginPath(); ctx.moveTo(off[i].x, off[i].y - .04); ctx.lineTo(off[i - 1].x, off[i - 1].y - .04); ctx.stroke(); }
+    body(['#3e6a1e', '#6f9a32', '#c8e07a'], [.3, .22, .06]);
+    ctx.fillStyle = '#5c8a2e'; ell(...P(.06, 0), .22, .19); ctx.fill();
+    // open jaw: a dark wedge from inside the head to the snout, teeth along both jaw edges
+    const A = [.06, .03], U = [.27, -.06], Lo = [.27, .11];
+    ctx.fillStyle = '#2d4a14'; ctx.beginPath(); ctx.moveTo(...P(...A)); ctx.lineTo(...P(...U)); ctx.lineTo(...P(...Lo)); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#fff';
+    for (const [E, dir] of [[U, 1], [Lo, -1]]) for (const t of [.5, .72, .92]) {
+      const f = A[0] + (E[0] - A[0]) * t, s = A[1] + (E[1] - A[1]) * t;
+      ctx.beginPath(); ctx.moveTo(...P(f - .02, s)); ctx.lineTo(...P(f + .02, s)); ctx.lineTo(...P(f, s + dir * .04)); ctx.closePath(); ctx.fill();
+    }
+    for (const s of [-.11, .11]) { ctx.fillStyle = '#fff6b0'; circ(...P(.02, s), .05); ctx.fill(); ctx.fillStyle = '#111'; circ(...P(.04, s), .026); ctx.fill(); }
+    ctx.strokeStyle = '#2d4a14'; ctx.lineWidth = .022;
+    for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(...P(.1, s * .13)); ctx.lineTo(...P(-.02, s * .17)); ctx.stroke(); }
+  }
 }
 
 function drawOcto(e) {
