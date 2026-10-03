@@ -43,7 +43,7 @@ tests/                 jsdom suites that drive the real game and render frames
 LAUNCH.md              The release plan, phase by phase
 ```
 
-There is no build step. The game runs as an installable web app when served over HTTPS, and its `Ads` adapter talks to the Poki or CrazyGames SDK when one is loaded, and does nothing otherwise. Open `index.html` in a browser, or serve the folder with any static server (for example `npx serve .`). Fonts load from Google Fonts, so the pages look best online.
+There is no build step. The game runs as an installable web app when served over HTTPS, and its `Ads` adapter talks to the Poki or CrazyGames SDK when one is loaded, and does nothing otherwise. Open `index.html` in a browser, or serve the folder with any static server (for example `npx serve .`). The title font is bundled inside the file, so nothing is fetched from outside it.
 
 Levels are plain text maps in the `LEVELS` array near the top of `index.html`. The legend is in the comment above it: `#` rock, `c` coral, `P` and `Q` the two start positions, digits for snack waves, letters for creatures and terrain. Add a map and a `waves` list and the level appears in the level select.
 
