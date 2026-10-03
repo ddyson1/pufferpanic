@@ -46,10 +46,11 @@ await p.evaluate(() => {
   window.__bot = (opts = {}) => {
     const S = G.S; if (!S || G.mode !== 'play') return;
     for (const pl of S.players) {
-      if (pl.dead || (opts.still && opts.still.includes(pl.id))) continue;
+      if (pl.dead) continue;
       let near = 9, nearE = null;
       for (const e of S.enemies) { const d = Math.hypot(e.fx - pl.fx, e.fy - pl.fy); if (d < near && !(e.kind === 'Y' && e.state === 'buried') && e.stun <= 0) { near = d; nearE = e; } }
       if (!opts.noPuff && near < 1.5 && pl.puffCd <= 0 && pl.puff <= 0) { pl.bufPuff = true; continue; }
+      if (opts.still && opts.still.includes(pl.id)) continue; // stands its ground, but still puffs
       if (nearE && near < 2.2 && pl.puff <= 0) {
         const dx = pl.fx - nearE.fx, dy = pl.fy - nearE.fy, away = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up');
         release(pl); G.pressDir(pl.id, away); continue;
@@ -96,10 +97,10 @@ await clip('Grow coral to wall them off', 4.5, {noPuff: true, noCoral: true, sti
 }, {30: () => { const pl = window.__pp.S.players[0]; pl.face = {x: 1, y: 0}; pl.bufAct = true; }, 75: () => { const pl = window.__pp.S.players[0]; pl.face = {x: 0, y: -1}; pl.bufAct = true; }});
 
 // 3. puff: Eel Reef, the eel closes in, the fish puffs and stuns it
-await play(3, false);
+await play(10, false);
 await clip('Puff up when they get close', 4.5, {noCoral: true, still: [0]}, () => {
-  const G = window.__pp, S = G.S, pl = S.players[0]; window.__tp(pl, 7, 6); pl.face = {x: 1, y: 0}; pl.puffCd = 0;
-  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, 11, 6); eel.dir = {x: -1, y: 0}; eel.stun = 0; }
+  const G = window.__pp, S = G.S, pl = S.players[0]; window.__tp(pl, 5, 7); pl.face = {x: 1, y: 0}; pl.puffCd = 0;
+  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, 11, 7); eel.dir = {x: -1, y: 0}; eel.stun = 0; }
   for (const e of S.enemies) if (e !== eel) e.stun = 99;
 });
 
@@ -114,11 +115,11 @@ await ev(() => { const G = window.__pp; if (G.mode === 'fail') G.continueLevel()
 
 // 5. kelp: Kelp Maze, the fish ducks into the kelp and the eel loses it
 await play(14, false);
-await clip('Hide in the kelp', 4, {noPuff: true, noCoral: true, still: [0]}, () => {
+await clip('Hide in the kelp', 3.5, {noPuff: true, noCoral: true, still: [0]}, () => {
   const G = window.__pp, S = G.S, pl = S.players[0]; const ks = window.__find('k'); const k = ks[Math.floor(ks.length / 2)] || [7, 6];
-  window.__tp(pl, k[0], k[1]); pl.puffCd = 9;
+  window.__tp(pl, k[0], k[1]); pl.puffCd = 9; pl.shield = true; // Niko's bubble, in case the eel still blunders into it
   // the eel starts a few tiles away on another row, so it is hunting but cannot see into the kelp
-  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { const spots = window.__find('').filter(([x, y]) => Math.abs(x - k[0]) + Math.abs(y - k[1]) >= 4 && Math.abs(x - k[0]) + Math.abs(y - k[1]) <= 6 && y !== k[1] && x !== k[0]); const sp = spots[Math.floor(spots.length / 2)] || [Math.min(13, k[0] + 4), k[1] + 2]; window.__tp(eel, sp[0], sp[1]); eel.dir = {x: Math.sign(k[0] - sp[0]) || 1, y: 0}; eel.stun = 0; }
+  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { const spots = window.__find('').filter(([x, y]) => Math.abs(x - k[0]) + Math.abs(y - k[1]) >= 5 && Math.abs(x - k[0]) + Math.abs(y - k[1]) <= 7 && y !== k[1] && x !== k[0]); const sp = spots[Math.floor(spots.length / 2)] || [Math.min(13, k[0] + 4), k[1] + 2]; window.__tp(eel, sp[0], sp[1]); eel.dir = {x: Math.sign(k[0] - sp[0]) || 1, y: 0}; eel.stun = 0; }
   for (const e of S.enemies) if (e !== eel) e.stun = 99;
 });
 
@@ -135,8 +136,8 @@ await play(4, false);
 await clip('Vents erupt', 3.5, {noPuff: true, noCoral: true, still: [0]}, () => {
   const G = window.__pp, S = G.S, pl = S.players[0]; const vs = window.__find('h'); const v = vs[Math.floor(vs.length / 2)] || [5, 5];
   // the fish watches from two tiles away on open floor
-  const open = window.__find('').filter(([x, y]) => Math.abs(x - v[0]) + Math.abs(y - v[1]) === 2 && y === v[1]); const o = open[0] || [v[0] - 2, v[1]]; window.__tp(pl, o[0], o[1]); pl.face = {x: Math.sign(v[0] - o[0]) || 1, y: 0};
-  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, v[0], v[1]); eel.stun = 0; }
+  const open = window.__find('').filter(([x, y]) => Math.abs(x - v[0]) + Math.abs(y - v[1]) === 3 && y === v[1]); const o = open[0] || [v[0] - 3, v[1]]; window.__tp(pl, o[0], o[1]); pl.face = {x: Math.sign(v[0] - o[0]) || 1, y: 0}; pl.shield = true; pl.puffCd = 9;
+  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, v[0], v[1]); eel.stun = 1.25; } // wakes as the vent erupts
   for (const e of S.enemies) if (e !== eel) e.stun = 99;
   S.ventT = 4.5 - 1.3; // erupts in 1.3 s
   window.__eel = eel;
