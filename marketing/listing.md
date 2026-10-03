@@ -12,20 +12,34 @@ Puffs first, asks questions later. A co-op reef maze for one or two players.
 A co-op arcade maze game. Grow coral walls to trap crabs, eels and stingrays, puff up when they get close, and gather every snack before the Moonlight Feast.
 
 ## Long description
-Killi and Milli are two pufferfish in charge of the snacks for the reef's Moonlight Feast. The night before, something huge wakes up in the Trench and every grumpy creature on the reef starts to move.
+Two small pufferfish. One very grumpy reef.
 
-Your one tool is coral. Grow a wall to block the way, break it to get through, and puff up into a spiky ball when a creature gets too close. Swim through 16 reefs that each introduce something new. Bruiser the shark blocks the way halfway down, and the Kraken Queen waits at the bottom. Niko the seal swims by to help.
+Killi and Milli are in charge of the snacks for the reef's Moonlight Feast. The night before, something huge wakes up in the Trench, every crab, jellyfish and eel on the reef is in a mood, and the snacks have scattered into every corner.
 
-- Play alone or with a friend on one keyboard. A caught fish comes back with the next wave of snacks.
-- Nine creatures with their own tricks: crabs walk in lines, jellyfish float over walls, eels hunt you, swordfish charge, stingrays burst out of the sand.
-- Currents that carry you along, kelp to hide in, vents that erupt and stun whatever stands on them.
-- Snacks that run away, pearls that teleport, clams that open and close.
-- Scores, streaks, best times and stars on every level.
-- Choose Killi or Milli and dress them up. Most outfits are earned by playing.
+Your only tool is coral. Grow a wall to shut a creature out, break it to get through, and puff up into a spiky ball when something gets too close. Clear every snack before the moon is up, then swim deeper.
+
+**What is waiting down there**
+- 16 reefs, each with something new: currents that carry you along, kelp to hide in, vents that erupt, snacks that run away, pearls that teleport, clams that open and close.
+- Two bosses. Bruiser the shark charges at anything that moves. The Kraken Queen fills the arena with tentacles.
+- Nine creatures with their own habits. Crabs walk in lines, jellyfish float over walls, eels hunt you down, swordfish charge, stingrays burst out of the sand.
+- Niko the seal, who bumps enemies aside and wraps you in a bubble shield.
+
+**Play together**
+One keyboard, two fish. A caught fish comes back with the next wave of snacks, and the reef only restarts if both of you are caught. Plays just as well alone.
+
+**Make it yours**
+- Choose Killi or Milli and dress them up. Most colors, patterns and accessories are earned by playing.
+- A handmade cut paper look, with three more looks, four sound packs and five music loops, all made in the browser as you play.
+- Scores, streaks, best times and stars on every reef. A reef takes two or three minutes.
 - An illustrated story with an ending worth reaching.
-- Handmade cut-paper look with three more looks, four sound packs, and calm music that follows the reef you are on.
-- Works on phones in landscape with touch controls. Fullscreen on desktop.
-- Short sessions. A reef takes two or three minutes.
+
+**Controls**
+- Swim: arrows or WASD. Coral: Space. Puff: Shift. P or Esc pauses, R restarts.
+- Two players: Killi keeps WASD, Space and left Shift. Milli takes the arrows, Option or Alt, and right Shift.
+- Phones: touch controls appear on screen, best in landscape. Fullscreen on desktop.
+
+**Rating**
+Everyone. No blood, no text chat, no ads and no purchases in this version. Progress saves in your browser.
 
 ## Tags
 arcade, maze, co-op, 2 player, local multiplayer, puzzle, cute, ocean, fish, family, casual, short
