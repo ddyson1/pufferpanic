@@ -38,6 +38,9 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 :root[data-theme="dark"]{--bg:#03141c;--fg:#d5eef0;--muted:#82a7b0;--chip:#0c2a35;--line:#163c49;--accent:#3bc2cf;color-scheme:dark}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+/* nothing on the page is selectable: a thumb sliding off the pad or resting on a button must never start a text selection or a long-press menu, which froze the touch controls on iOS. Buttons also skip the double-tap zoom delay. */
+body,button{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+button{touch-action:manipulation}
 .wrap{max-width:1000px;margin:0 auto;padding:12px 12px 14px}
 .hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 auto 8px;font-size:clamp(.88rem,calc(var(--boardW,600px)/62),1.08rem);font-variant-numeric:tabular-nums}
 .hud .grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
