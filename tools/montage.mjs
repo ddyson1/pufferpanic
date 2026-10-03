@@ -105,7 +105,7 @@ await clip('Puff up when they get close', 4.5, {noCoral: true, still: [0]}, () =
 
 // 4. jellyfish: Kelp Forest, one drifts over the coral and stings
 await play(1, false);
-await clip('Mind the jellyfish', 4.2, {noPuff: true, noCoral: true, still: [0]}, () => {
+await clip('Mind the jellyfish', 3.0, {noPuff: true, noCoral: true, still: [0]}, () => {
   const G = window.__pp, S = G.S, pl = S.players[0]; window.__tp(pl, 7, 6); pl.face = {x: 1, y: 0}; pl.puffCd = 9;
   const js = S.enemies.filter(e => e.kind === 'J'); js.forEach((j, i) => { window.__tp(j, 10 + i * 2, 6); j.dir = {x: -1, y: 0}; j.stun = 0; j.t = 9; });
   for (const e of S.enemies) if (e.kind !== 'J') e.stun = 99;
@@ -114,10 +114,11 @@ await ev(() => { const G = window.__pp; if (G.mode === 'fail') G.continueLevel()
 
 // 5. kelp: Kelp Maze, the fish ducks into the kelp and the eel loses it
 await play(14, false);
-await clip('Hide in the kelp', 4.5, {noPuff: true, noCoral: true, still: [0]}, () => {
+await clip('Hide in the kelp', 4, {noPuff: true, noCoral: true, still: [0]}, () => {
   const G = window.__pp, S = G.S, pl = S.players[0]; const ks = window.__find('k'); const k = ks[Math.floor(ks.length / 2)] || [7, 6];
   window.__tp(pl, k[0], k[1]); pl.puffCd = 9;
-  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, Math.min(13, k[0] + 3), k[1]); eel.dir = {x: -1, y: 0}; eel.stun = 0; }
+  // the eel starts a few tiles away on another row, so it is hunting but cannot see into the kelp
+  const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { const spots = window.__find('').filter(([x, y]) => Math.abs(x - k[0]) + Math.abs(y - k[1]) >= 4 && Math.abs(x - k[0]) + Math.abs(y - k[1]) <= 6 && y !== k[1] && x !== k[0]); const sp = spots[Math.floor(spots.length / 2)] || [Math.min(13, k[0] + 4), k[1] + 2]; window.__tp(eel, sp[0], sp[1]); eel.dir = {x: Math.sign(k[0] - sp[0]) || 1, y: 0}; eel.stun = 0; }
   for (const e of S.enemies) if (e !== eel) e.stun = 99;
 });
 
