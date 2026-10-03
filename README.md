@@ -9,7 +9,7 @@ Wiki: https://ddyson1.github.io/pufferpanic/wiki/
 
 - 18 levels: 16 reefs that each introduce one creature, snack or hazard, with Bruiser the shark guarding the way down after the twelfth and the Kraken Queen waiting at the bottom.
 - One or two players. In co-op, a caught fish returns when the next wave of snacks appears, and the reef only restarts if both are caught.
-- Nine creatures, seven snacks, six terrain types, and Nori the seal, who hands out bubble shields.
+- Nine creatures, seven snacks, six terrain types, and Niko the seal, who hands out bubble shields.
 - Scoring with streaks, best times, and one to three stars per level.
 - Choose Killi or Milli and customize them. Most colors, patterns and accessories are earned by clearing levels, beating bosses, or long-term goals.
 - An illustrated story intro, boss cards, and an ending.

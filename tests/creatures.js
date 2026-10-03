@@ -23,16 +23,16 @@ setTimeout(()=>{
   chk(!w.document.querySelector('[data-lv="10"]').disabled,'old save that cleared level 10 unlocks level 11');
   G.setTwoP(false);
   // Seal shield
-  G.loadLevel(10); G.tick(2.2); let S=G.S; const n=S.friends[0]; const p=S.players[0]; chk(!!n&&n.name==='Nori','Nori present in Seal Cove');
-  S.enemies.forEach(e=>e.stun=999); tp(n,4,9); tp(p,4,9); G.tick(.02); chk(p.shield===true,'touching Nori gives a bubble shield');
+  G.loadLevel(10); G.tick(2.2); let S=G.S; const n=S.friends[0]; const p=S.players[0]; chk(!!n&&n.name==='Niko','Niko present in Seal Cove');
+  S.enemies.forEach(e=>e.stun=999); tp(n,4,9); tp(p,4,9); G.tick(.02); chk(p.shield===true,'touching Niko gives a bubble shield');
   const e0=S.enemies[0]; e0.stun=0; tp(n,13,1); tp(e0,p.x,p.y); G.tick(.02); chk(!p.dead&&!p.shield&&e0.stun>0,'shield absorbs a hit, pops, and stuns the attacker');
   p.inv=0; e0.stun=0; tp(p,1,1); tp(e0,1,1); G.tick(.02); chk(p.dead,'without a shield the next hit catches you');
   // Seal boop
-  G.loadLevel(10); G.tick(2.2); S=G.S; const n2=S.friends[0]; const e1=S.enemies.find(e=>e.kind==='E'); tp(n2,5,4); tp(e1,5,4); S.players[0].inv=99; G.tick(.02); chk(e1.stun>0,'Nori boops an eel and stuns it');
+  G.loadLevel(10); G.tick(2.2); S=G.S; const n2=S.friends[0]; const e1=S.enemies.find(e=>e.kind==='E'); tp(n2,5,4); tp(e1,5,4); S.players[0].inv=99; G.tick(.02); chk(e1.stun>0,'Niko boops an eel and stuns it');
   // Seal roams toward players
   G.loadLevel(10); G.tick(2.2); S=G.S; const n3=S.friends[0]; S.enemies.forEach(e=>e.stun=999); const pl=S.players[0]; pl.inv=99; tp(pl,13,11); tp(n3,1,1);
   const d0=Math.abs(n3.fx-pl.fx)+Math.abs(n3.fy-pl.fy); for(let k=0;k<60*5;k++){G.tick(1/60);S.enemies.forEach(e=>e.stun=999);} const d1=Math.abs(n3.fx-pl.fx)+Math.abs(n3.fy-pl.fy);
-  chk(d1<d0,`Nori swims over to say hi (distance ${d0} -> ${d1.toFixed(1)})`);
+  chk(d1<d0,`Niko swims over to say hi (distance ${d0} -> ${d1.toFixed(1)})`);
   // Manta over coral
   G.loadLevel(13); G.tick(2.2); S=G.S; const m=S.enemies.find(e=>e.kind==='A'); S.players[0].inv=999; S.enemies.forEach(e=>{if(e!==m)e.stun=999});
   tp(m,6,1); m.dir={x:0,y:1}; S.grid[2][6]='c';

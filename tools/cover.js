@@ -32,7 +32,7 @@ boot(4, w => {
   G.setTwoP(true); G.loadLevel(G.LEVELS.length - 1); G.tick(.4); G.setTwoP(false); // one player hides the fish name tags
   const S = G.S, P = S.players, E = S.enemies, L = {x: -1, y: 0}, R = {x: 1, y: 0};
   tp(P[0], 5.9, 5.9); P[0].face = R; P[0].puff = .6; tp(P[1], 8.5, 5.95); P[1].face = L;
-  const nori = S.friends[0]; tp(nori, 7.1, 7.9); nori.dir = R;
+  const niko = S.friends[0]; tp(niko, 7.1, 7.9); niko.dir = R;
   const by = k => E.filter(e => e.kind === k);
   const [c1, c2] = by('C'), [j1, j2] = by('J'), [eel] = by('E'), [sw] = by('S'), [ray] = by('Y'), [lion] = by('F'), [shark] = by('K');
   tp(c1, 4.0, 7.5); c1.dir = R; tp(c2, 10.9, 7.6); c2.dir = L; tp(j1, 4.1, 5.0); tp(j2, 11.3, 6.4);
@@ -41,10 +41,10 @@ boot(4, w => {
   for (const e of E) e.stun = 0;
   const types = ['krill', 'pearl', 'grape', 'star', 'clam', 'shrimp', 'moon'], pos = [[5.3, 7.4], [9.6, 7.4], [6.0, 8.5], [8.6, 8.8], [3.4, 8.5], [11.6, 8.6], [7.4, 5.0]];
   S.snacks.forEach((s, i) => { if (i < pos.length) { tp(s, pos[i][0], pos[i][1]); s.type = types[i]; s.born = -9; s.wait = 0; s.open = true; } else tp(s, -5, -5); });
-  // Nori's name tag is drawn above her; render once without her and paste her body back in from a frame with her
-  G.draw(); const withNori = createCanvas(cv.width, cv.height); withNori.getContext('2d').drawImage(cv, 0, 0);
+  // Niko's name tag is drawn above him; render once without him and paste his body back in from a frame with him
+  G.draw(); const withNiko = createCanvas(cv.width, cv.height); withNiko.getContext('2d').drawImage(cv, 0, 0);
   S.friends.length = 0; G.draw();
-  cv.getContext('2d').drawImage(withNori, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T);
+  const pc = cv.getContext('2d'); pc.save(); pc.setTransform(1, 0, 0, 1, 0, 0); pc.drawImage(withNiko, (niko.fx - .4) * T, (niko.fy + .06) * T, 1.8 * T, 1.0 * T, (niko.fx - .4) * T, (niko.fy + .06) * T, 1.8 * T, 1.0 * T); pc.restore();
   const W = 1260, H = 1000, c = createCanvas(W, H), x = c.getContext('2d');
   const tw = 9.2, th = tw * H / W, x0 = 7.5 - tw / 2, y0 = 6.45 - th / 2;
   x.drawImage(cv, x0 * T, y0 * T, tw * T, th * T, 0, 0, W, H);
