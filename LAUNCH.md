@@ -5,7 +5,7 @@ Dates assume a start in early October 2026. Each phase has a clear finish line; 
 ## Phase 1: ship the web version (week 1)
 - [ ] Push this repository and turn on GitHub Pages (Settings, Pages, main branch, root). Check the game and `/wiki/` load at the Pages address, and that "Add to Home Screen" works on your phone.
 - [ ] Register `killiandmilli.com` or similar and point it at Pages (optional, but portals and press like a real domain).
-- [ ] Create an itch.io page: upload `index.html` as an HTML game, set it to "pay what you want", add the ten screenshots, the icon and the copy from `marketing/listing.md`.
+- [ ] Create an itch.io page: upload the zip from `npm run itch` as an HTML game played in the browser, add the cover, the ten screenshots and the copy from `marketing/listing.md`, and follow the page settings listed there.
 - [ ] Play every level yourself on a laptop and a phone. Note anything unfair. The usual single-number tunings are in `index.html`: PUFF_CD, STUN_T, enemy speeds in ESPEED, the Queen's warning time (0.9) and Bruiser's charge speed (9.5).
 
 ## Phase 2: playtest and tune (weeks 2 to 3)
