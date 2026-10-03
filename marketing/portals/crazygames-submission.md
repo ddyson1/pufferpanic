@@ -40,13 +40,16 @@ Bring a friend on the same keyboard: if one fish is caught, the other keeps goin
 - Two players: Killi keeps WASD, Space and left Shift. Milli takes the arrows, Option or Alt, and right Shift.
 - Mobile: touch controls appear on screen
 
-## Images
-- `covers/cover-16x9-1920x1080.png`: 16:9 cover
-- `covers/cover-4x3-1600x1200.png`: 4:3 cover
-- `covers/icon-1x1-1024.png` and `icon-1x1-512.png`: square cover
-- `covers/cover-2x3-1000x1500.png`: portrait cover
-- `screenshots/shot-1-the-shallows.png` to `shot-4-kraken-queen.png`: gameplay, 1440 x 1080
-- `gameplay-video.mp4`: 49 second gameplay montage, 1440 x 1080, with music
+## Details page, in their order
+- Category: Casual
+- Tags (max 5, from their list): Arcade, Maze, Co-op, 2 Player, Cute. If one is missing from the list, take Puzzle or Fish.
+- Description: the text above, pasted as plain text (their editor allows no HTML).
+- Controls: the controls block above, as a bulleted list.
+- Store links: leave empty.
+- Marketing creatives URL: https://github.com/ddyson1/pufferpanic/tree/main/marketing
+- Cover images: `covers/crazygames-landscape-1920x1080.png` (16:9), `covers/crazygames-portrait-800x1200.png` (2:3), `covers/crazygames-square-800x800.png` (1:1)
+- Preview videos: `crazygames-landscape-preview.mp4` (1920 x 1080, 20 s, silent) and `crazygames-portrait-preview.mp4` (1080 x 1920, 20 s, silent), both cut from the montage with blurred padding
+- Screenshots, if asked: `screenshots/shot-1-the-shallows.png` to `shot-4-kraken-queen.png`
 
 ## Notes for their QA
 - The game scales itself to any frame and has its own fullscreen button in the corner of the board.
