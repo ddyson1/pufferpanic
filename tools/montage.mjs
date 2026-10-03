@@ -1,7 +1,7 @@
 // Gameplay montage, recorded from the real game in headless Chromium: short scripted moments (coral, puffing, a
 // jellyfish sting, kelp, currents, vents, both bosses, co-op, the fish card) with captions, cut together with the
 // reef music rendered offline by tools/trailermusic.cjs. Needs Playwright with its Chromium and ffmpeg on the PATH,
-// and the game served at http://localhost:5173 (npm run serve). Writes marketing/gameplay.mp4 (1080p30) and
+// and the game served at http://localhost:5173 (npm run serve). Writes marketing/gameplay.mp4 (1440x1080 at 30 fps, the frames cropped to the board) and
 // marketing/gameplay.gif (a short loop for the store page). Frames are deterministic: the game's
 // requestAnimationFrame loop is stepped by hand at exactly 30 fps and the moments are set up with the same hooks
 // the tests use.
@@ -167,7 +167,7 @@ await b.close();
 const wav = path.join(OUT, 'music.wav');
 execFileSync('node', [path.join(ROOT, 'tools', 'trailermusic.cjs'), wav, String(n / FPS)], {stdio: 'inherit'});
 const mp4 = path.join(ROOT, 'marketing', 'gameplay.mp4');
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', path.join(OUT, 'f%05d.png'), '-i', wav, '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-af', 'afade=t=out:st=' + (n / FPS - 2).toFixed(1) + ':d=2', '-shortest', '-movflags', '+faststart', mp4]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', path.join(OUT, 'f%05d.png'), '-i', wav, '-vf', 'crop=1440:1080', '-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '160k', '-af', 'afade=t=out:st=' + (n / FPS - 2).toFixed(1) + ':d=2', '-shortest', '-movflags', '+faststart', mp4]);
 const gif = path.join(ROOT, 'marketing', 'gameplay.gif');
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-start_number', String(Math.round(FPS * 2.2) + 8), '-i', path.join(OUT, 'f%05d.png'), '-t', '9', '-vf', 'fps=15,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer:bayer_scale=4', gif]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-start_number', String(Math.round(FPS * 2.2) + 8), '-i', path.join(OUT, 'f%05d.png'), '-t', '9', '-vf', 'crop=1440:1080,fps=15,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer:bayer_scale=4', gif]);
 console.log('montage done', n, 'frames', (n / FPS).toFixed(1) + 's', (fs.statSync(mp4).size / 1e6).toFixed(1) + ' MB mp4', (fs.statSync(gif).size / 1e6).toFixed(1) + ' MB gif');
