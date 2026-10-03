@@ -32,7 +32,7 @@ boot(4, w => {
   G.setTwoP(true); G.loadLevel(G.LEVELS.length - 1); G.tick(.4); G.setTwoP(false); // one player hides the fish name tags
   const S = G.S, P = S.players, E = S.enemies, L = {x: -1, y: 0}, R = {x: 1, y: 0};
   tp(P[0], 5.9, 5.9); P[0].face = R; P[0].puff = .6; tp(P[1], 8.5, 5.95); P[1].face = L;
-  const nori = S.friends[0]; tp(nori, 7.1, 7.9); nori.dir = R;
+  const niko = S.friends[0]; tp(niko, 7.1, 7.9); niko.dir = R;
   const by = k => E.filter(e => e.kind === k);
   const [c1, c2] = by('C'), [j1, j2] = by('J'), [eel] = by('E'), [sw] = by('S'), [ray] = by('Y'), [lion] = by('F'), [shark] = by('K');
   tp(c1, 4.0, 7.5); c1.dir = R; tp(c2, 10.9, 7.6); c2.dir = L; tp(j1, 4.1, 5.0); tp(j2, 11.3, 6.4);
@@ -44,7 +44,7 @@ boot(4, w => {
   // Niko's name tag is drawn above her; render once without her and paste her body back in from a frame with her
   G.draw(); const withNiko = createCanvas(cv.width, cv.height); withNiko.getContext('2d').drawImage(cv, 0, 0);
   S.friends.length = 0; G.draw();
-  cv.getContext('2d').drawImage(withNiko, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T, (nori.fx - .4) * T, (nori.fy + .06) * T, 1.8 * T, 1.0 * T);
+  cv.getContext('2d').drawImage(withNiko, (niko.fx - .4) * T, (niko.fy + .06) * T, 1.8 * T, 1.0 * T, (niko.fx - .4) * T, (niko.fy + .06) * T, 1.8 * T, 1.0 * T);
   const W = 1260, H = 1000, c = createCanvas(W, H), x = c.getContext('2d');
   const tw = 9.2, th = tw * H / W, x0 = 7.5 - tw / 2, y0 = 6.45 - th / 2;
   x.drawImage(cv, x0 * T, y0 * T, tw * T, th * T, 0, 0, W, H);
