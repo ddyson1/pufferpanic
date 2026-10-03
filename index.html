@@ -2143,28 +2143,24 @@ function drawCrab(e) {
 }
 
 function drawJelly(e) {
-  // flat cut paper pieces: a bell with a pale rim and a lighter top, two paper-strip arms and thin tentacles
   const pulse = Math.sin(e.anim * 4) * .035;
   ctx.translate(e.fx + .5, e.fy + .3);
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#f2b6d2'; ctx.lineWidth = .028;
-  for (let i = 0; i < 5; i++) {
-    const x0 = -.2 + i * .1;
-    ctx.beginPath(); ctx.moveTo(x0, .1);
-    for (let k = 1; k <= 5; k++) ctx.lineTo(x0 + Math.sin(e.anim * 5 + i + k * .9) * .04, .1 + k * .072);
+  ctx.strokeStyle = 'rgba(238,186,255,0.75)'; ctx.lineWidth = .032; ctx.lineCap = 'round';
+  for (let i = 0; i < 4; i++) {
+    const x0 = -.15 + i * .1;
+    ctx.beginPath(); ctx.moveTo(x0, .05);
+    for (let k = 1; k <= 5; k++) ctx.lineTo(x0 + Math.sin(e.anim * 5 + i + k * .9) * .04, .05 + k * .08);
     ctx.stroke();
   }
-  ctx.strokeStyle = '#e97fae'; ctx.lineWidth = .065;
-  for (const x of [-.08, .08]) { ctx.beginPath(); ctx.moveTo(x, .1); for (let k = 1; k <= 5; k++) ctx.lineTo(x + Math.sin(e.anim * 4 + x * 9 + k) * .06, .1 + k * .07); ctx.stroke(); }
-  const rx = .27 + pulse, ry = .34 - pulse;
-  ctx.fillStyle = '#ef92bf'; ctx.beginPath(); ctx.ellipse(0, .06, rx, ry, 0, Math.PI, 0); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = '#f9c6dd'; ctx.beginPath(); ctx.ellipse(-.03, -.02, rx * .72, ry * .66, 0, Math.PI, 0); ctx.closePath(); ctx.fill(); // the lighter top piece
-  ctx.fillStyle = '#fde9f2'; ell(0, .08, rx, .05); ctx.fill(); // the pale rim
-  ctx.fillStyle = '#fff'; ell(-.11, -.16, .06, .035); ctx.fill();
-  ctx.fillStyle = '#5a2045'; circ(-.07, -.04, .026); ctx.fill(); circ(.07, -.04, .026); ctx.fill();
-  ctx.strokeStyle = '#5a2045'; ctx.lineWidth = .022;
-  ctx.beginPath(); ctx.moveTo(-.12, -.11); ctx.lineTo(-.04, -.085); ctx.moveTo(.12, -.11); ctx.lineTo(.04, -.085); ctx.stroke();
-  ctx.fillStyle = '#ff9fbd'; circ(-.14, .02, .03); ctx.fill(); circ(.14, .02, .03); ctx.fill();
+  const rx = .29 + pulse, ry = .27 - pulse;
+  const g = ctx.createRadialGradient(-.05, -.1, .02, 0, 0, .32);
+  g.addColorStop(0, 'rgba(240,200,255,0.85)'); g.addColorStop(1, 'rgba(190,110,250,0.6)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.ellipse(0, .04, rx, ry, 0, Math.PI, 0);
+  for (let i = 0; i <= 6; i++) ctx.lineTo(rx - i * (2 * rx) / 6, .04 + (i % 2 ? .05 : 0));
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.4)'; ell(-.09, -.09, .08, .045); ctx.fill();
+  ctx.fillStyle = '#3b1d52'; circ(-.07, -.01, .024); ctx.fill(); circ(.07, -.01, .024); ctx.fill();
 }
 
 function drawEel(e) {

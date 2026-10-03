@@ -32,13 +32,13 @@ await p.evaluate(() => {
   const G = window.__pp; G.endStory && G.endStory();
   const st = document.createElement('style'); st.textContent = `
     @font-face{font-family:Grandstander;font-weight:900;src:url(tools/fonts/grandstander-latin-900-normal.woff2)}@font-face{font-family:Grandstander;font-weight:800;src:url(tools/fonts/grandstander-latin-800-normal.woff2)}
-    .trcap{position:absolute;left:0;right:0;bottom:5%;z-index:40;text-align:center;pointer-events:none;opacity:0;font:900 42px Grandstander,system-ui,sans-serif;color:#f6c445;
+    .trcap{position:fixed;left:0;right:0;bottom:6%;z-index:45;text-align:center;pointer-events:none;opacity:0;font:900 42px Grandstander,system-ui,sans-serif;color:#f6c445;
       text-shadow:0 3px 0 #a5640f,0 0 2px #05303d,0 0 12px rgba(5,48,61,.9),0 8px 24px rgba(0,0,0,.45);letter-spacing:.01em}
     .trcard{position:fixed;inset:0;background:#07222b;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;z-index:50}
     .trcard img{width:min(88vw,calc(88vh * 1.26));border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
     .trcard p{position:absolute;left:0;right:0;bottom:5%;margin:0;text-align:center;font:800 34px Grandstander,system-ui,sans-serif;color:#e6f6f5;text-shadow:0 2px 10px rgba(0,0,0,.6)}`;
   document.head.appendChild(st);
-  const cap = document.createElement('div'); cap.className = 'trcap'; cap.id = 'trcap'; document.getElementById('stage').appendChild(cap);
+  const cap = document.createElement('div'); cap.className = 'trcap'; cap.id = 'trcap'; document.body.appendChild(cap); // on the body, so it stays above the fish card
   const card = document.createElement('div'); card.className = 'trcard'; card.id = 'trcard'; card.innerHTML = '<img src="marketing/cover-1260x1000.png"><p id="trline"></p>'; document.body.appendChild(card);
   const names = {'1,0': 'right', '-1,0': 'left', '0,1': 'down', '0,-1': 'up'};
   const release = pl => { for (const d of ['up', 'down', 'left', 'right']) G.releaseDir(pl.id, d); };
