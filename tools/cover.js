@@ -1,6 +1,6 @@
 // Store cover: the whole cast around the title on the paper reef, drawn from the game itself
-// so it always matches the build. Writes marketing/cover-1260x1000.png (itch.io, 2x of its 630x500) and
-// marketing/cover-630x500.png. The title font is bundled in tools/fonts/ (Grandstander, OFL) because the
+// so it always matches the build. Writes marketing/cast-cover-1260x1000.png (itch.io size at 2x) and
+// marketing/cast-cover-630x500.png. The store cover itself (marketing/cover-*.png) is the key art cut from marketing/keyart.png. The title font is bundled in tools/fonts/ (Grandstander, OFL) because the
 // game loads it from Google Fonts, which node cannot.
 const {JSDOM} = require('jsdom'); const fs = require('fs'); const path = require('path');
 const {createCanvas, GlobalFonts} = require('@napi-rs/canvas');
@@ -54,8 +54,8 @@ boot(4, w => {
   x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 30; x.shadowOffsetY = 14; x.lineWidth = 28; x.strokeStyle = '#05303d'; x.strokeText(title, tx, ty); x.shadowColor = 'transparent';
   x.fillStyle = '#a5640f'; x.fillText(title, tx, ty + 8); x.fillStyle = '#f6c445'; x.fillText(title, tx, ty);
   x.font = '800 44px Grandstander'; x.lineWidth = 12; x.strokeText('a co-op reef maze', tx, ty + 70); x.fillStyle = '#e6f6f5'; x.fillText('a co-op reef maze', tx, ty + 70);
-  fs.writeFileSync(path.join(ROOT, 'marketing', 'cover-1260x1000.png'), c.toBuffer('image/png'));
+  fs.writeFileSync(path.join(ROOT, 'marketing', 'cast-cover-1260x1000.png'), c.toBuffer('image/png'));
   const half = createCanvas(630, 500); half.getContext('2d').drawImage(c, 0, 0, 630, 500);
-  fs.writeFileSync(path.join(ROOT, 'marketing', 'cover-630x500.png'), half.toBuffer('image/png'));
+  fs.writeFileSync(path.join(ROOT, 'marketing', 'cast-cover-630x500.png'), half.toBuffer('image/png'));
   console.log('cover done'); process.exit(0);
 });
