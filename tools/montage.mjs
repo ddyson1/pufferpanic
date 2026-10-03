@@ -132,9 +132,10 @@ await clip('Ride the currents', 4.5, {noPuff: true, noCoral: true, still: [0]}, 
 
 // 7. vents: Vent Field, an eel on a vent when it erupts
 await play(4, false);
-await clip('Vents erupt', 4, {noPuff: true, noCoral: true, still: [0]}, () => {
+await clip('Vents erupt', 3.5, {noPuff: true, noCoral: true, still: [0]}, () => {
   const G = window.__pp, S = G.S, pl = S.players[0]; const vs = window.__find('h'); const v = vs[Math.floor(vs.length / 2)] || [5, 5];
-  window.__tp(pl, 7, 6);
+  // the fish watches from two tiles away on open floor
+  const open = window.__find('').filter(([x, y]) => Math.abs(x - v[0]) + Math.abs(y - v[1]) === 2 && y === v[1]); const o = open[0] || [v[0] - 2, v[1]]; window.__tp(pl, o[0], o[1]); pl.face = {x: Math.sign(v[0] - o[0]) || 1, y: 0};
   const eel = S.enemies.find(e => e.kind === 'E'); if (eel) { window.__tp(eel, v[0], v[1]); eel.stun = 0; }
   for (const e of S.enemies) if (e !== eel) e.stun = 99;
   S.ventT = 4.5 - 1.3; // erupts in 1.3 s
@@ -143,9 +144,9 @@ await clip('Vents erupt', 4, {noPuff: true, noCoral: true, still: [0]}, () => {
 
 // 8. bosses
 await play(12, true);
-await clip('Bruiser charges at anything that moves', 5, {}, () => { const G = window.__pp; G.S.players.forEach((pl, i) => window.__tp(pl, 6 + i * 3, 9)); });
+await clip('Bruiser charges', 5, {}, () => { const G = window.__pp; G.S.players.forEach((pl, i) => window.__tp(pl, 6 + i * 3, 9)); });
 await play(17, true);
-await clip('The Kraken Queen waits at the bottom', 5, {}, null);
+await clip('The Kraken Queen', 5, {}, null);
 
 // 9. co-op
 await play(5, true);
