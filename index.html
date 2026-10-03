@@ -209,7 +209,7 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .scaled>canvas{display:block}
 .scaled>.hud{position:relative;z-index:5;margin:0;height:46px;box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:.88rem}
 .scaled>.hud #hWave{display:none} /* the pips say it */
-.scaled>.hud[hidden]{display:flex;visibility:hidden} /* the strip keeps its row above the board on the title screen, so the board never jumps */
+.scaled>.hud[hidden]{display:none} /* no strip on the title screen or in the story, so the board takes the whole block */
 .scaled>.hud .grp{flex-wrap:nowrap;min-width:0}.scaled>.hud .lvl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:1.05rem;color:var(--gold)}
 .scaled>.hud .chip{background:rgba(255,255,255,.14);padding:2px 8px}
 .scaled>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
@@ -2774,7 +2774,10 @@ function hud() {
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
   hudEl.hidden = mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style';
   const inMenu = mode === 'menu' || mode === 'fish' || mode === 'story';
-  if (inMenu !== stage.parentElement.classList.contains('inmenu')) { stage.parentElement.classList.toggle('inmenu', inMenu); resize(); }
+  let relayout = hudCache.hudHidden !== hudEl.hidden; hudCache.hudHidden = hudEl.hidden; // the strip's row comes and goes with it
+  const storyNow = mode === 'story'; if (hudCache.storyMode !== storyNow) { hudCache.storyMode = storyNow; relayout = true; } // a phone's tall title layout does not apply to the story
+  if (inMenu !== stage.parentElement.classList.contains('inmenu')) { stage.parentElement.classList.toggle('inmenu', inMenu); relayout = true; }
+  if (relayout) resize();
   const tk = mode + (document.fullscreenElement ? 'F' : '');
   if (hudCache.tools !== tk) { hudCache.tools = tk; bPause.hidden = !(mode === 'play' || mode === 'paused'); bPause.classList.toggle('on', mode === 'paused'); lbl(bPause, mode === 'paused' ? 'Resume' : 'Pause'); bMenuBtn.hidden = mode === 'menu' || mode === 'fish'; $('#bStyle').classList.toggle('on', mode === 'style'); }
   if (showBoard) {
@@ -2833,7 +2836,8 @@ const HUD_H = 46; // the info strip's row above the board
 // One layout, scaled as a whole: the strip and the board are laid out at the reference size and the block is scaled to
 // fit the window, so every screen shows the same picture at a different magnification. The canvas renders at the
 // pixels it is actually shown at, so nothing blurs. 1.4 caps the magnification on very large screens.
-const REF_T = 56, REF_W = COLS * REF_T, REF_H = ROWS * REF_T + HUD_H, KMAX = 1.4;
+const REF_T = 56, REF_W = COLS * REF_T, KMAX = 1.4;
+const refH = () => ROWS * REF_T + (hudEl.hidden ? 0 : HUD_H); // the block is the board plus the info strip when the strip is shown
 const scaledEl = $('#scaled');
 let scaleK = 1;
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
@@ -2842,7 +2846,7 @@ function resize() {
   const innerW = window.innerWidth || 0, innerH = window.innerHeight || 800;
   const sideTouch = !!(window.matchMedia && matchMedia('(pointer:coarse) and (orientation:landscape)').matches); // landscape phones put the pad beside the board
   const sideMode = !sideTouch && !!(window.matchMedia && matchMedia('(pointer:fine) and (min-width:900px)').matches); // wide windows: the block alone, as tall as the window
-  const inMenu = wrap.classList.contains('inmenu');
+  const inMenu = wrap.classList.contains('inmenu'), REF_H = refH(), hudH = REF_H - ROWS * REF_T;
   const touchDisp = getComputedStyle(touchEl).display;
   const touchH = touchDisp !== 'none' && !sideTouch && !inMenu ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
@@ -2857,7 +2861,7 @@ function resize() {
   const apply = k => {
     scaleK = k; const W = Math.round(REF_W * k), H = Math.round(REF_H * k);
     scaledEl.style.transform = `scale(${k})`; stage.style.width = W + 'px'; stage.style.height = H + 'px';
-    stage.style.setProperty('--hudTop', (HUD_H * k).toFixed(1) + 'px');
+    stage.style.setProperty('--hudTop', (hudH * k).toFixed(1) + 'px');
     stage.classList.toggle('small', k < .6);
     return H;
   };
@@ -2873,7 +2877,9 @@ function resize() {
     const H = apply(k);
     // a portrait phone's title screen: the card gets the height the pad would have taken, the block sits in the middle of it
     const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > H + 80;
-    stage.style.height = (tall ? availH : H) + 'px'; scaledEl.style.marginTop = tall ? Math.round((availH - H) / 2) + 'px' : '';
+    // the story keeps the board at the top with its caption right under it; the caption's gradient overlaps the board's bottom edge
+    const storyH = mode === 'story' ? Math.max(0, storyEl.offsetHeight - 34) : 0;
+    stage.style.height = (tall ? (mode === 'story' ? Math.min(availH, H + storyH) : availH) : H) + 'px'; scaledEl.style.marginTop = tall && mode !== 'story' ? Math.round((availH - H) / 2) + 'px' : '';
     // the footer and the touch pad line up with the block; the footer takes at least 600px (within the window) so it cannot wrap taller
     touchEl.style.width = Math.round(REF_W * k) + 'px';
     footEl.style.width = Math.max(Math.round(REF_W * k), Math.min(wrapW, 660)) + 'px';
