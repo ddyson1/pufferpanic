@@ -2198,9 +2198,11 @@ function drawEel(e) {
       const f = A[0] + (E[0] - A[0]) * t, s = A[1] + (E[1] - A[1]) * t;
       ctx.beginPath(); ctx.moveTo(...P(f - .02, s)); ctx.lineTo(...P(f + .02, s)); ctx.lineTo(...P(f, s + dir * .04)); ctx.closePath(); ctx.fill();
     }
-    for (const s of [-.11, .11]) { ctx.fillStyle = '#fff6b0'; circ(...P(.02, s), .05); ctx.fill(); ctx.fillStyle = '#111'; circ(...P(.04, s), .026); ctx.fill(); }
-    ctx.strokeStyle = '#2d4a14'; ctx.lineWidth = .022;
-    for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(...P(.1, s * .13)); ctx.lineTo(...P(-.02, s * .17)); ctx.stroke(); }
+    // one eye on the side above the jaw, with a frown
+    ctx.fillStyle = '#fff6b0'; circ(...P(.1, -.09), .055); ctx.fill();
+    ctx.fillStyle = '#111'; circ(...P(.13, -.09), .028); ctx.fill();
+    ctx.strokeStyle = '#2d4a14'; ctx.lineWidth = .025;
+    ctx.beginPath(); ctx.moveTo(...P(.2, -.14)); ctx.lineTo(...P(.06, -.18)); ctx.stroke();
   }
 }
 
