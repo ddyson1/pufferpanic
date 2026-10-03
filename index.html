@@ -478,7 +478,7 @@ const Ads = (() => {
     init() {
       try {
         if (poki()) poki().init().then(() => { ready = true; poki().gameLoadingFinished(); }).catch(() => {});
-        else if (cg()) Promise.resolve(cg().init()).then(() => { ready = true; }).catch(() => {});
+        else if (cg()) { try { cg().game.loadingStart(); } catch (e) {} Promise.resolve(cg().init()).then(() => { ready = true; try { cg().game.loadingStop(); } catch (e) {} }).catch(() => {}); } // the loading calls bound their load time measurement
       } catch (e) {}
     },
     get ready() { return ready; },
