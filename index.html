@@ -34,12 +34,6 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1000px;margin:0 auto;padding:12px 12px 14px}
-@media (min-width:1000px){
-  .wrap:has(.style:not([hidden])){display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:16px;align-items:start;max-width:1200px}
-  .wrap:has(.style:not([hidden])) #optTrack{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .wrap:has(.style:not([hidden]))>*{grid-column:1}
-  .wrap .style:not([hidden]){grid-column:2;grid-row:1/span 5;margin:0;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;max-width:none !important}
-}
 .hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 auto 8px;font-size:clamp(.88rem,calc(var(--boardW,600px)/62),1.08rem);font-variant-numeric:tabular-nums}
 .hud .grp{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .chip{background:var(--chip);border-radius:999px;padding:4px 10px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
@@ -132,8 +126,9 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
   .wrap{max-width:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;column-gap:10px;align-items:center;padding:8px}
   .wrap>*{grid-column:2}
   .touch{display:contents}
-  .pad{grid-column:1;grid-row:1}
+  .pad{grid-column:1;grid-row:1;align-self:start}
   .acts{grid-column:3;grid-row:1;flex-direction:column}
+  .touch>.mini{grid-column:1;grid-row:1;align-self:end;justify-self:center;flex-wrap:wrap;justify-content:center;max-width:180px}
   .foot{display:none}
 }
 .pad{display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(3,56px);gap:4px}
@@ -207,37 +202,37 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .overlay{container-type:size}
 @container (min-width:540px){.card{max-width:720px}.levels{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @container (max-height:520px){.card h2{font-size:1.7rem}.tag{display:none}.seg{margin:6px 0 0}.seg button{padding:5px 12px}.fishrow{margin:4px 0 0}.fishmini canvas{width:40px;height:40px}.levels{gap:4px;margin:6px 0 0}.lv{padding:4px 8px}.lv span{font-size:.82rem}.lv small{font-size:.7rem}.row{margin-top:6px}}
-/* the reef info as a strip over the top row of rocks and the icon buttons in the bottom corner, used whenever resize()
-   moves them into the stage: wide desktop windows and landscape phones */
-@media (min-width:0){
-  .stage>.hud{position:relative;z-index:5;margin:0;height:var(--hudH,46px);box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:clamp(.7rem,calc(var(--boardW,600px)/60),.86rem)}
-  .stage>.hud #hWave{display:none} /* the pips say it */
-  .stage>.hud[hidden]{display:flex;visibility:hidden} /* the strip keeps its row above the board on the title screen, so the board never jumps */
-  .stage.hud2>.hud{flex-wrap:wrap;align-content:center;row-gap:4px}.stage.hud2>.hud .grp{flex-basis:100%;justify-content:center}
-  .stage>.hud .grp{flex-wrap:nowrap;min-width:0}.stage>.hud .lvl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-  .stage>.hud .chip{background:rgba(255,255,255,.14);padding:2px 8px}
-  .stage>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
-  .stage>.hud .chip.sb small{opacity:.7}
-  .stage>.hud .pips i{background:rgba(255,255,255,.3)}.stage>.hud .pips i.on{background:var(--accent)}.stage>.hud .pips i.done{background:rgba(255,255,255,.6)}.stage>.hud .pips i.boss{background:#e8463a}
-  .stage>.hud .lvl{font-size:clamp(.85rem,calc(var(--boardW,600px)/46),1.05rem);color:var(--gold)}
-  .stage>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
-  .stage>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
-  .stage>.mini button.off{color:rgba(230,246,245,.5)}
-  .stage.hudin .banner{top:56px}
-  .stage.hudin .overlay{padding:14px 14px 58px}
-  .stage.tall{display:flex;align-items:center;justify-content:center}
-  .stage.hudin:not(.narrow) .storybar{margin-right:180px}
-  .stage.hudin.narrow:has(.story:not([hidden]))>.mini{display:none}
-  .stage.narrow .story p{font-size:.78rem;line-height:1.35;min-height:0}.stage.narrow .story{padding:20px 12px 10px}
-  .stage.narrow>.hud .chip.sb{display:none}
-  .stage.narrow>.hud{padding:0 8px;gap:4px}.stage.narrow>.hud .chip{padding:2px 7px}
-  .wrap.inmenu .touch{display:none} /* the pad has nothing to do on the title screen */
-}
+/* One layout, scaled as a whole: the strip, the board and (on wide windows) the icon buttons are laid out once at the
+   reference size (840 x 728 board under a 46 px strip) inside .scaled, which resize() scales to fit the window. The
+   cards, the banner and the lab stay unscaled over it. */
+.scaled{position:relative;width:840px;height:774px;transform-origin:0 0;overflow:hidden}
+.scaled>canvas{display:block}
+.scaled>.hud{position:relative;z-index:5;margin:0;height:46px;box-sizing:border-box;flex-wrap:nowrap;overflow:hidden;gap:6px;padding:0 10px;color:#e6f6f5;background:rgba(2,26,36,.85);font-size:.88rem}
+.scaled>.hud #hWave{display:none} /* the pips say it */
+.scaled>.hud[hidden]{display:flex;visibility:hidden} /* the strip keeps its row above the board on the title screen, so the board never jumps */
+.scaled>.hud .grp{flex-wrap:nowrap;min-width:0}.scaled>.hud .lvl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;font-size:1.05rem;color:var(--gold)}
+.scaled>.hud .chip{background:rgba(255,255,255,.14);padding:2px 8px}
+.scaled>.hud .chip.sb{background:rgba(2,26,36,.75);color:#e6f6f5}
+.scaled>.hud .chip.sb small{opacity:.7}
+.scaled>.hud .pips i{background:rgba(255,255,255,.3)}.scaled>.hud .pips i.on{background:var(--accent)}.scaled>.hud .pips i.done{background:rgba(255,255,255,.6)}.scaled>.hud .pips i.boss{background:#e8463a}
+.scaled>.mini{position:absolute;right:10px;bottom:10px;z-index:5}
+.scaled>.mini button{background:rgba(2,26,36,.7);color:#e6f6f5}
+.scaled>.mini button.off{color:rgba(230,246,245,.5)}
+.stage{display:block}
+.stage .banner{top:calc(var(--hudTop,46px) + 10px)}
+.stage.miniin .overlay{padding-bottom:62px}
+.stage.miniin .storybar{margin-right:180px}
+/* phones: the block is under 60% of reference size, so the strip's type grows back and the time and score chips step aside */
+.stage.small .scaled>.hud{font-size:1.5rem;gap:10px;padding:0 14px}.stage.small .scaled>.hud .lvl{font-size:1.7rem}.stage.small .scaled>.hud .chip{padding:3px 12px}
+.stage.small .scaled>.hud .chip.sb{display:none}.stage.small .scaled>.hud .pips{gap:7px}.stage.small .scaled>.hud .pips i{width:13px;height:13px}
+.stage.small .scaled>.hud .dot{width:16px;height:16px}.stage.small .scaled>.hud .meter{width:64px;height:11px}
+.stage.small .story p{font-size:.78rem;line-height:1.35;min-height:0}.stage.small .story{padding:20px 12px 10px}
+.wrap.inmenu .touch{display:none} /* the pad has nothing to do on the title screen */
 /* wide desktop windows: the board alone, as tall as the window; the reef info sits in a strip over the top row of rocks
    and the sound, music, pause and fullscreen buttons in the bottom right corner (see resize, which moves them in) */
 @media (pointer:fine) and (min-width:900px){
-  .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:center;max-width:none;min-height:100vh;padding:12px 16px}
-  .wrap.side>.hud,.wrap.side .rotate,.wrap.side .touch,.wrap.side .foot{display:none}
+  .wrap.side{display:grid;grid-template-columns:auto;justify-content:center;column-gap:16px;align-items:center;max-width:none;min-height:100vh;box-sizing:border-box;padding:12px 16px}
+  .wrap.side .rotate,.wrap.side .touch,.wrap.side .foot{display:none}
   .wrap.side .stage{grid-column:1;grid-row:1;margin:0}
   .wrap.side .stage>.style:not([hidden]){position:absolute;grid-area:auto;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;margin:0;width:min(760px,94%);max-width:none !important;max-height:calc(100% - 24px);border-radius:16px;background:rgba(7,34,43,.96);color:#e6f6f5;overflow:auto;padding:16px 18px 8px;box-shadow:0 0 0 3000px rgba(2,20,30,.6),0 24px 60px rgba(0,0,0,.45)}
   .wrap.side .stage>.style .opts{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
@@ -253,18 +248,20 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 </head>
 <body>
 <main class="wrap">
-  <div class="hud" id="hud">
-    <div class="grp">
-      <span class="lvl" id="hLevel">Killi and Milli</span>
-      <span class="chip"><span id="hWave">Wave</span><span class="pips" id="hPips"></span></span>
-      <span class="chip" id="hLeft">Choose a reef</span>
-    </div>
-    <div class="grp score"><span class="chip sb" id="hTimeChip"><small>Time</small><b id="hTime">0:00.0</b></span><span class="chip sb" id="hScoreChip"><small>Score</small><b id="hScore">0</b></span><span class="grp" id="hPlayers"></span></div>
-  </div>
 
   <p class="rotate" id="rotateHint">Turn your phone sideways for a bigger reef.</p>
   <div class="stage" id="stage">
-    <canvas id="c" aria-label="Game board"></canvas>
+    <div class="scaled" id="scaled">
+    <div class="hud" id="hud">
+      <div class="grp">
+        <span class="lvl" id="hLevel">Killi and Milli</span>
+        <span class="chip"><span id="hWave">Wave</span><span class="pips" id="hPips"></span></span>
+        <span class="chip" id="hLeft">Choose a reef</span>
+      </div>
+      <div class="grp score"><span class="chip sb" id="hTimeChip"><small>Time</small><b id="hTime">0:00.0</b></span><span class="chip sb" id="hScoreChip"><small>Score</small><b id="hScore">0</b></span><span class="grp" id="hPlayers"></span></div>
+    </div>
+      <canvas id="c" aria-label="Game board"></canvas>
+    </div>
     <div class="banner" id="banner" hidden></div>
     <div class="overlay" id="overlay"><div class="card" id="card"></div></div>
     <div class="story" id="story" hidden>
@@ -2756,7 +2753,7 @@ function hud() {
   const showBoard = !!S && (mode === 'play' || mode === 'paused' || mode === 'won');
   hWave.parentElement.hidden = hPlayers.hidden = mode === 'menu' || mode === 'fish'; // nothing to report there
   hTime.parentElement.hidden = hScoreChip.hidden = !showBoard;
-  hudEl.hidden = sideLayout && (mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style');
+  hudEl.hidden = mode === 'menu' || mode === 'fish' || mode === 'story' || mode === 'style';
   const inMenu = mode === 'menu' || mode === 'fish' || mode === 'story';
   if (inMenu !== stage.parentElement.classList.contains('inmenu')) { stage.parentElement.classList.toggle('inmenu', inMenu); resize(); }
   const tk = mode + (document.fullscreenElement ? 'F' : '');
@@ -2812,83 +2809,67 @@ function updateKeysHelp() {
 }
 
 // ================= layout =================
-let builtT = 0, builtDpr = 0, sideLayout = false, labIn = false;
-const HUD_H = 46, HUD_H2 = 76, HUD_WIDE = 800;
-// The board comes in three sizes by window width, phone (24 px tiles, 360 x 312), laptop (44, 660 x 572) and desktop (56,
-// 840 x 728); a window too short for the chosen size trims the board to the height it has, so a wide but short window keeps
-// a board as big as it can show instead of dropping to the phone size. sizeCap steps the stacked layout down a size when
-// the measured page still overflows the window.
-const SIZES = [56, 44, 24];
-let sizeCap = Infinity, sizedFor = '';
-const snapT = (maxW, maxH) => Math.max(16, Math.min(SIZES.find(t => t <= Math.min(maxW, sizeCap)) || Math.floor(maxW), Math.floor(maxH))); // the info strip above the board: one row, or two rows under 800 px where two players would not fit
+let builtT = 0, builtDpr = 0, miniHome = '', labIn = false;
+const HUD_H = 46; // the info strip's row above the board
+// One layout, scaled as a whole: the strip and the board are laid out at the reference size and the block is scaled to
+// fit the window, so every screen shows the same picture at a different magnification. The canvas renders at the
+// pixels it is actually shown at, so nothing blurs. 1.4 caps the magnification on very large screens.
+const REF_T = 56, REF_W = COLS * REF_T, REF_H = ROWS * REF_T + HUD_H, KMAX = 1.4;
+const scaledEl = $('#scaled');
+let scaleK = 1;
 const miniEl = $('.mini'), toolsEl = $('.tools'), rotateEl = $('#rotateHint'), hudEl = $('#hud'), footEl = $('.foot');
 function resize() {
-  const sig = (window.innerWidth || 0) + 'x' + (window.innerHeight || 0); if (sig !== sizedFor) { sizedFor = sig; sizeCap = Infinity; }
-  // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
-  const wrap = stage.parentElement, wcs = getComputedStyle(wrap);
-  const labW = !stylePanel.hidden && !sideLayout && (window.innerWidth || 0) >= 1000 ? 356 : 0; // the lab's column in the stacked layout, see .wrap:has(.style) in the CSS
-  const touchDisp = getComputedStyle(touchEl).display, sideTouch = !!(window.matchMedia && matchMedia('(pointer:coarse) and (orientation:landscape)').matches); // landscape phones put the pad beside the board
+  const wrap = $('main'), wcs = getComputedStyle(wrap);
+  const innerW = window.innerWidth || 0, innerH = window.innerHeight || 800;
+  const sideTouch = !!(window.matchMedia && matchMedia('(pointer:coarse) and (orientation:landscape)').matches); // landscape phones put the pad beside the board
+  const sideMode = !sideTouch && !!(window.matchMedia && matchMedia('(pointer:fine) and (min-width:900px)').matches); // wide windows: the block alone, as tall as the window
   const inMenu = wrap.classList.contains('inmenu');
+  const touchDisp = getComputedStyle(touchEl).display;
   const touchH = touchDisp !== 'none' && !sideTouch && !inMenu ? touchEl.offsetHeight + 20 : 0;
   const sideW = sideTouch ? $('.pad').offsetWidth + $('.acts').offsetWidth + 20 : 0;
-  const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - labW - sideW) || 600;
-  // the board gets the height left over by the hud, footer and touch pad plus the 56px of margins around
-  // them, so the page never scrolls in a fixed frame such as an itch.io embed. Those wrap differently at
-  // each width, so size twice and let them settle. 150 is the fallback before anything has laid out.
-  // Wide desktop windows: the hud chips go down the left, the buttons down the right, and the board takes the
-  // full height (see .wrap.side). Chosen whenever that gives a bigger board than the stacked layout.
-  const innerH = window.innerHeight || 800;
-  let sideMode = false;
-  if (!sideTouch && window.matchMedia && matchMedia('(pointer:fine) and (min-width:900px)').matches) {
-    // the side layout lifts the wrap's width cap, so judge it by the window's width, not the capped wrap
-    const fullW = (window.innerWidth || 0) - 48;
-    const tStack = snapT(Math.min(wrapW, 976) / COLS, (innerH - 150) / ROWS), tSide = snapT(fullW / COLS, (innerH - 24 - HUD_H) / ROWS);
-    sideMode = tSide >= tStack; // a tie goes to the side layout, which keeps the whole page in view
-  }
+  // clientWidth includes the wrap's padding, so subtract it or the board overflows the screen on phones
+  const wrapW = Math.max(0, wrap.clientWidth - (parseFloat(wcs.paddingLeft) || 0) - (parseFloat(wcs.paddingRight) || 0) - sideW) || 600;
   wrap.classList.toggle('side', sideMode);
-  const hudIn = sideMode || sideTouch; // the hud and the icon buttons sit on the board on wide windows and landscape phones
-  if (hudIn !== sideLayout) {
-    sideLayout = hudIn;
-    if (hudIn) { stage.prepend(hudEl); stage.append(miniEl); }
-    else { rotateEl.before(hudEl); toolsEl.prepend(miniEl); hudEl.hidden = false; }
-  }
+  // the icon buttons sit in the block on wide windows, under the pad on landscape phones, in the footer otherwise
+  const home = sideMode ? 'scaled' : sideTouch ? 'touch' : 'tools';
+  if (home !== miniHome) { miniHome = home; if (home === 'scaled') scaledEl.append(miniEl); else if (home === 'touch') touchEl.append(miniEl); else toolsEl.prepend(miniEl); }
+  stage.classList.toggle('miniin', home === 'scaled');
   if (sideMode !== labIn) { labIn = sideMode; if (sideMode) stage.append(stylePanel); else footEl.after(stylePanel); }
-  stage.classList.toggle('hudin', hudIn);
-  if (sideMode) {
-    const innerW = window.innerWidth || 0;
-    T = snapT((innerW - 48) / COLS, (innerH - 24 - HUD_H) / ROWS);
-    if (COLS * T < HUD_WIDE) T = snapT((innerW - 48) / COLS, (innerH - 24 - HUD_H2) / ROWS);
-    stage.style.width = COLS * T + 'px'; stage.style.height = ''; stage.classList.remove('tall'); hudEl.style.width = footEl.style.width = touchEl.style.width = '';
-  } else for (let pass = 0, hudH = HUD_H; pass < 2; pass++) {
-    const rotH = $('#rotateHint').offsetHeight; // the portrait hint, when shown
-    const chromeH = Math.max(sideTouch ? 24 : 100, (hudIn ? (pass ? hudH : HUD_H) : hudEl.offsetHeight) + (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46)); // 100 is the fallback before anything has laid out
-    const availH = Math.max(240, (window.innerHeight || 800) - chromeH);
-    T = snapT(wrapW / COLS, availH / ROWS);
-    hudH = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600 ? HUD_H2 : HUD_H; // the second pass sizes for a two-row strip when needed
-    // a portrait phone's title screen: the card gets the height the pad would have taken, the board sits in the middle of it
-    const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > ROWS * T + 80;
-    stage.classList.toggle('tall', tall); stage.style.height = tall ? availH + 'px' : '';
-    // keep the hud, footer and touch pad as wide as the board so they line up when height limits the board
-    stage.style.width = touchEl.style.width = COLS * T + 'px';
-    // the hud and footer take at least 600px (within the window) so a narrow board cannot wrap them taller, which would shrink the board further
-    const barW = Math.max(COLS * T, Math.min(wrapW, 660)) + 'px';
-    footEl.style.width = barW; hudEl.style.width = sideTouch ? '' : barW;
+  const apply = k => {
+    scaleK = k; const W = Math.round(REF_W * k), H = Math.round(REF_H * k);
+    scaledEl.style.transform = `scale(${k})`; stage.style.width = W + 'px'; stage.style.height = H + 'px';
+    stage.style.setProperty('--hudTop', (HUD_H * k).toFixed(1) + 'px');
+    stage.classList.toggle('small', k < .6);
+    return H;
+  };
+  let k, availH = innerH;
+  if (sideMode) { k = Math.min(KMAX, (innerW - 48) / REF_W, (innerH - 24) / REF_H); apply(k); touchEl.style.width = footEl.style.width = ''; scaledEl.style.marginTop = ''; }
+  else for (let pass = 0; pass < 2; pass++) {
+    // the block gets the height left over by the footer and the touch pad plus the margins around them, so the page never
+    // scrolls in a fixed frame such as an itch.io embed. Those wrap differently at each width, so size twice and let them settle.
+    const rotH = rotateEl.offsetHeight; // the portrait hint, when shown
+    const chromeH = Math.max(sideTouch ? 24 : 60, (sideTouch ? 0 : footEl.offsetHeight) + touchH + (rotH ? rotH + 8 : 0) + (sideTouch ? 24 : 46));
+    availH = Math.max(200, innerH - chromeH);
+    k = Math.min(KMAX, wrapW / REF_W, availH / REF_H);
+    const H = apply(k);
+    // a portrait phone's title screen: the card gets the height the pad would have taken, the block sits in the middle of it
+    const tall = inMenu && !sideTouch && window.matchMedia && matchMedia('(pointer:coarse)').matches && availH > H + 80;
+    stage.style.height = (tall ? availH : H) + 'px'; scaledEl.style.marginTop = tall ? Math.round((availH - H) / 2) + 'px' : '';
+    // the footer and the touch pad line up with the block; the footer takes at least 600px (within the window) so it cannot wrap taller
+    touchEl.style.width = Math.round(REF_W * k) + 'px';
+    footEl.style.width = Math.max(Math.round(REF_W * k), Math.min(wrapW, 660)) + 'px';
   }
-  // the frame cost is fill rate, so the backing store is capped at about 2.2 million pixels; a 975 px board on a 2x screen renders at 1.56x
-  dpr = Math.min(window.devicePixelRatio || 1, 2.5, Math.sqrt(PIXEL_BUDGET / (COLS * T * ROWS * T)));
-  dpr = Math.max(1, Math.floor(T * dpr)) / T; // a whole number of pixels per tile, so prerendered sprites blit 1:1 instead of being resampled
+  T = REF_T;
+  // the canvas renders at the pixels it is shown at: the scale times the screen's pixel ratio, capped at about 2.2 million
+  // pixels since the frame cost is fill rate, and a whole number of pixels per tile so prerendered sprites blit 1:1
+  let d = Math.min(window.devicePixelRatio || 1, 2.5) * k;
+  d = Math.min(d, Math.sqrt(PIXEL_BUDGET / (COLS * T * ROWS * T)));
+  dpr = Math.max(1, Math.floor(T * d)) / T;
   cv.width = Math.round(COLS * T * dpr); cv.height = Math.round(ROWS * T * dpr);
-  cv.style.width = COLS * T + 'px'; cv.style.height = ROWS * T + 'px';
-  stylePanel.style.maxWidth = COLS * T + 'px';
-  wrap.style.setProperty('--boardW', COLS * T + 'px'); // the hud and footer text scale with it
-  stage.style.setProperty('--T', T + 'px'); // the strip over the top row of rocks in the side layout
-  stage.classList.toggle('narrow', hudIn && COLS * T < 600); // a landscape phone's strip keeps only the reef, the snacks and the fish
-  const twoRows = hudIn && COLS * T < HUD_WIDE && COLS * T >= 600; stage.classList.toggle('hud2', twoRows); stage.style.setProperty('--hudH', (twoRows ? HUD_H2 : HUD_H) + 'px');
+  cv.style.width = REF_W + 'px'; cv.style.height = ROWS * REF_T + 'px';
+  stylePanel.style.maxWidth = Math.round(REF_W * k) + 'px';
+  wrap.style.setProperty('--boardW', REF_W + 'px'); // the footer text scales with the reference board
   if (T !== builtT || dpr !== builtDpr) { builtT = T; builtDpr = dpr; rebuildArt(); }
-  // the stacked layout's chrome is measured, not computed, so check the result and step down a size if the page still scrolls
-  if (!sideMode && window.innerHeight && document.documentElement.scrollHeight > window.innerHeight + 1 && stylePanel.hidden) {
-    const i = SIZES.indexOf(T); if (i >= 0 && i < SIZES.length - 1 && SIZES[i + 1] < sizeCap) { sizeCap = SIZES[i + 1]; resize(); }
-  }
 }
 cv.tabIndex = -1; // focusable by script only: tapping or clicking the board takes focus off any button, so keys go to the game
 stage.addEventListener('pointerdown', () => { try { cv.focus({preventScroll:true}); } catch (e) {} });
