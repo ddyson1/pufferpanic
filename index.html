@@ -185,6 +185,8 @@ kbd{font-family:inherit;background:var(--chip);color:var(--fg);border-radius:6px
 .style summary::before{content:'';width:0;height:0;border:5px solid transparent;border-left:7px solid var(--muted);transition:transform .15s}
 .style details[open] summary::before{transform:rotate(90deg)}
 .style[hidden]{display:none}
+/* in the stacked layout the lab covers the whole frame and scrolls inside itself, so an itch.io embed or a phone never has to scroll the page to reach it */
+.wrap:not(.side) .style:not([hidden]){position:fixed;inset:0;z-index:30;margin:0;max-width:none !important;border-radius:0;overflow:auto;padding:14px 16px 10px;box-sizing:border-box}
 .story{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(to top,rgba(2,18,28,.97),rgba(2,18,28,.97) 30%,rgba(2,18,28,.8) 65%,rgba(2,18,28,0));color:#eaf7f6}
 .story[hidden]{display:none}
 .story p{margin:0 0 10px;font-size:clamp(.9rem,2.3vw,1.08rem);line-height:1.5;min-height:4.5em;max-width:62ch}
@@ -3328,7 +3330,7 @@ function openStyle() {
   if (autoTrack) setTrack(TRACKS.lantern);
   stylePanel.hidden = false; resize();
   unlockAudio(); renderStyle();
-  stylePanel.scrollTop = 0; if (stylePanel.getBoundingClientRect().top > (window.innerHeight || 800) - 120) stylePanel.scrollIntoView({behavior:'smooth', block:'start'});
+  stylePanel.scrollTop = 0;
 }
 function closeStyle() { hideStyle(); showMenu(); }
 // the board shares the row with the lab, so it has to be re-measured whenever the lab goes away
