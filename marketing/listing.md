@@ -12,23 +12,26 @@ Puffs first, asks questions later. A co-op reef maze for one or two players.
 A co-op arcade maze game. Grow coral walls to trap crabs, eels and stingrays, puff up when they get close, and gather every snack before the Moonlight Feast.
 
 ## Long description
-Two small pufferfish. One very grumpy reef.
+In the warm shallows, where the coral glows at dusk, live Killi and Milli, the two smallest and roundest pufferfish on the whole reef. Killi chases anything shiny. Milli makes sure he finds his way home.
 
-Killi and Milli are in charge of the snacks for the reef's Moonlight Feast. The night before, something huge wakes up in the Trench, every crab, jellyfish and eel on the reef is in a mood, and the snacks have scattered into every corner.
+Once a year the reef gathers for the Moonlight Feast, and this year the snacks are their job. Then, the night before, a rumble rolls up from the Trench. Jellyfish wake up cross. Eels stop pretending to be friendly. Every crab sets off in a straight line, and the snacks scatter into every corner of the reef.
 
-Your only tool is coral. Grow a wall to shut a creature out, break it to get through, and puff up into a spiky ball when something gets too close. Clear every snack before the moon is up, then swim deeper.
+So the two of them set out, reef by reef, to gather every last one before the moon is up. Bruiser the shark guards the way down. The Kraken Queen waits at the bottom. And a seal called Niko, who blows the best bubbles on the reef, has noticed two very small fish heading the wrong way.
 
-**What is waiting down there**
-- 16 reefs, each with something new: currents that carry you along, kelp to hide in, vents that erupt, snacks that run away, pearls that teleport, clams that open and close.
-- Two bosses. Bruiser the shark charges at anything that moves. The Kraken Queen fills the arena with tentacles.
-- Nine creatures with their own habits. Crabs walk in lines, jellyfish float over walls, eels hunt you down, swordfish charge, stingrays burst out of the sand.
-- Niko the seal, who bumps enemies aside and wraps you in a bubble shield.
+**How it plays**
+Each reef is a small maze. Swim around, pick up every snack, and do not get caught.
+- Grow coral in front of you to build a wall. Creatures cannot get through it.
+- Break the same coral to open the way again.
+- Puff up when something gets close. For a moment nothing can touch you, and whatever bumps you is stunned.
+- Snacks come in waves. Clear a wave and the next one appears somewhere new.
 
-**Play together**
-One keyboard, two fish. A caught fish comes back with the next wave of snacks, and the reef only restarts if both of you are caught. Plays just as well alone.
+That is the whole game, and each of the 16 reefs adds one twist: currents that carry you, kelp to hide in, vents that erupt, snacks that run away, pearls that teleport, and nine kinds of creature with their own habits.
 
-**Make it yours**
-- Choose Killi or Milli and dress them up. Most colors, patterns and accessories are earned by playing.
+**Two players, one keyboard**
+Bring a friend. If one fish is caught, the other keeps going and brings them back with the next wave of snacks. Plays just as well alone.
+
+**Also in the box**
+- Dress up Killi or Milli. Most colors, patterns and accessories are earned by playing.
 - A handmade cut paper look, with three more looks, four sound packs and five music loops, all made in the browser as you play.
 - Scores, streaks, best times and stars on every reef. A reef takes two or three minutes.
 - An illustrated story with an ending worth reaching.
