@@ -16,7 +16,10 @@
     "cover": "node tools/cover.js",
     "itch": "zip -qr killi-and-milli-itch.zip index.html manifest.webmanifest sw.js icons && echo built killi-and-milli-itch.zip",
     "montage": "node tools/montage.mjs",
-    "itchbg": "node tools/itchbg.js"
+    "itchbg": "node tools/itchbg.js",
+    "portal:poki": "node tools/portal.js poki",
+    "portal:crazygames": "node tools/portal.js crazygames",
+    "portal:assets": "node tools/portalassets.js"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.60",
