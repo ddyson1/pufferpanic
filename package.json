@@ -19,7 +19,8 @@
     "itchbg": "node tools/itchbg.js",
     "portal:poki": "node tools/portal.js poki",
     "portal:crazygames": "node tools/portal.js crazygames",
-    "portal:assets": "node tools/portalassets.js"
+    "portal:assets": "node tools/portalassets.js",
+    "portal:bundle": "node tools/portalbundle.js"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.60",
