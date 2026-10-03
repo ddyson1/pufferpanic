@@ -311,7 +311,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <div class="chars">
   <div class="char" id="killi"><div class="pair">{img('killi', 'Killi', 140)}{img('killi_puffed', 'Killi puffed up', 140)}</div><h3>Killi</h3><p>A golden pufferfish with brown spots who puffs first and asks questions later. Player one.</p></div>
   <div class="char" id="milli"><div class="pair">{img('milli', 'Milli', 140)}{img('milli_shield', 'Milli inside a bubble shield', 140)}</div><h3>Milli</h3><p>A pale blue pufferfish with dark blue spots and a single eyelash, who always has a plan. Player two. Her sounds are pitched a little higher than Killi&#8217;s.</p></div>
-  <div class="char" id="nori">{img('nori', 'Niko the seal', 220)}<h3>Niko</h3><p>A friendly harbor seal. She wanders the reef, swims over when the pufferfish are far away, bumps creatures out of the way, and hands out <a href="#bubble-shield">bubble shields</a>. First appears in {lvlink(first['N'])}.</p></div>
+  <div class="char" id="nori">{img('nori', 'Niko the seal', 220)}<h3>Niko</h3><p>A friendly harbor seal. He wanders the reef, swims over when the pufferfish are far away, bumps creatures out of the way, and hands out <a href="#bubble-shield">bubble shields</a>. First appears in {lvlink(first['N'])}.</p></div>
 </div>
 
 <h3 id="customization">Choosing and customizing your fish</h3>
@@ -325,7 +325,7 @@ kbd{{font:inherit;font-size:.88em;background:var(--soft);border:1px solid var(--
 <h3 id="puff">Puffing up</h3>
 <p>Puffing turns a pufferfish into a spiky ball for 1.3 seconds. While puffed it cannot move but cannot be caught, and any creature nearby is stunned for 2.6 seconds. Puffing then needs 4.5 seconds to recharge, shown by the meter next to each name in the score strip. Bosses are the exception: see <a href="#bosses">Bosses</a>.</p>
 <h3 id="bubble-shield">Bubble shield</h3>
-<p>Swimming past <a href="#nori">Niko</a> wraps a pufferfish in a bubble that absorbs one hit, stuns the creature that hit it, and pops. Niko needs about seven seconds to make another, shown by a small bubble over her head when one is ready.</p>
+<p>Swimming past <a href="#nori">Niko</a> wraps a pufferfish in a bubble that absorbs one hit, stuns the creature that hit it, and pops. Niko needs about seven seconds to make another, shown by a small bubble over his head when one is ready.</p>
 <h3 id="co-op">Co-op and getting caught</h3>
 <p>In two-player mode, a caught pufferfish is out until the next wave of snacks appears, then returns at its starting spot with a moment of invulnerability. In boss reefs, landing a hit on the boss brings a caught partner back. The reef only restarts if both pufferfish are caught at the same time.</p>
 <h3 id="scoring">Score and time</h3>
