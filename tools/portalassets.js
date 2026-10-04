@@ -1,20 +1,35 @@
-// Cuts the portal submission images from the key art and captures four wide gameplay screenshots.
-// Writes marketing/portals/. Usage: node tools/portalassets.js (needs the game served at http://localhost:5173 for the screenshots).
-const {createCanvas, loadImage} = require('@napi-rs/canvas'); const fs = require('fs'); const path = require('path');
+// Cuts the store and portal covers from the key art and captures four wide gameplay screenshots.
+// Writes marketing/portals/, marketing/cover-*.png and marketing/itch/banner-960x420.png.
+// Usage: node tools/portalassets.js [covers]  (`covers` skips the screenshots, which need the game served at http://localhost:5173).
+const {createCanvas, loadImage, GlobalFonts} = require('@napi-rs/canvas'); const fs = require('fs'); const path = require('path');
 const ROOT = path.join(__dirname, '..'), OUT = path.join(ROOT, 'marketing', 'portals');
 fs.mkdirSync(OUT, {recursive: true});
 (async () => {
-  const im = await loadImage(fs.readFileSync(path.join(ROOT, 'marketing', 'keyart.png')));
-  // crop the key art to a size, keeping the title and the two fish: the focus sits a little above centre
-  const cut = (w, h, name, fy = .46) => {
-    const s = Math.max(w / im.width, h / im.height), sw = w / s, sh = h / s, sx = (im.width - sw) / 2, sy = Math.max(0, Math.min(im.height - sh, im.height * fy - sh / 2));
-    const c = createCanvas(w, h); c.getContext('2d').drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
-    fs.writeFileSync(path.join(OUT, name), c.toBuffer('image/png'));
+  // every cover is cut from the untitled key art and gets the title drawn to fit its own width, so the narrow and square
+  // sizes keep the whole name instead of cropping it
+  GlobalFonts.registerFromPath(path.join(__dirname, 'fonts', 'grandstander-latin-900-normal.woff2'), 'Grandstander');
+  const im = await loadImage(fs.readFileSync(path.join(ROOT, 'marketing', 'keyart-notitle.png')));
+  const title = (x, w, size, ty) => {
+    x.save(); x.textAlign = 'center'; x.lineJoin = 'round'; const t = 'Killi and Milli';
+    for (; size > 40; size -= 2) { x.font = `900 ${size}px Grandstander`; if (x.measureText(t).width <= w * .9) break; }
+    x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = size * .2; x.shadowOffsetY = size * .1; x.lineWidth = size * .19; x.strokeStyle = '#05303d'; x.strokeText(t, w / 2, ty + size); x.shadowColor = 'transparent';
+    x.fillStyle = '#a5640f'; x.fillText(t, w / 2, ty + size + size * .06); x.fillStyle = '#f6c445'; x.fillText(t, w / 2, ty + size); x.restore();
   };
-  cut(1920, 1080, 'cover-16x9-1920x1080.png', .3); cut(1280, 720, 'cover-16x9-1280x720.png', .3); // wide cuts start at the top so the title stays in
-  cut(1600, 1200, 'cover-4x3-1600x1200.png'); cut(1024, 1024, 'icon-1x1-1024.png', .5); cut(512, 512, 'icon-1x1-512.png', .5); cut(628, 628, 'icon-1x1-628.png', .5);
-  cut(1000, 1500, 'cover-2x3-1000x1500.png', .5);
-  console.log('covers done');
+  // crop the art to a size around the two fish (the focus sits at 52% across, 60% down), then put the title in the water above them
+  const cut = (w, h, out, size = h * .13, fx = .52, fy = .6) => {
+    const s = Math.max(w / im.width, h / im.height), sw = w / s, sh = h / s;
+    const sx = Math.max(0, Math.min(im.width - sw, im.width * fx - sw / 2)), sy = Math.max(0, Math.min(im.height - sh, im.height * fy - sh / 2));
+    const c = createCanvas(w, h), x = c.getContext('2d'); x.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
+    title(x, w, size, h * .04);
+    fs.mkdirSync(path.dirname(out), {recursive: true}); fs.writeFileSync(out, c.toBuffer('image/png'));
+  };
+  const P = n => path.join(OUT, n), M = n => path.join(ROOT, 'marketing', n);
+  cut(1920, 1080, P('cover-16x9-1920x1080.png')); cut(1280, 720, P('cover-16x9-1280x720.png'));
+  cut(1600, 1200, P('cover-4x3-1600x1200.png')); cut(1024, 1024, P('icon-1x1-1024.png'), 118); cut(512, 512, P('icon-1x1-512.png'), 59); cut(628, 628, P('icon-1x1-628.png'), 72);
+  cut(1000, 1500, P('cover-2x3-1000x1500.png'), 120);
+  cut(1920, 1080, P('crazygames-landscape-1920x1080.png')); cut(800, 1200, P('crazygames-portrait-800x1200.png'), 96); cut(800, 800, P('crazygames-square-800x800.png'), 92);
+  cut(1260, 1000, M('cover-1260x1000.png')); cut(630, 500, M('cover-630x500.png')); cut(960, 420, M(path.join('itch', 'banner-960x420.png')), 64, .52, .4); // the banner keeps the top so the title sits in open water
+  console.log('covers done'); if (process.argv[2] === 'covers') return;
   const {chromium} = await import('/opt/node22/lib/node_modules/playwright/index.mjs');
   const b = await chromium.launch(); const ctx = await b.newContext({viewport: {width: 1920, height: 1080}, deviceScaleFactor: 1, colorScheme: 'dark'});
   const p = await ctx.newPage();

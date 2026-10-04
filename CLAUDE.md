@@ -7,7 +7,7 @@ A co-op arcade maze game (a spiritual successor to Nitrome's *Bad Ice-Cream*) by
 - `index.html` is the entire game: HTML, CSS and one `<script>` with no build step and no dependencies. Keep it that way unless there is a strong reason; portals and the PWA rely on the single file.
 - `wiki/index.html` is generated. Do not hand-edit it; change `tools/wiki/wiki_gen.py` and run `npm run wiki`.
 - `tests/` are jsdom-based suites that drive the real game through a debug hook (`window.__pp`) and render frames with `@napi-rs/canvas`. `npm run test:quick` takes about 3 minutes; `npm run test:gameplay` adds randomized playthroughs of all 18 levels in both modes and takes about 5 minutes. Run the quick suite after any change and the full suite before a release. Tests write images to `tests/out/` (gitignored); look at them when a change is visual.
-- `tools/` regenerates the wiki images, store screenshots and icons from the game itself, so visuals in the wiki always match the build. `npm run cover` renders the cast cover into `marketing/cast-cover-*.png`; the store cover (`marketing/cover-*.png`) is cut from the key art in `marketing/keyart.png` and is not generated.
+- `tools/` regenerates the wiki images, store screenshots and icons from the game itself, so visuals in the wiki always match the build. `npm run cover` renders the cast cover into `marketing/cast-cover-*.png`; the store and portal covers are cut from the key art (`marketing/keyart-notitle.png`, title drawn per size) by `node tools/portalassets.js covers`.
 - `sw.js` caches the game for offline play. Bump `CACHE` in it whenever `index.html` changes in a release.
 
 ## How the game code is organized (all in index.html)
