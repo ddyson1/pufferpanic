@@ -16,10 +16,10 @@ fs.mkdirSync(OUT, {recursive: true});
     x.fillStyle = '#a5640f'; x.fillText(t, w / 2, ty + size + size * .06); x.fillStyle = '#f6c445'; x.fillText(t, w / 2, ty + size); x.restore();
   };
   // crop the art to a size around the two fish (the focus sits at 52% across, 60% down), then put the title in the water above them
-  const cut = (w, h, out, size = h * .13, fx = .52, fy = .6) => {
-    const s = Math.max(w / im.width, h / im.height), sw = w / s, sh = h / s;
-    const sx = Math.max(0, Math.min(im.width - sw, im.width * fx - sw / 2)), sy = Math.max(0, Math.min(im.height - sh, im.height * fy - sh / 2));
-    const c = createCanvas(w, h), x = c.getContext('2d'); x.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
+  const cut = (w, h, out, size = h * .13, fx = .52, fy = .6, src = im) => {
+    const s = Math.max(w / src.width, h / src.height), sw = w / s, sh = h / s;
+    const sx = Math.max(0, Math.min(src.width - sw, src.width * fx - sw / 2)), sy = Math.max(0, Math.min(src.height - sh, src.height * fy - sh / 2));
+    const c = createCanvas(w, h), x = c.getContext('2d'); x.drawImage(src, sx, sy, sw, sh, 0, 0, w, h);
     title(x, w, size, h * .04);
     fs.mkdirSync(path.dirname(out), {recursive: true}); fs.writeFileSync(out, c.toBuffer('image/png'));
   };
@@ -28,7 +28,9 @@ fs.mkdirSync(OUT, {recursive: true});
   cut(1600, 1200, P('cover-4x3-1600x1200.png')); cut(1024, 1024, P('icon-1x1-1024.png'), 118); cut(512, 512, P('icon-1x1-512.png'), 59); cut(628, 628, P('icon-1x1-628.png'), 72);
   cut(1000, 1500, P('cover-2x3-1000x1500.png'), 120);
   cut(1920, 1080, P('crazygames-landscape-1920x1080.png')); cut(800, 1200, P('crazygames-portrait-800x1200.png'), 96); cut(800, 800, P('crazygames-square-800x800.png'), 92);
-  cut(1260, 1000, M('cover-1260x1000.png')); cut(630, 500, M('cover-630x500.png')); cut(960, 420, M(path.join('itch', 'banner-960x420.png')), 64, .52, .4); // the banner keeps the top so the title sits in open water
+  cut(1260, 1000, M('cover-1260x1000.png')); cut(630, 500, M('cover-630x500.png')); // the banner is cut from a copy of the art with the clam raised, so the title and the clam both fit its short frame
+  const bim = await loadImage(fs.readFileSync(path.join(ROOT, 'marketing', 'reference', 'keyart-banner-notitle.png')));
+  cut(960, 420, M(path.join('itch', 'banner-960x420.png')), 64, .52, .4, bim);
   console.log('covers done'); if (process.argv[2] === 'covers') return;
   const {chromium} = await import('/opt/node22/lib/node_modules/playwright/index.mjs');
   const b = await chromium.launch(); const ctx = await b.newContext({viewport: {width: 1920, height: 1080}, deviceScaleFactor: 1, colorScheme: 'dark'});
