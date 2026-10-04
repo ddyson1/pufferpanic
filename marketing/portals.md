@@ -37,12 +37,11 @@ Apply at the CrazyGames developer portal with the `dist/killi-and-milli-crazygam
 
 ## Poki
 
-Apply at Poki for Developers with the itch.io link as the playable demo, then they send a build request. Upload `dist/killi-and-milli-poki.zip`. Fields they ask for:
-- Thumbnail 1:1: `marketing/portals/icon-1x1-628.png` (and the 1024 if they want larger)
-- Cover 16:9: `marketing/portals/cover-16x9-1920x1080.png`
-- Screenshots: the four `shot-*.png`
-- Poki's guidelines, already met: no links out of the game, no login, nothing loaded from other domains, pauses on ad and resumes after, plays on mobile in landscape, saves in localStorage only.
-- Poki inspects play time and retention in a test run on their site before listing; the single-player mobile experience is what they weigh most, so the touch layout should be checked on a real phone before sending the build.
+`npm run portal:bundle poki` assembles everything into `dist/poki-submission.zip`, with the form text from `marketing/portals/poki-submission.md`.
+
+Apply at Poki for Developers and upload `dist/killi-and-milli-poki.zip`. Poki wants thumbnails without text, so theirs are separate from the titled covers: `node tools/pokithumb.js` renders `marketing/portals/poki-thumb-1024.png` and `poki-thumb-628.png` (square, full bleed, the two fish in their default look) and `poki-animated-thumb-1080.mp4` (1080 x 1080, 60 fps, 5 s, silent, looping, with the jellyfish, moray and clam drawn by the game). Screenshots are the four `shot-*.png`.
+- Poki's guidelines, already met: first download well under 8 MB, no links out of the game, no login, nothing loaded from other domains, pauses on ad and resumes after, touch controls on phones and tablets, saves in localStorage only. Portal builds also drop the share meta tags.
+- Poki tests play time and retention on their site before listing; the single player mobile game is what they weigh most, so check the touch layout on a real phone and a tablet before sending the build.
 
 ## Before either
 
