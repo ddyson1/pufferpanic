@@ -5,9 +5,9 @@ const ROOT = path.join(__dirname, '..'), which = process.argv[2];
 if (!['crazygames', 'poki'].includes(which)) { console.error('usage: node tools/portalbundle.js crazygames|poki'); process.exit(1); }
 execFileSync('node', [path.join(ROOT, 'tools', 'portal.js'), which], {stdio: 'inherit'});
 const B = path.join(ROOT, 'dist', `${which}-submission`), P = path.join(ROOT, 'marketing', 'portals');
-fs.rmSync(B, {recursive: true, force: true}); fs.mkdirSync(path.join(B, 'covers'), {recursive: true}); fs.mkdirSync(path.join(B, 'screenshots'));
+fs.rmSync(B, {recursive: true, force: true}); fs.mkdirSync(path.join(B, 'covers'), {recursive: true}); fs.mkdirSync(path.join(B, 'screenshots')); if (which === 'poki') fs.mkdirSync(path.join(B, 'thumbnails'));
 fs.copyFileSync(path.join(ROOT, 'dist', `killi-and-milli-${which}.zip`), path.join(B, `killi-and-milli-${which}.zip`));
-for (const f of fs.readdirSync(P)) { if (f.startsWith('cover-') || f.startsWith('icon-') || (f.startsWith(which + '-') && f.endsWith('.png'))) fs.copyFileSync(path.join(P, f), path.join(B, 'covers', f)); if (f.startsWith('crazygames-') && f.endsWith('.mp4') && which === 'crazygames') fs.copyFileSync(path.join(P, f), path.join(B, f)); if (f.startsWith('shot-')) fs.copyFileSync(path.join(P, f), path.join(B, 'screenshots', f)); }
+for (const f of fs.readdirSync(P)) { if (f.startsWith('cover-') || f.startsWith('icon-') || (f.startsWith(which + '-') && f.endsWith('.png'))) fs.copyFileSync(path.join(P, f), path.join(B, which === 'poki' && f.startsWith('poki-') ? 'thumbnails' : 'covers', f)); if (f.startsWith(which + '-') && f.endsWith('.mp4')) fs.copyFileSync(path.join(P, f), path.join(B, f)); if (f.startsWith('shot-')) fs.copyFileSync(path.join(P, f), path.join(B, 'screenshots', f)); }
 fs.copyFileSync(path.join(ROOT, 'marketing', 'gameplay.mp4'), path.join(B, 'gameplay-video.mp4'));
 const form = path.join(P, `${which}-submission.md`);
 if (fs.existsSync(form)) fs.copyFileSync(form, path.join(B, 'SUBMISSION.md')); else console.warn('no form text at', form);

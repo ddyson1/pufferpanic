@@ -15,6 +15,8 @@ const sw = "if ('serviceWorker' in navigator && location.protocol === 'https:') 
 if (!html.includes(sw)) throw new Error('service worker registration not found');
 html = html.replace(sw, '// service worker left out of the portal build');
 html = html.replace('<link rel="manifest" href="manifest.webmanifest">', '');
+// the share tags only matter on the game's own site; inside a portal's iframe they are unused and point off-site
+html = html.replace(/<meta (property="og:|name="twitter:)[^>]*>\n?/g, '');
 const out = path.join(ROOT, 'dist', which);
 fs.rmSync(out, {recursive: true, force: true}); fs.mkdirSync(out, {recursive: true});
 fs.writeFileSync(path.join(out, 'index.html'), html);
